@@ -1,388 +1,431 @@
 <template>
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <div class="flex justify-between items-center mb-6">
-      <h1 class="text-2xl font-bold text-gray-900">My Bookings</h1>
-      <NuxtLink to="/profile" class="text-primary hover:text-pink-600">My Profile</NuxtLink>
-    </div>
-
-    <div v-if="loading" class="flex justify-center py-12">
-      <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-primary"></div>
-    </div>
-
-    <div v-else-if="error" class="text-center py-12 text-red-500">
-      Failed to load bookings. {{ error.message }}
-    </div>
-
-    <div v-else-if="bookings.length === 0" class="text-center py-12 bg-white rounded-lg shadow">
-      <p class="text-gray-500">You have no upcoming bookings.</p>
-      <NuxtLink to="/book" class="mt-4 inline-block text-primary font-medium">Book an Appointment</NuxtLink>
-    </div>
-
-    <div v-else class="bg-white shadow overflow-hidden sm:rounded-md">
-      <ul class="divide-y divide-gray-200">
-        <li v-for="booking in bookings" :key="booking._id">
-          <div class="px-4 py-4 sm:px-6">
-            <div class="flex items-center justify-between">
-              <p class="text-sm font-medium text-primary truncate">
-                {{ booking.services[0]?.serviceName }}
-              </p>
+  <div class="min-h-screen">
+    <!-- Header -->
+    <header class="bg-white -sm">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
+        <NuxtLink to="/" class="flex items-center">
+          <img src="@/assets/img/logo.png" alt="Lola April Wellness Spa" class="h-10 w-auto" />
+        </NuxtLink>
+        
+        <div class="relative">
+          <button
+            @click="showUserMenu = !showUserMenu"
+            class="flex items-center space-x-3 focus:outline-none"
+          >
+            <div class="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center font-semibold">
+              {{ userInitials }}
             </div>
-            <div class="mt-2 sm:flex sm:justify-between">
-              <div class="sm:flex">
-                <p class="flex items-center text-sm text-gray-500">
-                  Ticket #{{ booking.bookingNumber }}
-                </p>
-                <p class="mt-2 flex items-center text-sm text-gray-500 sm:mt-0 sm:ml-6">
-                  {{ formatDate(booking.preferredDate) }} at {{ booking.preferredStartTime }}
-                </p>
+            <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+
+          <!-- User Dropdown Menu -->
+          <Transition name="dropdown">
+            <div
+              v-if="showUserMenu"
+              v-click-outside="() => showUserMenu = false"
+              class="absolute right-0 mt-2 w-64 bg-white rounded-lg  py-2 z-50 border border-gray-100"
+            >
+              <div class="px-4 py-3 border-b border-gray-100">
+                <p class="text-sm font-semibold text-gray-900">{{ user?.firstName }} {{ user?.lastName }}</p>
+                <p class="text-sm text-gray-500">{{ user?.email }}</p>
               </div>
-              <div class="mt-2 flex items-center gap-3 text-sm sm:mt-0">
-                <button 
-                  v-if="canReschedule(booking)"
-                  @click="openRescheduleModal(booking)"
-                  class="text-primary hover:text-pink-600 font-medium text-sm"
+              
+              <NuxtLink
+                to="/profile"
+                class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-50 transition-colors"
+                @click="showUserMenu = false"
+              >
+                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
+                Profile
+              </NuxtLink>
+              
+              <NuxtLink
+                to="/bookings"
+                class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-50 transition-colors"
+                @click="showUserMenu = false"
+              >
+                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+                Appointments
+              </NuxtLink>
+              
+              <button
+                @click="openChangePasswordModal"
+                class="w-full flex items-center px-4 py-3 text-gray-700 hover:bg-gray-50 transition-colors"
+              >
+                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
+                </svg>
+                Change Password
+              </button>
+              
+              <NuxtLink
+                to="/settings"
+                class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-50 transition-colors"
+                @click="showUserMenu = false"
+              >
+                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                Settings
+              </NuxtLink>
+              
+              <div class="border-t border-gray-100 mt-2 pt-2">
+                <button
+                  @click="handleLogout"
+                  class="w-full flex items-center px-4 py-3 text-red-600 hover:bg-red-50 transition-colors"
                 >
-                  Reschedule
+                  <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                  </svg>
+                  Log out
                 </button>
-                <button 
-                  v-if="canCancel(booking)"
-                  @click="handleCancel(booking._id)"
-                  :disabled="loadingCancel === booking._id"
-                  class="text-red-600 hover:text-red-900 font-medium text-sm disabled:opacity-50"
-                >
-                  {{ loadingCancel === booking._id ? 'Cancelling...' : 'Cancel' }}
-                </button>
+              </div>
+            </div>
+          </Transition>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <h1 class="text-xl font-bold text-gray-900 mb-8">My Appointments</h1>
+
+      <div v-if="loading" class="flex justify-center py-12">
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+      </div>
+
+      <div v-else-if="error" class="text-center py-12 bg-white rounded-lg ">
+        <svg class="w-16 h-16 text-red-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <p class="text-red-500 text-lg">Failed to load bookings</p>
+        <p class="text-gray-500 mt-2">{{ error.message }}</p>
+      </div>
+
+      <div v-else-if="upcomingBookings.length === 0 && pastBookings.length === 0" class="text-center py-16 bg-white rounded-lg ">
+        <svg class="w-20 h-20 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+        </svg>
+        <p class="text-gray-500 text-lg mb-4">No appointments found</p>
+        <p class="text-gray-400 mb-6">Your upcoming appointments will appear here when you book</p>
+        <NuxtLink to="/#book" class="inline-block bg-primary hover:bg-primary-700 text-white font-semibold px-6 py-3.5 text-sm rounded-full transition-all">
+          Book an Appointment
+        </NuxtLink>
+      </div>
+
+      <div v-else class="space-y-8">
+        <!-- Upcoming Bookings -->
+        <div v-if="upcomingBookings.length > 0">
+          <h2 class="text-xl font-semibold text-gray-900 mb-4">Upcoming</h2>
+          <div class="grid gap-4">
+            <div
+              v-for="booking in upcomingBookings"
+              :key="booking._id"
+              class="bg-white rounded-lg -sm border border-gray-200 overflow-hidden hover:-md transition-"
+            >
+              <div class="p-6">
+                <div class="flex items-start justify-between">
+                  <div class="flex-1">
+                    <div class="flex items-center gap-3 mb-3">
+                      <span
+                        :class="getStatusClass(booking.status)"
+                        class="px-3 py-1 rounded-full text-xs font-semibold"
+                      >
+                        {{ booking.status }}
+                      </span>
+                      <span class="text-sm text-gray-500">Ref: #{{ booking.bookingNumber }}</span>
+                    </div>
+                    <!-- {{ booking }} -->
+                    
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">
+                      {{ booking.services[0]?.serviceName }}
+                    </h3>
+                    
+                    <div class="flex flex-wrap gap-4 text-sm text-gray-600">
+                      <div class="flex items-center">
+                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                        {{ formatDate(booking.preferredDate) }}
+                      </div>
+                      <div class="flex items-center">
+                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        {{ booking.preferredStartTime }}
+                      </div>
+                      <div class="flex items-center">
+                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        {{ booking.services[0]?.duration || 60 }} mins
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="flex flex-col items-end gap-2">
+                    <span class="text-lg font-bold text-primary">₦{{ formatPrice(booking.estimatedTotal) }}</span>
+                    <div class="flex gap-2">
+                      <button
+                        v-if="canReschedule(booking)"
+                        @click="openRescheduleModal(booking)"
+                        class="text-primary hover:text-primary-700 font-medium text-sm px-3 py-2.5 border border-primary rounded-full hover:bg-primary-50 transition-all"
+                      >
+                        Reschedule
+                      </button>
+                      <button
+                        v-if="canCancel(booking)"
+                        @click="openCancelModal(booking)"
+                        :disabled="loadingCancel === booking._id"
+                        class="text-red-600 hover:text-red-700 font-medium text-sm px-3 py-2.5 border border-red-600 rounded-full hover:bg-red-50 transition-all disabled:opacity-50"
+                      >
+                        {{ loadingCancel === booking._id ? 'Cancelling...' : 'Cancel' }}
+                      </button>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-        </li>
-      </ul>
-    </div>
+        </div>
 
-    <!-- Reschedule Modal -->
-    <Teleport to="body">
-      <div 
-        v-if="showRescheduleModal" 
-        class="fixed inset-0 z-50 overflow-y-auto"
-        @click.self="closeRescheduleModal"
-      >
-        <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
-          <!-- Background overlay -->
-          <div 
-            class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
-            @click="closeRescheduleModal"
-          ></div>
-
-          <!-- Modal panel -->
-          <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full">
-            <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-              <div class="flex justify-between items-center mb-4">
-                <h3 class="text-xl font-bold text-gray-900">Reschedule Booking</h3>
-                <button 
-                  @click="closeRescheduleModal"
-                  class="text-gray-400 hover:text-gray-500"
-                >
-                  <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
-              </div>
-
-              <div v-if="selectedBooking" class="mb-4 p-3 bg-gray-50 rounded-lg">
-                <p class="text-sm text-gray-600">
-                  <span class="font-semibold">Service:</span> {{ selectedBooking.services[0]?.serviceName }}
-                </p>
-                <p class="text-sm text-gray-600 mt-1">
-                  <span class="font-semibold">Current:</span> {{ formatDate(selectedBooking.preferredDate) }} at {{ selectedBooking.preferredStartTime }}
-                </p>
-              </div>
-
-              <!-- Date Selection -->
-              <div class="mb-6">
-                <label class="block text-gray-700 font-semibold mb-2">New Date</label>
-                <input 
-                  type="date" 
-                  v-model="rescheduleData.newPreferredDate" 
-                  :min="minDate"
-                  class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none"
-                />
-              </div>
-
-              <!-- Time Slots Selection -->
-              <div v-if="loadingAvailable" class="flex justify-center py-8">
-                <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-              </div>
-
-              <div v-else-if="timeSlots.length > 0" class="mb-6">
-                <h4 class="text-base font-semibold mb-3">Available Times</h4>
-                <div class="grid grid-cols-3 sm:grid-cols-4 gap-3 max-h-60 overflow-y-auto">
-                  <button 
-                    v-for="(slot, index) in timeSlots" 
-                    :key="index"
-                    @click="selectRescheduleTime(slot)"
-                    :class="[
-                      'py-3 px-2 rounded-lg text-sm font-medium transition duration-200 border',
-                      rescheduleData.newPreferredStartTime === slot.startTime 
-                        ? 'bg-primary text-white border-primary shadow-md' 
-                        : 'bg-white text-gray-700 border-gray-200 hover:border-primary hover:bg-pink-50'
-                    ]"
-                  >
-                    {{ formatTime(slot.startTime) }}
-                  </button>
+        <!-- Past Bookings -->
+        <div v-if="pastBookings.length > 0">
+          <h2 class="text-xl font-semibold text-gray-900 mb-4">Past ({{ pastBookings.length }})</h2>
+          <div class="grid gap-4">
+            <div
+              v-for="booking in pastBookings"
+              :key="booking._id"
+              class="bg-white rounded-lg -sm border border-gray-200 overflow-hidden opacity-75"
+            >
+              <div class="p-6">
+                <div class="flex items-start justify-between">
+                  <div class="flex-1">
+                    <div class="flex items-center gap-3 mb-3">
+                      <span
+                        :class="getStatusClass(booking.status)"
+                        class="px-3 py-1 rounded-full text-xs font-semibold"
+                      >
+                        {{ booking.status }}
+                      </span>
+                      <span class="text-sm text-gray-500">Ref: #{{ booking.bookingNumber }}</span>
+                    </div>
+                    
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">
+                      {{ booking.services[0]?.serviceName }}
+                    </h3>
+                    
+                    <div class="flex flex-wrap gap-4 text-sm text-gray-600">
+                      <div class="flex items-center">
+                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                        {{ formatDate(booking.preferredDate) }}
+                      </div>
+                      <div class="flex items-center">
+                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        {{ booking.preferredStartTime }}
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="text-right">
+                    <span class="text-lg font-bold text-gray-700">₦{{ formatPrice(booking.estimatedTotal) }}</span>
+                  </div>
                 </div>
               </div>
-
-              <div v-else-if="rescheduleData.newPreferredDate && !loadingAvailable" class="mb-6 text-center py-6 bg-gray-50 rounded-lg border border-dashed border-gray-300">
-                <p class="text-gray-500">No available slots for this date.</p>
-                <p class="text-sm text-gray-400 mt-1">Please select another date.</p>
-              </div>
-
-              <div v-else-if="!rescheduleData.newPreferredDate" class="mb-6 text-center py-6 bg-gray-50 rounded-lg border border-dashed border-gray-300">
-                <p class="text-gray-500">Please select a date to view available time slots.</p>
-              </div>
-
-              <!-- Reason Input -->
-              <div class="mb-6">
-                <label class="block text-gray-700 font-semibold mb-2">Reason for Reschedule</label>
-                <textarea 
-                  v-model="rescheduleData.reason"
-                  placeholder="Please provide a reason for rescheduling..."
-                  rows="3"
-                  class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none"
-                ></textarea>
-              </div>
-            </div>
-
-            <!-- Modal Actions -->
-            <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse gap-3">
-              <button 
-                @click="handleReschedule"
-                :disabled="!canSubmitReschedule || rescheduling"
-                :class="[
-                  'w-full inline-flex justify-center rounded-lg border border-transparent shadow-sm px-6 py-3 font-bold text-base sm:ml-3 sm:w-auto sm:text-sm',
-                  canSubmitReschedule && !rescheduling
-                    ? 'bg-primary text-white hover:bg-pink-600' 
-                    : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                ]"
-              >
-                {{ rescheduling ? 'Rescheduling...' : 'Confirm Reschedule' }}
-              </button>
-              <button 
-                @click="closeRescheduleModal"
-                type="button"
-                :disabled="rescheduling"
-                class="mt-3 w-full inline-flex justify-center rounded-lg border border-gray-300 shadow-sm px-6 py-3 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 sm:mt-0 sm:w-auto sm:text-sm disabled:opacity-50"
-              >
-                Cancel
-              </button>
             </div>
           </div>
         </div>
       </div>
-    </Teleport>
+    </div>
+
+    <!-- Reschedule Modal -->
+    <RescheduleModal
+      :is-open="showRescheduleModal"
+      :booking="selectedBooking"
+      @close="closeRescheduleModal"
+      @success="handleRescheduleSuccess"
+    />
+
+    <!-- Cancel Modal -->
+    <CancelBookingModal
+      :is-open="showCancelModal"
+      :booking="selectedBooking"
+      @close="closeCancelModal"
+      @success="handleCancelSuccess"
+    />
+
+    <!-- Change Password Modal -->
+    <ChangePasswordModal
+      :is-open="showPasswordModal"
+      @close="closePasswordModal"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
 import { useGetMyBookings } from '@/composables/modules/booking/useGetMyBookings'
-import { useCancelBooking } from '@/composables/modules/booking/useCancelBooking'
-import { useRescheduleBooking } from '@/composables/modules/booking/useRescheduleBooking'
-import { useGetAvailableSlots } from '~/composables/modules/availability/useGetAvailableSlots'
 import { useUser } from '@/composables/modules/auth/user'
-
-const { loading, bookings, getMyBookings, error } = useGetMyBookings()
-const { cancelBooking } = useCancelBooking()
-const { loading: rescheduling, error: reschedulingError, rescheduleBooking } = useRescheduleBooking()
-const { slots: availableSlots, loading: loadingAvailable, getAvailableSlots } = useGetAvailableSlots()
-const { user } = useUser()
-
-interface TimeSlot {
-  startTime: string
-  endTime: string
-  duration: number
-  availableStaff: any[]
-  availableResources: any[]
-  isBookable: boolean
-}
 
 definePageMeta({
   middleware: (to) => {
     const { token } = useUser()
-    if (!token.value) return '/auth/login'
+    if (!token.value) return navigateTo('/')
   }
 })
 
-// Time slots from getAvailableSlots
-const timeSlots = computed(() => {
-  const slots = availableSlots.value || []
-  if (Array.isArray(slots)) {
-    return slots.filter((slot: any) => slot.isBookable !== false)
-  }
-  return []
-})
+const { loading, bookings, getMyBookings, error } = useGetMyBookings()
+const { user } = useUser()
 
-const minDate = computed(() => new Date().toISOString().split('T')[0])
-
+const showUserMenu = ref(true)
+const showRescheduleModal = ref(false)
+const showCancelModal = ref(false)
+const showPasswordModal = ref(false)
+const selectedBooking = ref<any>(null)
 const loadingCancel = ref<string | null>(null)
 
-// Reschedule Modal State
-const showRescheduleModal = ref(false)
-const selectedBooking = ref<any>(null)
-const rescheduleData = ref({
-  newPreferredDate: '',
-  newPreferredStartTime: '',
-  reason: ''
+const userInitials = computed(() => {
+  if (!user.value) return 'U'
+  const first = user.value.firstName?.[0] || ''
+  const last = user.value.lastName?.[0] || ''
+  return (first + last).toUpperCase()
 })
 
-// Computed to check if reschedule form is complete
-const canSubmitReschedule = computed(() => {
-  return rescheduleData.value.newPreferredDate && 
-         rescheduleData.value.newPreferredStartTime && 
-         rescheduleData.value.reason.trim().length > 0
+const upcomingBookings = computed(() => {
+  return bookings.value.filter((booking: any) => {
+    const bookingDate = new Date(booking.preferredDate)
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
+    return bookingDate >= today && booking.status !== 'cancelled' && booking.status !== 'completed'
+  })
 })
 
-// Helper to format date
+const pastBookings = computed(() => {
+  return bookings.value.filter((booking: any) => {
+    const bookingDate = new Date(booking.preferredDate)
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
+    return bookingDate < today || booking.status === 'completed' || booking.status === 'cancelled'
+  })
+})
+
 const formatDate = (dateStr: string) => {
-  return new Date(dateStr).toLocaleDateString(undefined, {
-    weekday: 'short', year: 'numeric', month: 'short', day: 'numeric'
+  if (!dateStr) return ''
+  return new Date(dateStr).toLocaleDateString('en-US', {
+    weekday: 'short',
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric'
   })
 }
 
-// Helper to format time
-const formatTime = (time: string) => {
-  if (!time || typeof time !== 'string') return time
-  
-  const [hours, minutes] = time.split(':')
-  if (!hours || !minutes) return time
-  
-  const date = new Date()
-  date.setHours(parseInt(hours))
-  date.setMinutes(parseInt(minutes))
-  return date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })
+const formatPrice = (price: number) => {
+  if (!price) return '0'
+  return price.toLocaleString('en-NG')
 }
 
-// Logic to check if cancellation is allowed
+const getStatusClass = (status: string) => {
+  const statusLower = status.toLowerCase()
+  if (statusLower === 'confirmed') return 'bg-green-100 text-green-800'
+  if (statusLower === 'pending') return 'bg-yellow-100 text-yellow-800'
+  if (statusLower === 'cancelled') return 'bg-red-100 text-red-800'
+  if (statusLower === 'completed') return 'bg-blue-100 text-blue-800'
+  return 'bg-gray-100 text-gray-800'
+}
+
 const canCancel = (booking: any) => {
-  if (booking.status === 'cancelled') return false
-  return true
+  return booking.status !== 'cancelled' && booking.status !== 'completed'
 }
 
-// Logic to check if rescheduling is allowed
 const canReschedule = (booking: any) => {
-  if (booking.status === 'cancelled') return false
-  return true
+  return booking.status !== 'cancelled' && booking.status !== 'completed'
 }
 
-// Fetch available slots for a specific date and service
-const fetchAvailableSlots = async () => {
-  if (!rescheduleData.value.newPreferredDate || !selectedBooking.value) return
-  
-  const serviceId = selectedBooking.value.services[0]?._id || selectedBooking.value.services[0]?.serviceId
-  
-  if (!serviceId) {
-    console.error('No service ID found')
-    return
-  }
-
-  await getAvailableSlots({
-    businessId: selectedBooking.value.businessId._id,
-    date: rescheduleData.value.newPreferredDate,
-    serviceIds: [serviceId]
-  })
-}
-
-// Open reschedule modal
 const openRescheduleModal = (booking: any) => {
   selectedBooking.value = booking
   showRescheduleModal.value = true
-  
-  // Pre-populate with today's date
-  const today = new Date().toISOString().split('T')[0]
-  rescheduleData.value = {
-    newPreferredDate: today,
-    newPreferredStartTime: '',
-    reason: ''
-  }
+  showUserMenu.value = false
 }
 
-// Close reschedule modal
 const closeRescheduleModal = () => {
-  if (rescheduling.value) return
   showRescheduleModal.value = false
   selectedBooking.value = null
-  rescheduleData.value = {
-    newPreferredDate: '',
-    newPreferredStartTime: '',
-    reason: ''
-  }
 }
 
-// Select time slot for reschedule
-const selectRescheduleTime = (slot: TimeSlot) => {
-  rescheduleData.value.newPreferredStartTime = slot.startTime
+const handleRescheduleSuccess = async () => {
+  closeRescheduleModal()
+  await getMyBookings()
 }
 
-// Handle reschedule submission
-const handleReschedule = async () => {
-  if (!selectedBooking.value || !canSubmitReschedule.value) return
-  
-  try {
-    await rescheduleBooking(selectedBooking.value._id, {
-      newPreferredDate: rescheduleData.value.newPreferredDate,
-      newPreferredStartTime: rescheduleData.value.newPreferredStartTime,
-      reason: rescheduleData.value.reason
-    })
-    
-    closeRescheduleModal()
-    await getMyBookings()
-  } catch (e: any) {
-    console.error('Reschedule error:', e)
-  }
+const openCancelModal = (booking: any) => {
+  selectedBooking.value = booking
+  showCancelModal.value = true
+  showUserMenu.value = false
 }
 
-// Handle cancellation
-const handleCancel = async (id: string) => {
-  if (!confirm('Are you sure you want to cancel this booking?')) return
-  
-  loadingCancel.value = id
-  try {
-    await cancelBooking(id, 'User requested cancellation')
-    await getMyBookings()
-  } catch (e: any) {
-    console.error('Cancel error:', e)
-  } finally {
-    loadingCancel.value = null
-  }
+const closeCancelModal = () => {
+  showCancelModal.value = false
+  selectedBooking.value = null
 }
 
-// AGGRESSIVE WATCHER - Fetch slots immediately when date changes
-watch(
-  () => rescheduleData.value.newPreferredDate,
-  async (newDate) => {
-    if (!newDate || !showRescheduleModal.value || !selectedBooking.value) return
-    
-    // Reset time selection
-    rescheduleData.value.newPreferredStartTime = ''
-    
-    // Fetch slots immediately
-    await fetchAvailableSlots()
-  },
-  { immediate: true }
-)
+const handleCancelSuccess = async () => {
+  closeCancelModal()
+  await getMyBookings()
+}
 
-// AGGRESSIVE WATCHER - Fetch slots when modal opens
-watch(
-  () => showRescheduleModal.value,
-  async (isOpen) => {
-    if (isOpen && rescheduleData.value.newPreferredDate && selectedBooking.value) {
-      await fetchAvailableSlots()
+const openChangePasswordModal = () => {
+  showPasswordModal.value = true
+  showUserMenu.value = false
+}
+
+const closePasswordModal = () => {
+  showPasswordModal.value = false
+}
+
+// const handleLogout = () => {
+//   clearUser()
+//   navigateTo('/')
+// }
+
+// Click outside directive
+const vClickOutside = {
+  mounted(el: any, binding: any) {
+    el.clickOutsideEvent = (event: Event) => {
+      if (!(el === event.target || el.contains(event.target))) {
+        binding.value()
+      }
     }
+    document.addEventListener('click', el.clickOutsideEvent)
   },
-  { immediate: true }
-)
+  unmounted(el: any) {
+    document.removeEventListener('click', el.clickOutsideEvent)
+  }
+}
 
-// Load bookings on mount
 onMounted(() => {
   getMyBookings()
 })
 </script>
+
+<style scoped>
+.dropdown-enter-active,
+.dropdown-leave-active {
+  transition: all 0.2s ease;
+}
+
+.dropdown-enter-from,
+.dropdown-leave-to {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+</style>

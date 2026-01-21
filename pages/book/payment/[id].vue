@@ -25,7 +25,7 @@
     <button 
       @click="payNow"
       :disabled="loading"
-      class="w-full bg-primary hover:bg-pink-600 text-white font-bold py-4 rounded-lg shadow-xl transition transform hover:scale-105"
+      class="w-full bg-primary  text-white font-bold py-4 rounded-lg shadow-xl transition transform hover:scale-105"
     >
       <span v-if="loading">Initializing Payment...</span>
       <span v-else>Pay with Paystack</span>

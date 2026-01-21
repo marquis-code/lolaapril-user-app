@@ -530,7 +530,7 @@ const handleSignup = async () => {
     // TODO: Replace with your actual API call
     await register(signupForm.value)    
     closeModal()
-    await navigateTo('/book?subdomain=luxebeauty')
+    await navigateTo('/book?subdomain=lola-beauty')
   } catch (error) {
     console.error('Signup error:', error)
   } finally {
@@ -544,7 +544,7 @@ const handleLogin = async () => {
   try {
     await login(loginForm.value)    
     closeModal()
-    await navigateTo('/book?subdomain=luxebeauty')
+    await navigateTo('/book?subdomain=lola-beauty')
   } catch (error) {
     console.error('Login error:', error)
   } finally {

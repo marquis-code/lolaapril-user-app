@@ -11,7 +11,7 @@
       <p class="text-gray-600 mb-6">{{ error }}</p>
       <button 
         @click="retry"
-        class="w-full bg-primary hover:bg-pink-600 text-white font-bold py-3 px-6 rounded-lg transition duration-200"
+        class="w-full bg-primary  text-white font-bold py-3 px-6 rounded-lg transition duration-200"
       >
         Try Again
       </button>
@@ -25,7 +25,7 @@
       <div class="space-y-4">
         <NuxtLink 
           to="/bookings"
-          class="block w-full bg-primary hover:bg-pink-600 text-white font-bold py-3 px-6 rounded-lg transition duration-200"
+          class="block w-full bg-primary  text-white font-bold py-3 px-6 rounded-lg transition duration-200"
         >
           View My Bookings
         </NuxtLink>

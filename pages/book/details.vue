@@ -64,7 +64,7 @@
               <button 
                 type="submit"
                 :disabled="loginLoading"
-                class="w-full bg-primary hover:bg-pink-600 text-white font-bold py-3 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
+                class="w-full bg-primary  text-white font-bold py-3 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <span v-if="loginLoading">Logging in...</span>
                 <span v-else>Login</span>
@@ -132,7 +132,7 @@
               <button 
                 type="submit"
                 :disabled="signupLoading"
-                class="w-full bg-primary hover:bg-pink-600 text-white font-bold py-3 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
+                class="w-full bg-primary  text-white font-bold py-3 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <span v-if="signupLoading">Creating Account...</span>
                 <span v-else>Sign Up</span>
@@ -214,7 +214,7 @@
         <button 
           type="submit"
           :disabled="loading"
-          class="w-full bg-primary hover:bg-pink-600 text-white font-bold py-4 rounded-lg mt-6 shadow-md transition transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+          class="w-full bg-primary  text-white font-bold py-4 rounded-lg mt-6 shadow-md transition transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <span v-if="loading">Processing...</span>
           <span v-else>Proceed to Payment</span>

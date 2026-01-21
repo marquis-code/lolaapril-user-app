@@ -75,7 +75,7 @@
         :class="[
           'px-8 py-3 rounded-lg font-bold shadow-md transition duration-200',
           selectedDate && selectedTime 
-            ? 'bg-primary text-white hover:bg-pink-600 transform hover:scale-105' 
+            ? 'bg-primary text-white  transform hover:scale-105' 
             : 'bg-gray-300 text-gray-500 cursor-not-allowed'
         ]"
       >

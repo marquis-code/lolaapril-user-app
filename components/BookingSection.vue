@@ -11,7 +11,7 @@
         <p class="text-lg">E: reservations@lolaapril.com</p>
       </div>
 
-      <button class="btn-primary text-lg">
+      <button @click="$emit('open-booking')" class="btn-primary text-lg">
         Reserve Your Experience
       </button>
 
@@ -32,3 +32,7 @@
     </div>
   </section>
 </template>
+
+<script setup lang="ts">
+defineEmits(['open-booking'])
+</script>

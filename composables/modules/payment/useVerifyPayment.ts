@@ -8,7 +8,8 @@ export const useVerifyPayment = () => {
         loading.value = true
         try {
             const res = (await payment_api.verifyPayment(reference)) as any
-            return res.data
+            console.log("Verify Payment Response:", res)
+            return res.data.data
         } catch (err: any) {
             error.value = err.message
             throw err

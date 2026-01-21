@@ -73,8 +73,9 @@ export const useUser = () => {
     localStorageData.token.value = token;
   };
   const createUser = (data: any) => {
+    console.log("Creating user with data:", data);
     localStorageData.token.value = data?.accessToken;
-    localStorageData.token.value = data?.refreshToken;
+    localStorageData.refreshToken.value = data?.refreshToken;
     localStorageData.user.value = data?.user;
 
     runtimeData.user.value = data?.user;
