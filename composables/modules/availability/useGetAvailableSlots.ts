@@ -1,10 +1,12 @@
 // useGetAvailableSlots.ts
 import { availability_api } from "@/api_factory/modules/availability"
+import { useLoader } from "@/composables/core/useLoader"
 
 export const useGetAvailableSlots = () => {
     const loading = ref(false)
     const error = ref<string | null>(null)
     const slots = ref<string[]>([])
+    const { startLoading, stopLoading } = useLoader()
 
     const getAvailableSlots = async (params: { 
         subdomain?: string
@@ -15,6 +17,7 @@ export const useGetAvailableSlots = () => {
         loading.value = true
         error.value = null
         slots.value = []
+        startLoading('Fetching available slots...')
         try {
             const res = (await availability_api.getAvailableSlots(params)) as any
             if (res.data?.success) {
@@ -23,10 +26,9 @@ export const useGetAvailableSlots = () => {
                 else if (result.slots) slots.value = result.slots
                 else if (result.availableSlots) slots.value = result.availableSlots
             }
-        } catch (err: any) {
-            error.value = err.message
         } finally {
-            loading.value = false
+            stopLoading()
+            // loading.value = false
         }
     }
 

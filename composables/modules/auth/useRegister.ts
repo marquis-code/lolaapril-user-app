@@ -1,14 +1,17 @@
 import { auth_api } from "@/api_factory/modules/auth"
 import { useCustomToast } from "@/composables/core/useCustomToast"
+import { useLoader } from "@/composables/core/useLoader"
 
 export const useRegister = () => {
     const loading = ref(false)
     const error = ref<string | null>(null)
     const { showToast } = useCustomToast()
+    const { startLoading, stopLoading } = useLoader()
 
     const register = async (payload: any) => {
-        loading.value = true
+        // loading.value = true
         error.value = null
+        startLoading('Registering your account...')
         try {
             const res = (await auth_api.register(payload)) as any
             if (res.status === 201 || res.status === 200) {
@@ -20,11 +23,9 @@ export const useRegister = () => {
                 })
                 return res.data
             }
-        } catch (err: any) {
-            error.value = err.message
-            throw err
         } finally {
-            loading.value = false
+            stopLoading()
+            // loading.value = false
         }
     }
 

@@ -17,9 +17,6 @@ export const useGetBusiness = () => {
             } else {
                 throw new Error('Business not found')
             }
-        } catch (err: any) {
-            error.value = err.message
-            business.value = null
         } finally {
             loading.value = false
         }

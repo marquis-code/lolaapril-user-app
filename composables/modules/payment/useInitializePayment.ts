@@ -1,12 +1,15 @@
 import { payment_api } from "@/api_factory/modules/payment"
+import { useLoader } from "@/composables/core/useLoader"
 
 export const useInitializePayment = () => {
     const loading = ref(false)
     const error = ref<string | null>(null)
+        const { startLoading, stopLoading } = useLoader()
 
     const initializePayment = async (payload: any) => {
         loading.value = true
         error.value = null
+        startLoading('Initializing payment...')
         try {
             const res = (await payment_api.initializePayment(payload)) as any
             console.log("Initialize Payment Response:", res)
@@ -22,11 +25,9 @@ export const useInitializePayment = () => {
                 return data
             }
             throw new Error('Payment initialization failed')
-        } catch (err: any) {
-            error.value = err.message
-            throw err
         } finally {
-            loading.value = false
+            stopLoading()
+            // loading.value = false
         }
     }
 

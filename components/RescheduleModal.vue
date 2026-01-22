@@ -19,14 +19,14 @@
             </button>
 
             <div class="p-8">
-              <h3 class="text-2xl font-bold text-gray-900 mb-6">Reschedule Booking</h3>
+              <h3 class="text-xl font-bold text-gray-900 mb-6">Reschedule Booking</h3>
 
               <div v-if="booking" class="mb-6 p-4 bg-gray-25 rounded-lg border-[0.5px] border-gray-100">
                 <h4 class="font-semibold text-gray-900 mb-2">Current Booking</h4>
                 <div class="space-y-1 text-sm text-gray-600">
-                  <p><span class="font-medium">Service:</span> {{ booking.services[0]?.serviceName }}</p>
-                  <p><span class="font-medium">Date:</span> {{ formatDate(booking.preferredDate) }}</p>
-                  <p><span class="font-medium">Time:</span> {{ booking.preferredStartTime }}</p>
+                  <p><span class="font-medium text-sm">Service:</span> {{ booking.services[0]?.serviceName }}</p>
+                  <p><span class="font-medium text-sm">Date:</span> {{ formatDate(booking.preferredDate) }}</p>
+                  <p><span class="font-medium text-sm">Time:</span> {{ booking.preferredStartTime }}</p>
                 </div>
               </div>
 
@@ -96,7 +96,7 @@
                 <button
                   @click="closeModal"
                   :disabled="rescheduling"
-                  class="flex-1 px-6 py-3.5 border border-gray-300 rounded-full font-semibold text-gray-700 hover:bg-gray-50 transition-all disabled:opacity-50"
+                  class="flex-1 px-6 py-3.5 border text-sm border-gray-300 rounded-full font-semibold text-gray-700 hover:bg-gray-50 transition-all disabled:opacity-50"
                 >
                   Cancel
                 </button>
@@ -104,7 +104,7 @@
                   @click="handleReschedule"
                   :disabled="!canSubmit || rescheduling"
                   :class="[
-                    'flex-1 px-6 py-3.5 rounded-full font-semibold text-white transition-all',
+                    'flex-1 px-6 py-3.5 rounded-full text-sm font-semibold text-white transition-all',
                     canSubmit && !rescheduling
                       ? 'bg-primary hover:bg-primary-700'
                       : 'bg-gray-300 cursor-not-allowed'

@@ -26,26 +26,26 @@
                 </svg>
               </div>
 
-              <h3 class="text-2xl font-bold text-gray-900 mb-2 text-center">Cancel Booking?</h3>
-              <p class="text-gray-600 mb-6 text-center">Are you sure you want to cancel this booking? This action cannot be undone.</p>
+              <h3 class="text-lg font-bold text-gray-900 mb-2 text-center">Cancel Booking?</h3>
+              <p class="text-gray-600 text-sm mb-6 text-center">Are you sure you want to cancel this booking? This action cannot be undone.</p>
 
               <div v-if="booking" class="mb-6 p-4 bg-gray-25 rounded-lg border-[0.5px] border-gray-100">
                 <div class="space-y-2 text-sm">
                   <div class="flex justify-between">
-                    <span class="text-gray-600">Service:</span>
-                    <span class="font-semibold text-gray-900">{{ booking.services[0]?.serviceName }}</span>
+                    <span class="text-gray-600 text-xs">Service:</span>
+                    <span class="font-semibold text-gray-900 text-xs">{{ booking.services[0]?.serviceName }}</span>
                   </div>
                   <div class="flex justify-between">
-                    <span class="text-gray-600">Date:</span>
-                    <span class="font-semibold text-gray-900">{{ formatDate(booking.preferredDate) }}</span>
+                    <span class="text-gray-600 text-xs">Date:</span>
+                    <span class="font-semibold text-gray-900 text-xs">{{ formatDate(booking.preferredDate) }}</span>
                   </div>
                   <div class="flex justify-between">
-                    <span class="text-gray-600">Time:</span>
-                    <span class="font-semibold text-gray-900">{{ booking.preferredStartTime }}</span>
+                    <span class="text-gray-600 text-xs">Time:</span>
+                    <span class="font-semibold text-gray-900 text-xs">{{ booking.preferredStartTime }}</span>
                   </div>
                   <div class="flex justify-between">
-                    <span class="text-gray-600">Amount:</span>
-                    <span class="font-semibold text-gray-900">₦{{ formatPrice(booking.totalAmount) }}</span>
+                    <span class="text-gray-600 text-xs">Amount:</span>
+                    <span class="font-semibold text-gray-900 text-xs">₦{{ formatPrice(booking.totalAmount) }}</span>
                   </div>
                 </div>
               </div>
@@ -66,7 +66,7 @@
                 <button
                   @click="closeModal"
                   :disabled="cancelling"
-                  class="flex-1 px-6 py-3 border-[0.5px] text-sm border-gray-300 rounded-full text-gray-700 hover:bg-gray-50 transition-all disabled:opacity-50"
+                  class="flex-1 px-6 py-2.5 border-[0.5px] text-sm border-gray-300 rounded-full text-gray-700 hover:bg-gray-50 transition-all disabled:opacity-50"
                 >
                   Keep Booking
                 </button>
@@ -74,7 +74,7 @@
                   @click="handleCancel"
                   :disabled="!canSubmit || cancelling"
                   :class="[
-                    'flex-1 px-6 py-3.5 rounded-full text-sm text-white transition-all',
+                    'flex-1 px-6 py-2.5 rounded-full text-sm text-white transition-all',
                     canSubmit && !cancelling
                       ? 'bg-red-600 hover:bg-red-700'
                       : 'bg-gray-300 cursor-not-allowed'

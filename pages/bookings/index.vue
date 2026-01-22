@@ -95,7 +95,7 @@
 
     <!-- Main Content -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <h1 class="text-xl font-bold text-gray-900 mb-8">My Appointments</h1>
+      <h1 class="text-lg font-bold text-gray-900 mb-8">My Bookings</h1>
 
       <div v-if="loading" class="flex justify-center py-12">
         <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
@@ -123,12 +123,12 @@
       <div v-else class="space-y-8">
         <!-- Upcoming Bookings -->
         <div v-if="upcomingBookings.length > 0">
-          <h2 class="text-xl font-semibold text-gray-900 mb-4">Upcoming</h2>
+          <h2 class="text-base font-semibold text-gray-900 mb-4">Upcoming</h2>
           <div class="grid gap-4">
             <div
               v-for="booking in upcomingBookings"
               :key="booking._id"
-              class="bg-white rounded-lg -sm border border-gray-200 overflow-hidden hover:-md transition-"
+              class="bg-white rounded-lg border-[0.5px] border-gray-50 overflow-hidden hover:-md transition-"
             >
               <div class="p-6">
                 <div class="flex items-start justify-between">
@@ -144,24 +144,24 @@
                     </div>
                     <!-- {{ booking }} -->
                     
-                    <h3 class="text-lg font-semibold text-gray-900 mb-2">
+                    <h3 class="text-sm font-semibold text-gray-900 mb-2">
                       {{ booking.services[0]?.serviceName }}
                     </h3>
                     
                     <div class="flex flex-wrap gap-4 text-sm text-gray-600">
-                      <div class="flex items-center">
+                      <div class="flex text-xs items-center">
                         <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                         </svg>
                         {{ formatDate(booking.preferredDate) }}
                       </div>
-                      <div class="flex items-center">
+                      <div class="flex text-xs items-center">
                         <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                         {{ booking.preferredStartTime }}
                       </div>
-                      <div class="flex items-center">
+                      <div class="flex text-xs items-center">
                         <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
@@ -176,7 +176,7 @@
                       <button
                         v-if="canReschedule(booking)"
                         @click="openRescheduleModal(booking)"
-                        class="text-primary hover:text-primary-700 font-medium text-sm px-3 py-2.5 border border-primary rounded-full hover:bg-primary-50 transition-all"
+                        class="text-primary hover:text-primary-700 font-medium text-xs px-3 py-2 border border-primary rounded-full hover:bg-primary-50 transition-all"
                       >
                         Reschedule
                       </button>
@@ -184,7 +184,7 @@
                         v-if="canCancel(booking)"
                         @click="openCancelModal(booking)"
                         :disabled="loadingCancel === booking._id"
-                        class="text-red-600 hover:text-red-700 font-medium text-sm px-3 py-2.5 border border-red-600 rounded-full hover:bg-red-50 transition-all disabled:opacity-50"
+                        class="text-red-600 hover:text-red-700 font-medium text-xs px-3 py-2 border border-red-600 rounded-full hover:bg-red-50 transition-all disabled:opacity-50"
                       >
                         {{ loadingCancel === booking._id ? 'Cancelling...' : 'Cancel' }}
                       </button>
@@ -287,7 +287,7 @@ definePageMeta({
 const { loading, bookings, getMyBookings, error } = useGetMyBookings()
 const { user } = useUser()
 
-const showUserMenu = ref(true)
+const showUserMenu = ref(false)
 const showRescheduleModal = ref(false)
 const showCancelModal = ref(false)
 const showPasswordModal = ref(false)

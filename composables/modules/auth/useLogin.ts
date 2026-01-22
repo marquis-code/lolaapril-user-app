@@ -1,16 +1,19 @@
 import { auth_api } from "@/api_factory/modules/auth"
 import { useUser } from "@/composables/modules/auth/user"
 import { useCustomToast } from "@/composables/core/useCustomToast"
+import { useLoader } from "@/composables/core/useLoader"
 
 export const useLogin = () => {
     const loading = ref(false)
     const error = ref<string | null>(null)
     const { setToken, createUser } = useUser()
     const { showToast } = useCustomToast()
+    const { startLoading, stopLoading } = useLoader()
 
     const login = async (payload: any) => {
-        loading.value = true
+        // loading.value = true
         error.value = null
+        startLoading('Logging you in...')
         try {
             const res = (await auth_api.login(payload)) as any
             console.log("Login Response:", res)
@@ -24,11 +27,9 @@ export const useLogin = () => {
                 })
                 return true
             }
-        } catch (err: any) {
-            error.value = err.message
-            return false
         } finally {
-            loading.value = false
+            stopLoading()
+            // loading.value = false
         }
     }
 

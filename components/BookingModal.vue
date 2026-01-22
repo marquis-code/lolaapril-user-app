@@ -2,38 +2,39 @@
   <Teleport to="body">
     <div 
       v-if="isOpen"
-      class="fixed inset-0 z-50 bg-white overflow-y-auto"
+      class="fixed inset-0 z-50 bg-white overflow-hidden flex flex-col"
     >
       <!-- Header -->
-      <div class="sticky top-0 bg-white border-b border-gray-200 z-10">
-        <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
-          <!-- Back Button -->
+      <div class="sticky top-0 bg-white border-b-[0.5px] border-gray-200 z-10 flex-shrink-0 safe-area-top">
+        <div class="px-4 sm:px-6 lg:px-8 py-3 sm:py-4 flex items-center justify-between max-w-7xl mx-auto">
           <button 
             v-if="currentStep > 1"
             @click="goBack"
-            class="p-2 hover:bg-gray-100 rounded-full transition"
+            class="p-2 hover:bg-gray-100 bg-gray-50 rounded-full transition flex-shrink-0 -ml-2"
           >
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="w-3 h-3 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
             </svg>
           </button>
-          <div v-else class="w-10"></div>
+          <div v-else class="w-9 sm:w-10 flex-shrink-0"></div>
 
-          <!-- Progress Breadcrumb -->
-          <div class="flex items-center space-x-2 text-sm">
-            <span :class="currentStep >= 1 ? 'text-gray-900 font-medium' : 'text-gray-400'">Services</span>
-            <span class="text-gray-300">›</span>
-            <span :class="currentStep >= 2 ? 'text-gray-900 font-medium' : 'text-gray-400'">Time</span>
-            <span class="text-gray-300">›</span>
-            <span :class="currentStep >= 3 ? 'text-gray-900 font-medium' : 'text-gray-400'">Confirm</span>
+          <div class="flex items-center space-x-1 sm:space-x-2 text-xs sm:text-sm flex-1 justify-center px-2">
+            <span :class="currentStep >= 1 ? 'text-gray-900 font-semibold' : 'text-gray-400'">Services</span>
+            <span class="text-gray-300">
+              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#000000" viewBox="0 0 256 256"><path d="M229.66,109.66l-48,48a8,8,0,0,1-11.32-11.32L204.69,112H128a88.1,88.1,0,0,0-88,88,8,8,0,0,1-16,0A104.11,104.11,0,0,1,128,96h76.69L170.34,61.66a8,8,0,0,1,11.32-11.32l48,48A8,8,0,0,1,229.66,109.66Z"></path></svg>
+            </span>
+            <span :class="currentStep >= 2 ? 'text-gray-900 font-semibold' : 'text-gray-400'">Time</span>
+            <span class="text-gray-300">
+              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#000000" viewBox="0 0 256 256"><path d="M229.66,109.66l-48,48a8,8,0,0,1-11.32-11.32L204.69,112H128a88.1,88.1,0,0,0-88,88,8,8,0,0,1-16,0A104.11,104.11,0,0,1,128,96h76.69L170.34,61.66a8,8,0,0,1,11.32-11.32l48,48A8,8,0,0,1,229.66,109.66Z"></path></svg>
+            </span>
+            <span :class="currentStep >= 3 ? 'text-gray-900 font-semibold' : 'text-gray-400'">Confirm</span>
           </div>
 
-          <!-- Close Button -->
           <button 
             @click="closeModal"
-            class="p-2 hover:bg-gray-100 rounded-full transition"
+            class="p-2  border-b-[0.5px] border-gray-200 bg-gray-50 rounded-full transition flex-shrink-0 -mr-2"
           >
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="w-3 h-3 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
@@ -41,329 +42,322 @@
       </div>
 
       <!-- Main Content -->
-      <div class="max-w-7xl mx-auto">
-        <div class="grid lg:grid-cols-3 gap-8 p-4 lg:p-8">
-          <!-- Left Content Area -->
-          <div class="lg:col-span-2">
-            <!-- Step 1: Service Selection -->
-            <div v-show="currentStep === 1">
-              <h1 class="text-2xl font-bold text-gray-900 mb-2">Services</h1>
-              <p class="text-gray-600 mb-8">Choose the services you'd like to book</p>
+      <div class="flex-1 overflow-hidden">
+        <div class="max-w-7xl mx-auto h-full">
+          <div class="lg:grid lg:grid-cols-3 lg:gap-8 lg:p-6 h-full">
+            <!-- Left Content - Scrollable -->
+            <div class="lg:col-span-2 p-4 sm:p-6 lg:p-0 pb-32 lg:pb-6 h-full overflow-y-auto" ref="leftContentRef">
+              <!-- Step 1: Services -->
+              <div v-show="currentStep === 1">
+                <h1 class="text-xl sm:text-2xl font-bold text-gray-900 mb-1 sm:mb-2">Services</h1>
+                <p class="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6">Choose the services you'd like to book</p>
 
-              <!-- Category Tabs -->
-              <div class="flex gap-2 mb-6 overflow-x-auto pb-2">
-                <button
-                  v-for="category in serviceCategories"
-                  :key="category"
-                  @click="selectedCategory = category"
-                  :class="[
-                    'px-4 py-2 rounded-full font-medium whitespace-nowrap transition',
-                    selectedCategory === category
-                      ? 'bg-gray-900 text-white'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                  ]"
-                >
-                  {{ category?.categoryName }}
-                </button>
-              </div>
-
-              <!-- Services Grid -->
-              <div v-if="servicesLoading" class="flex justify-center py-12">
-                <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-primary"></div>
-              </div>
-
-              <div v-else class="space-y-4">
-                <div
-                  v-for="service in filteredServices"
-                  :key="service._id"
-                  class="bg-white rounded-lg border border-gray-50 transition cursor-pointer p-4"
-                  :class="isServiceInCart(service._id) ? 'border-primary bg-primary/5' : 'border-gray-200 hover:border-gray-300'"
-                  @click="handleServiceClick(service)"
-                >
-                  <div class="flex items-start justify-between">
-                    <div class="flex-1">
-                      <h3 class="font-semibold text-lg mb-1">{{ service.basicDetails.serviceName }}</h3>
-                      <p class="text-gray-600 text-sm mb-3 line-clamp-2">
-                        {{ service.basicDetails.description }}
-                      </p>
-                      <div class="flex items-center gap-4 text-sm text-gray-500">
-                        <span>{{ formatDuration(service.pricingAndDuration.duration.servicingTime) }}</span>
-                        <span class="font-bold text-gray-900">{{ formatPrice(service.pricingAndDuration.price) }}</span>
-                      </div>
-                    </div>
+                <!-- Sticky Category Tabs -->
+                <div class="sticky top-0 bg-white z-10 -mx-4 px-4 sm:-mx-6 sm:px-6 lg:mx-0 lg:px-0 pb-4">
+                  <div class="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
                     <button
-                      @click.stop="toggleServiceInCart(service)"
-                      class="ml-4 w-8 h-8 rounded-full flex items-center justify-center transition"
-                      :class="isServiceInCart(service._id) ? 'bg-primary text-white' : 'border-2 border-gray-300'"
+                      v-for="category in serviceCategories"
+                      :key="category"
+                      @click="scrollToCategory(category)"
+                      :class="['flex-shrink-0 px-3 sm:px-4 py-1.5 sm:py-2 hover:bg-gray-50 rounded-full font-medium text-sm transition',
+                        activeCategory === category ? 'bg-gray-900 text-white' : 'bg-gray-50 text-gray-700']"
                     >
-                      <svg v-if="isServiceInCart(service._id)" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-                      </svg>
-                      <span v-else class="text-2xl leading-none">+</span>
+                      {{ category?.categoryName ?? 'All Services' }}
                     </button>
                   </div>
                 </div>
-              </div>
-            </div>
 
-            <!-- Step 2: Date & Time Selection -->
-            <div v-show="currentStep === 2">
-              <h1 class="text-xl font-bold text-gray-900 mb-2">Select time</h1>
-              <p class="text-gray-600 text-sm mb-8">Choose your preferred date and time</p>
-
-              <!-- Calendar Icon for Date Picker -->
-              <button
-                @click="showDatePicker = !showDatePicker"
-                class="mb-6 px-4 py-2 border-[0.5px] border-gray-100 rounded-lg flex items-center gap-2 hover:bg-gray-50"
-              >
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
-                <span>{{ formatDisplayDate(selectedDate) || 'Select date' }}</span>
-              </button>
-
-              <!-- Date Picker Dropdown -->
-              <div v-if="showDatePicker" class="mb-6 bg-white border-[0.5px] border-gray-100 rounded-lg p-4 shadow-lg">
-                <div class="flex items-center justify-between mb-4">
-                  <button @click="previousMonth" class="p-2 hover:bg-gray-100 rounded">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-                    </svg>
-                  </button>
-                  <h3 class="font-semibold">{{ currentMonthYear }}</h3>
-                  <button @click="nextMonth" class="p-2 hover:bg-gray-100 rounded">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                    </svg>
-                  </button>
-                </div>
-
-                <div class="grid grid-cols-7 gap-2 text-center">
-                  <div v-for="day in ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']" :key="day" class="text-xs text-gray-500 font-medium py-2">
-                    {{ day }}
-                  </div>
-                  <div
-                    v-for="date in calendarDates"
-                    :key="date.dateString"
-                    @click="selectDate(date)"
-                    :class="[
-                      'py-2 rounded-lg cursor-pointer transition',
-                      !date.isCurrentMonth ? 'text-gray-300' : '',
-                      date.isToday ? 'font-bold' : '',
-                      date.dateString === selectedDate ? 'bg-primary text-white' : 'hover:bg-gray-100',
-                      !date.isAvailable ? 'opacity-50 cursor-not-allowed' : ''
-                    ]"
+                <!-- Services by Category with Refs -->
+                <div ref="servicesContainerRef" class="space-y-8">
+                  <div 
+                    v-for="category in serviceCategories" 
+                    :key="category"
+                    :ref="el => setCategoryRef(category, el)"
+                    :data-category="category"
+                    class="scroll-mt-32"
                   >
-                    {{ date.day }}
+                    <h2 class="text-lg font-bold text-gray-900 mb-3">{{ category?.categoryName ?? 'Featured' }}</h2>
+                    <div class="space-y-3">
+                      <div
+                        v-for="service in getServicesByCategory(category)"
+                        :key="service._id"
+                        class="bg-white rounded-xl border-[0.5px] transition cursor-pointer p-3 sm:p-4 active:scale-98"
+                        :class="isServiceInCart(service._id) ? 'border-primary bg-primary/5' : 'border-gray-100'"
+                        @click="handleServiceClick(service)"
+                      >
+                        <div class="flex items-start justify-between gap-3">
+                          <div class="flex-1 min-w-0">
+                            <h3 class="font-semibold text-sm sm:text-base mb-1">{{ service.basicDetails.serviceName }}</h3>
+                            <p class="text-gray-600 text-xs sm:text-sm mb-2 line-clamp-2">{{ service.basicDetails.description }}</p>
+                            <div class="flex items-center gap-3 text-xs sm:text-sm text-gray-500">
+                              <span>{{ formatDuration(service.pricingAndDuration.duration.servicingTime) }}</span>
+                              <span class="font-bold text-gray-900">{{ formatPrice(service.pricingAndDuration.price) }}</span>
+                            </div>
+                          </div>
+                          <button
+                            @click.stop="toggleServiceInCart(service)"
+                            class="ml-2 w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center transition flex-shrink-0"
+                            :class="isServiceInCart(service._id) ? 'bg-primary text-white' : 'border-[0.5px] border-gray-100'"
+                          >
+                            <svg v-if="isServiceInCart(service._id)" class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                              <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                            </svg>
+                            <svg v-else xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#000000" viewBox="0 0 256 256"><path d="M224,128a8,8,0,0,1-8,8H136v80a8,8,0,0,1-16,0V136H40a8,8,0,0,1,0-16h80V40a8,8,0,0,1,16,0v80h80A8,8,0,0,1,224,128Z"></path></svg>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
 
-              <!-- Week Days Quick Select -->
-              <div class="flex gap-3 mb-8 overflow-x-auto pb-2">
+              <!-- Step 2: Date/Time -->
+              <div v-show="currentStep === 2">
+                <h1 class="text-lg sm:text-xl font-bold text-gray-900 mb-1 sm:mb-2">Select time</h1>
+                <p class="text-sm text-gray-600 mb-4 sm:mb-6">Choose your preferred date and time</p>
+
                 <button
-                  v-for="day in upcomingDays"
-                  :key="day.dateString"
-                  @click="selectDateFromQuick(day)"
-                  :class="[
-                    'flex-shrink-0 text-center py-3 px-5 rounded-full border-[0.5px] border-gray-100 transition',
-                    selectedDate === day.dateString
-                      ? 'border-primary bg-primary text-white'
-                      : 'border-gray-200 hover:border-gray-300'
-                  ]"
+                  @click="showDatePicker = !showDatePicker"
+                  class="mb-4 px-3 sm:px-4 py-3 border-[0.5px] border-gray-100 rounded-lg flex items-center gap-2 hover:bg-gray-25 w-full text-sm relative"
                 >
-                  <div class="text-2xl font-bold">{{ day.day }}</div>
-                  <div class="text-xs">{{ day.weekday }}</div>
+                  <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                  <span class="truncate">{{ formatDisplayDate(selectedDate) || 'Select date' }}</span>
                 </button>
-              </div>
 
-              <!-- Time Slots -->
-              <div v-if="timeSlotsLoading" class="flex justify-center py-12">
-                <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-              </div>
+                <!-- Calendar Picker - Absolute positioned overlay -->
+                <div v-if="showDatePicker" class="relative mb-4">
+                  <div class="absolute top-0 left-0 right-0 bg-white border-[0.5px] border-gray-50 rounded-lg p-3 sm:p-4 shadow-xl z-50">
+                  <div class="flex items-center justify-between mb-3">
+                    <button @click="previousMonth" class="p-2 hover:bg-gray-100 rounded">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                      </svg>
+                    </button>
+                    <h3 class="font-semibold text-sm">{{ currentMonthYear }}</h3>
+                    <button @click="nextMonth" class="p-2 hover:bg-gray-100 rounded">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                      </svg>
+                    </button>
+                  </div>
 
-              <div v-else-if="selectedDate && timeSlots.length > 0">
-                <h3 class="font-semibold mb-4">Available times</h3>
-                <div class="grid grid-cols-4 sm:grid-cols-5 gap-3">
-                  <button
-                    v-for="slot in timeSlots"
-                    :key="slot.startTime"
-                    @click="selectTimeSlot(slot.startTime)"
-                    :class="[
-                      'py-3 rounded-full text-sm font-medium transition border-[0.5px] border-gray-100',
-                      selectedTime === slot.startTime
-                        ? 'bg-primary text-white border-primary'
-                        : 'bg-white border-gray-200 hover:border-primary'
-                    ]"
-                  >
-                    {{ formatTime(slot.startTime) }}
-                  </button>
+                  <div class="grid grid-cols-7 gap-1 text-center">
+                    <div v-for="day in ['M','T','W','T','F','S','S']" :key="day" class="text-[10px] sm:text-xs text-gray-500 font-medium py-1">{{ day }}</div>
+                    <div
+                      v-for="date in calendarDates"
+                      :key="date.dateString"
+                      @click="selectDate(date)"
+                      :class="['py-2 rounded-full cursor-pointer transition text-xs',
+                        !date.isCurrentMonth ? 'text-gray-300' : '',
+                        date.isToday ? 'font-bold' : '',
+                        date.dateString === selectedDate ? 'bg-primary text-white' : 'hover:bg-gray-100',
+                        !date.isAvailable ? 'opacity-50 cursor-not-allowed' : '']"
+                    >
+                      {{ date.day }}
+                    </div>
+                  </div>
+                </div>
+                </div>
+
+                <!-- Horizontal Quick Date Picker - Fixed spacing -->
+                <div class="mb-6 -mx-4 px-4 sm:-mx-6 sm:px-6 lg:mx-0 lg:px-0">
+                  <div class="flex gap-2 overflow-x-auto pb-2 scrollbar-hide snap-x snap-mandatory">
+                    <button
+                      v-for="day in upcomingDays"
+                      :key="day.dateString"
+                      @click="selectDateFromQuick(day)"
+                      :class="['flex-shrink-0 snap-start text-center py-2.5 px-3 min-w-[60px] rounded-full border-[0.5px] transition',
+                        selectedDate === day.dateString ? 'border-primary bg-primary text-white' : 'border-gray-100 hover:border-gray-200']"
+                    >
+                      <div class="text-base font-bold">{{ day.day }}</div>
+                      <div class="text-[10px] uppercase tracking-wide" :class="selectedDate === day.dateString ? 'text-white' : 'text-gray-500'">{{ day.weekday }}</div>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Time Slots -->
+                <div v-if="selectedDate && timeSlots.length > 0">
+                  <h3 class="font-semibold mb-3 text-sm">Available times</h3>
+                  <div class="grid grid-cols-3 sm:grid-cols-4 gap-2">
+                    <button
+                      v-for="slot in timeSlots"
+                      :key="slot.startTime"
+                      @click="selectTimeSlot(slot.startTime)"
+                      :class="['py-2.5 rounded-full text-xs font-medium transition border-[0.5px]',
+                        selectedTime === slot.startTime ? 'bg-primary text-white border-primary' : 'bg-white border-gray-100 hover:border-gray-200']"
+                    >
+                      {{ formatTime(slot.startTime) }}
+                    </button>
+                  </div>
+                </div>
+
+                <div v-else-if="selectedDate" class="text-center py-12 bg-gray-50 rounded-lg">
+                  <p class="text-sm text-gray-500">No available slots</p>
                 </div>
               </div>
 
-              <div v-else-if="selectedDate" class="text-center py-12 bg-gray-50 rounded-lg">
-                <p class="text-gray-500">No available slots for this date</p>
-              </div>
+              <!-- Step 3: Confirm -->
+              <div v-show="currentStep === 3" class="space-y-4">
+                <h1 class="text-lg sm:text-2xl font-bold text-gray-900 mb-1">Review and confirm</h1>
+                <p class="text-sm text-gray-600 mb-4">Please review your booking details</p>
 
-              <div v-else class="text-center py-12 bg-gray-50 rounded-lg">
-                <p class="text-gray-500">Please select a date to view available times</p>
+                <div>
+                  <h3 class="font-semibold mb-2 text-sm">Payment method</h3>
+                  <div class="border-[0.5px] border-gray-100 rounded-lg p-5 flex items-center gap-2">
+                     <img src="@/assets/img/paystack-logo.png" class="h-6 w-auto" alt="" />
+                    <!-- <span class="font-medium text-sm">Pay with Paystack</span> -->
+                  </div>
+                </div>
+
+                <div class="p-3 bg-gray-25 border-[0.5px] border-gray-50 rounded-lg">
+                  <h3 class="font-semibold mb-1 text-sm">Cancellation policy</h3>
+                  <p class="text-xs text-gray-700">Cancel at least <strong>2 hours before</strong> appointment.</p>
+                </div>
+
+                <div>
+                  <h3 class="font-semibold mb-1 text-sm">Important info</h3>
+                  <p class="text-xs text-gray-600 leading-relaxed">Appointments confirmed upon payment. Unconfirmed appointments released after 2 hours.</p>
+                </div>
+
+                <div>
+                  <UiAnimatedInput
+                    v-model="bookingNotes"
+                    label="Booking notes (optional)"
+                    type="textarea"
+                    :rows="3"
+                    :cols="6"
+                  />
+                </div>
               </div>
             </div>
 
-            <!-- Step 3: Review and Confirm -->
-            <div v-show="currentStep === 3">
-              <h1 class="text-3xl font-bold text-gray-900 mb-2">Review and confirm</h1>
-              <p class="text-gray-600 mb-8">Please review your booking details</p>
-
-              <!-- Payment Method -->
-              <div class="mb-6">
-                <h3 class="font-semibold mb-3">Payment method</h3>
-                <div class="border-[0.5px] border-gray-100 rounded-lg p-4 py-6 flex items-center gap-3">
-                  <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
-                  </svg>
-                  <span class="font-medium">Pay with Paystack</span>
+            <!-- Desktop Sidebar - Fixed position, doesn't scroll with content -->
+            <div class="hidden lg:block lg:col-span-1">
+              <div class="sticky top-24 bg-white border-[0.5px] border-gray-50 rounded-lg h-[calc(100vh-12rem)] flex flex-col">
+                <!-- Business Info - Fixed -->
+                <div class="flex items-center gap-3 p-6 pb-4 border-b-[0.5px] border-gray-50 flex-shrink-0">
+                  <div class="w-12 h-12 rounded-lg bg-gray-100 flex items-center justify-center flex-shrink-0">
+                     <img v-if="business.logo" :src="business.logo" class="w-12 h-12 rounded-lg object-cover" alt="Logo" />
+                    <span v-else class="text-gray-500 font-bold">{{ business?.businessName?.charAt(0) }}</span>
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <h3 class="font-bold text-sm truncate">{{ business?.businessName }}</h3>
+                    <p class="text-xs text-gray-500 truncate">{{ business?.address?.street }}</p>
+                  </div>
                 </div>
-              </div>
 
-              <!-- Cancellation Policy -->
-              <div class="mb-6 p-4 py-6 bg-gray-25 border-[0.5px] border-gray-100 rounded-lg">
-                <h3 class="font-semibold mb-2">Cancellation policy</h3>
-                <p class="text-sm text-gray-700">Please cancel at least <strong>2 hours before</strong> appointment.</p>
-              </div>
+                <!-- Scrollable Cart Content -->
+                <div class="flex-1 overflow-y-auto px-6 py-4">
+                  <div v-if="cart.length === 0" class="text-center py-8 text-gray-400">
+                    <p class="text-sm">No services selected</p>
+                  </div>
 
-              <!-- Important Info -->
-              <div class="mb-6">
-                <h3 class="font-semibold mb-2">Important info</h3>
-                <p class="text-sm text-gray-600 leading-relaxed">
-                  Appointments are confirmed upon payment. Unconfirmed appointments will be released after 2 hours from the time of booking. Kindly ensure timely payment to secure your booking.
-                </p>
-              </div>
+                  <div v-else class="space-y-4">
+                    <div v-if="selectedDate" class="text-sm space-y-1 pb-4 border-b-[0.5px] border-gray-50">
+                      <div class="flex items-center gap-2 text-gray-600">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                        <span class="text-xs">{{ formatDisplayDate(selectedDate) }}</span>
+                      </div>
+                      <div v-if="selectedTime" class="flex items-center gap-2 text-gray-600">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span class="text-xs">{{ formatTime(selectedTime) }}</span>
+                      </div>
+                    </div>
 
-              <!-- Booking Notes -->
-              <div class="mb-6">
-                <UiAnimatedInput
-                  v-model="bookingNotes"
-                  label="Booking notes"
-                  type="textarea"
-                  :rows="10"
-                  :cols="10"
-                />
+                    <div v-for="item in cart" :key="item.service._id" class="border-t-[0.5px] first:border-t-0 border-gray-50 pt-4">
+                      <div class="flex justify-between items-start mb-1">
+                        <h4 class="font-medium text-sm flex-1">{{ item.service.basicDetails.serviceName }}</h4>
+                        <button @click="removeFromCart(item.service._id)" class="text-gray-400 bg-gray-50 rounded-full p-2 hover:text-red-500 ml-2 flex-shrink-0">
+                          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                          </svg>
+                        </button>
+                      </div>
+                      <div class="text-xs text-gray-500 mb-2">{{ formatDuration(item.service.pricingAndDuration.duration.servicingTime) }}</div>
+                      <div class="font-semibold text-sm">{{ formatPrice(item.selectedVariant?.price || item.service.pricingAndDuration.price) }}</div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Total & CTA - Fixed at bottom -->
+                <div v-if="cart.length > 0" class="border-t-[0.5px] border-gray-100 p-6 flex-shrink-0">
+                  <div class="flex justify-between items-center mb-4">
+                    <span class="font-semibold text-base">Total</span>
+                    <span class="font-semibold text-base">{{ formatPrice(totalPrice) }}</span>
+                  </div>
+
+                  <button
+                    v-if="currentStep === 1"
+                    @click="proceedToDateTime"
+                    :disabled="cart.length === 0"
+                    class="w-full bg-gray-900 text-white text-sm font-bold py-3.5 rounded-full transition disabled:opacity-50 hover:bg-gray-800"
+                  >
+                    Continue
+                  </button>
+
+                  <button
+                    v-else-if="currentStep === 2"
+                    @click="proceedToConfirm"
+                    :disabled="!selectedDate || !selectedTime"
+                    class="w-full bg-gray-900 text-white text-sm font-bold py-3.5 rounded-full transition disabled:opacity-50 hover:bg-gray-800"
+                  >
+                    Continue
+                  </button>
+
+                  <button
+                    v-else-if="currentStep === 3"
+                    @click="confirmBooking"
+                    class="w-full bg-gray-900 text-white text-sm font-bold py-3.5 rounded-full transition disabled:opacity-50 hover:bg-gray-800"
+                  >
+                  Confirm
+                  </button>
+                </div>
               </div>
             </div>
           </div>
+        </div>
+      </div>
 
-          <!-- Right Sidebar - Cart/Summary -->
-          <div class="lg:col-span-1">
-            <div class="bg-white border-[0.5px] border-gray-100 rounded-lg p-6 sticky top-24">
-              <!-- Business Info -->
-              <div class="flex items-center gap-3 mb-6 pb-6 border-b">
-                <img
-                  v-if="business?.logo"
-                  :src="business.logo"
-                  alt="Business"
-                  class="w-12 h-12 rounded-lg object-cover"
-                />
-                <div v-else class="w-12 h-12 rounded-lg bg-gray-100 flex items-center justify-center">
-                  <span class="text-gray-500 font-bold text-lg">{{ business?.businessName?.charAt(0) }}</span>
-                </div>
-                <div class="flex-1">
-                  <h3 class="font-bold text-sm">{{ business?.businessName }}</h3>
-                  <div class="flex items-center gap-1 text-xs text-gray-600">
-                    <span class="text-yellow-500">★</span>
-                    <span>4.9</span>
-                    <span class="text-gray-400">(61)</span>
-                  </div>
-                  <p class="text-xs text-gray-500 mt-1">{{ business?.address?.street }}</p>
-                </div>
-              </div>
-
-              <!-- Cart Items -->
-              <div v-if="cart.length === 0" class="text-center py-8 text-gray-400">
-                <p class="text-sm">No services selected</p>
-              </div>
-
-              <div v-else class="space-y-4 mb-6">
-                <!-- Selected Date & Time -->
-                <div v-if="selectedDate" class="text-sm">
-                  <div class="flex items-center gap-2 text-gray-600 mb-1">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                    </svg>
-                    <span>{{ formatDisplayDate(selectedDate) }}</span>
-                  </div>
-                  <div v-if="selectedTime" class="flex items-center gap-2 text-gray-600">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    <span>{{ formatTime(selectedTime) }}</span>
-                  </div>
-                </div>
-
-                <!-- Services in Cart -->
-                <div
-                  v-for="item in cart"
-                  :key="item.service._id"
-                  class="border-t pt-4"
-                >
-                  <div class="flex justify-between items-start mb-1">
-                    <h4 class="font-medium text-sm flex-1">{{ item.service.basicDetails.serviceName }}</h4>
-                    <button
-                      @click="removeFromCart(item.service._id)"
-                      class="text-gray-400 hover:text-red-500 ml-2"
-                    >
-                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                      </svg>
-                    </button>
-                  </div>
-                  <div class="text-xs text-gray-500 mb-2">
-                    {{ formatDuration(item.service.pricingAndDuration.duration.servicingTime) }}
-                    <span v-if="item.selectedVariant"> • {{ item.selectedVariant.name }}</span>
-                  </div>
-                  <div class="font-semibold text-sm">
-                    {{ formatPrice(item.selectedVariant?.price || item.service.pricingAndDuration.price) }}
-                  </div>
-                </div>
-              </div>
-
-              <!-- Total -->
-              <div v-if="cart.length > 0" class="border-t pt-4">
-                <div class="flex justify-between items-center mb-4">
-                  <span class="font-bold">Total</span>
-                  <span class="font-bold text-xl">{{ formatPrice(totalPrice) }}</span>
-                </div>
-
-                <!-- Continue Button -->
-                <button
-                  v-if="currentStep === 1"
-                  @click="proceedToDateTime"
-                  :disabled="cart.length === 0"
-                  class="w-full bg-gray-900 text-white font-bold py-4 rounded-full transition disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-800"
-                >
-                  Continue
-                </button>
-
-                <button
-                  v-else-if="currentStep === 2"
-                  @click="proceedToConfirm"
-                  :disabled="!selectedDate || !selectedTime"
-                  class="w-full bg-gray-900 text-white font-bold py-4 rounded-full transition disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-800"
-                >
-                  Continue
-                </button>
-
-                <button
-                  v-else-if="currentStep === 3"
-                  @click="confirmBooking"
-                  :disabled="bookingLoading"
-                  class="w-full bg-gray-900 text-white font-bold py-4 rounded-full transition disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-800"
-                >
-                  <span v-if="bookingLoading">Processing...</span>
-                  <span v-else>Confirm</span>
-                </button>
-              </div>
+      <!-- Mobile Bottom Bar -->
+      <div class="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t-[0.5px] border-gray-50 z-20 safe-area-bottom">
+        <div class="p-4">
+          <div v-if="cart.length > 0" class="flex items-center justify-between gap-4">
+            <div class="flex-1 min-w-0">
+              <div class="text-xs text-gray-600">{{ cart.length }} service{{ cart.length > 1 ? 's' : '' }}</div>
+              <div class="font-bold text-lg truncate">{{ formatPrice(totalPrice) }}</div>
             </div>
+            <button
+              v-if="currentStep === 1"
+              @click="proceedToDateTime"
+              :disabled="cart.length === 0"
+              class="px-6 py-3 bg-gray-900 text-white font-semibold rounded-full transition disabled:opacity-50 text-sm whitespace-nowrap"
+            >
+              Continue
+            </button>
+            <button
+              v-else-if="currentStep === 2"
+              @click="proceedToConfirm"
+              :disabled="!selectedDate || !selectedTime"
+              class="px-6 py-3 bg-gray-900 text-white font-semibold rounded-full transition disabled:opacity-50 text-sm whitespace-nowrap"
+            >
+              Continue
+            </button>
+            <button
+              v-else-if="currentStep === 3"
+              @click="confirmBooking"
+              class="px-6 py-3 bg-gray-900 text-white font-semibold rounded-full transition disabled:opacity-50 text-sm whitespace-nowrap"
+            >
+            Confirm
+            </button>
+          </div>
+          <div v-else class="text-center text-sm text-gray-500 py-2">
+            No services selected
           </div>
         </div>
       </div>
@@ -427,7 +421,7 @@
                 </div>
               </div>
 
-              <div class="mt-6 pt-6 border-t">
+              <div class="mt-6 pt-6 border-t-[0.5px] border-gray-100">
                 <div class="flex items-center justify-between mb-4">
                   <span class="font-bold">
                     {{ selectedVariant ? formatPrice(selectedVariant.price) : formatPrice(selectedServiceForVariant.pricingAndDuration.price) }}
@@ -450,12 +444,12 @@
         </div>
       </Teleport>
 
-      <!-- Add Extra Service Modal (After Time Selection) -->
+      <!-- Add Extra Service Modal -->
       <Teleport to="body" v-if="showExtraServiceModal">
-        <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center backdrop-blur-xl justify-center z-[60] p-4">
+        <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center backdrop-blur-sm justify-center z-[60] p-4">
           <div class="bg-white rounded-2xl max-w-3xl w-full">
             <div class="p-6 border-b-[0.5px] border-gray-25 flex items-center justify-between">
-              <h2 class="text-xl font-bold">Add an extra service?</h2>
+              <h2 class="text-lg font-bold">Add an extra service?</h2>
               <button
                 @click="skipExtraService"
                 class="text-gray-400 hover:text-gray-600"
@@ -473,7 +467,7 @@
                 @click="addExtraService(service)"
                 class="p-4 border-[0.5px] border-gray-100 rounded-lg hover:border-primary cursor-pointer transition"
               >
-                <h3 class="font-medium mb-1">{{ service.basicDetails.serviceName }}</h3>
+                <h3 class="font-semibold mb-1">{{ service.basicDetails.serviceName }}</h3>
                 <p class="text-sm text-gray-500 mb-2">{{ formatDuration(service.pricingAndDuration.duration.servicingTime) }}</p>
                 <span class="font-bold">{{ formatPrice(service.pricingAndDuration.price) }}</span>
               </div>
@@ -482,7 +476,7 @@
             <div class="p-6 pt-6 border-t border-gray-100">
               <button
                 @click="skipExtraService"
-                class="w-full py-3.5 border-[0.5px] border-gray-100 rounded-full bg-black text-white font-medium transition"
+                class="w-full py-3.5 border-[0.5px] border-gray-100 rounded-full bg-black text-white font-medium transition hover:bg-gray-800"
               >
                 No, thanks
               </button>
@@ -496,15 +490,17 @@
         <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[60] p-4">
           <div class="bg-white rounded-2xl max-w-md w-full">
             <div class="p-6">
-              <h2 class="text-2xl font-bold mb-2">Log in or sign up</h2>
+             <div class="pb-4">
+               <h2 class="text-xl font-bold mb-1">Log in or sign up</h2>
               <p class="text-gray-600 text-sm mb-6">Log in or sign up to complete your booking</p>
+             </div>
 
               <!-- Tab Navigation -->
-              <div class="flex gap-4 mb-6 border-b border-gray-200">
+              <div class="flex gap-4 mb-6 border-b-[0.5px] border-gray-100">
                 <button
                   @click="authTab = 'login'"
                   :class="[
-                    'pb-2 font-medium transition',
+                    'pb-2 w-full font-semibold transition',
                     authTab === 'login'
                       ? 'text-primary border-b-2 border-primary'
                       : 'text-gray-600 hover:text-gray-800'
@@ -515,7 +511,7 @@
                 <button
                   @click="authTab = 'signup'"
                   :class="[
-                    'pb-2 font-medium transition',
+                    'pb-2 w-full font-semibold transition',
                     authTab === 'signup'
                       ? 'text-primary border-b-2 border-primary'
                       : 'text-gray-600 hover:text-gray-800'
@@ -528,100 +524,87 @@
               <!-- Login Form -->
               <form v-if="authTab === 'login'" @submit.prevent="handleLogin" class="space-y-4">
                 <div>
-                  <label class="block text-gray-700 font-medium mb-1 text-sm">Email</label>
-                  <input
+                  <UiAnimatedInput
                     v-model="loginForm.email"
                     type="email"
+                    label="Email"
                     required
-                    class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary outline-none"
-                    placeholder="your@email.com"
                   />
                 </div>
                 <div>
-                  <label class="block text-gray-700 font-medium mb-1 text-sm">Password</label>
-                  <input
+                  <UiAnimatedInput
                     v-model="loginForm.password"
                     type="password"
+                    label="Password"
                     required
-                    class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary outline-none"
-                    placeholder="••••••••"
                   />
                 </div>
                 <div v-if="loginError" class="text-red-500 text-sm">{{ loginError }}</div>
-                <button
+               <div class="pt-6">
+                 <button
                   type="submit"
-                  :disabled="loginLoading"
-                  class="w-full bg-primary text-white font-bold py-3 rounded-full transition disabled:opacity-50 disabled:cursor-not-allowed"
+                  class="w-full bg-primary text-sm text-white font-bold py-3 rounded-full transition disabled:opacity-50 disabled:cursor-not-allowed hover:bg-primary/90"
                 >
-                  <span v-if="loginLoading">Logging in...</span>
-                  <span v-else>Continue</span>
+                Continue
                 </button>
+               </div>
               </form>
 
               <!-- Signup Form -->
               <form v-else @submit.prevent="handleSignup" class="space-y-4">
                 <div class="grid grid-cols-2 gap-3">
                   <div>
-                    <label class="block text-gray-700 font-medium mb-1 text-sm">First Name</label>
-                    <input
+                    <UiAnimatedInput
                       v-model="signupForm.firstName"
                       type="text"
+                      label="First Name"
                       required
-                      class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary outline-none"
-                      placeholder="John"
                     />
                   </div>
                   <div>
-                    <label class="block text-gray-700 font-medium mb-1 text-sm">Last Name</label>
-                    <input
+                    <UiAnimatedInput
                       v-model="signupForm.lastName"
+                      label="Last Name"
                       type="text"
                       required
-                      class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary outline-none"
-                      placeholder="Doe"
                     />
                   </div>
                 </div>
                 <div>
-                  <label class="block text-gray-700 font-medium mb-1 text-sm">Email</label>
-                  <input
+                  <UiAnimatedInput
                     v-model="signupForm.email"
                     type="email"
                     required
-                    class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary outline-none"
-                    placeholder="your@email.com"
+                    label="Email"
                   />
                 </div>
                 <div>
-                  <label class="block text-gray-700 font-medium mb-1 text-sm">Phone Number</label>
-                  <input
+                  <UiAnimatedInput
                     v-model="signupForm.phone"
                     type="tel"
-                    class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary outline-none"
-                    placeholder="+234..."
+                    label="Phone Number"
                   />
                 </div>
                 <div>
                   <label class="block text-gray-700 font-medium mb-1 text-sm">Password</label>
-                  <input
+                  <UiAnimatedInput
                     v-model="signupForm.password"
                     type="password"
+                    label="Password"
                     required
                     minlength="6"
-                    class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary outline-none"
-                    placeholder="••••••••"
                   />
                   <p class="text-gray-500 text-xs mt-1">Minimum 6 characters</p>
                 </div>
                 <div v-if="signupError" class="text-red-500 text-sm">{{ signupError }}</div>
-                <button
+      <div class="pt-6">
+                  <button
                   type="submit"
-                  :disabled="signupLoading"
-                  class="w-full bg-primary text-white font-bold py-3 rounded-full transition disabled:opacity-50 disabled:cursor-not-allowed"
+                  class="w-full bg-primary text-sm text-white font-bold py-3 rounded-full transition disabled:opacity-50 disabled:cursor-not-allowed hover:bg-primary/90"
                 >
-                  <span v-if="signupLoading">Creating Account...</span>
-                  <span v-else>Continue</span>
+                Continue
                 </button>
+      </div>
               </form>
             </div>
           </div>
@@ -631,8 +614,9 @@
   </Teleport>
 </template>
 
+
 <script setup lang="ts">
-import { ref, reactive, computed, watch, onMounted } from 'vue'
+import { ref, reactive, computed, watch, onMounted, onUnmounted, nextTick } from 'vue'
 import { useRoute } from 'vue-router'
 import { useGetBusiness } from '@/composables/modules/business/useGetBusiness'
 import { useGetServices } from '@/composables/modules/services/useGetServices'
@@ -656,17 +640,18 @@ const route = useRoute()
 
 // Composables
 const { business } = useGetBusiness()
-const { services, loading: servicesLoading, getServices } = useGetServices()
-const { slots: availableSlots, loading: timeSlotsLoading, getAvailableSlots } = useGetAvailableSlots()
+const { services, getServices } = useGetServices()
+const { slots: availableSlots,  getAvailableSlots } = useGetAvailableSlots()
 const { getAllSlots } = useGetAllSlots()
-const { createBooking, loading: bookingLoading } = useCreateBooking()
+const { createBooking } = useCreateBooking()
 const { initializePayment } = useInitializePayment()
-const { login, loading: loginLoading, error: loginError } = useLogin()
-const { register, loading: signupLoading, error: signupError } = useRegister()
+const { login, error: loginError } = useLogin()
+const { register, error: signupError } = useRegister()
 
 // State
-const currentStep = ref(1) // 1: Services, 2: Date/Time, 3: Confirm
+const currentStep = ref(1)
 const selectedCategory = ref('Featured')
+const activeCategory = ref('Featured')
 const cart = ref<Array<{ service: any; selectedVariant?: any }>>([])
 const selectedDate = ref<string | null>(null)
 const selectedTime = ref<string | null>(null)
@@ -706,6 +691,14 @@ const showDatePicker = ref(false)
 const calendarMonth = ref(new Date().getMonth())
 const calendarYear = ref(new Date().getFullYear())
 
+// Category refs for scroll tracking
+const categoryRefs = ref<Record<string, HTMLElement>>({})
+const servicesContainerRef = ref<HTMLElement | null>(null)
+const leftContentRef = ref<HTMLElement | null>(null)
+const scrollObserver = ref<IntersectionObserver | null>(null)
+const isUserScrolling = ref(false)
+let scrollTimeout: NodeJS.Timeout | null = null
+
 // Computed
 const serviceCategories = computed(() => {
   const categories = new Set(['Featured'])
@@ -717,12 +710,12 @@ const serviceCategories = computed(() => {
   return Array.from(categories)
 })
 
-const filteredServices = computed(() => {
-  if (selectedCategory.value === 'Featured') {
+const getServicesByCategory = (category: string) => {
+  if (category === 'Featured') {
     return services.value
   }
-  return services.value?.filter((s: any) => s.basicDetails.category === selectedCategory.value)
-})
+  return services.value?.filter((s: any) => s.basicDetails.category === category) || []
+}
 
 const timeSlots = computed(() => {
   if (!availableSlots.value) return []
@@ -757,11 +750,9 @@ const calendarDates = computed(() => {
   const today = new Date()
   today.setHours(0, 0, 0, 0)
 
-  // Get day of week (0 = Sunday, adjust to Monday = 0)
   let dayOfWeek = firstDay.getDay()
   dayOfWeek = dayOfWeek === 0 ? 6 : dayOfWeek - 1
 
-  // Add previous month days
   const prevMonthLastDay = new Date(calendarYear.value, calendarMonth.value, 0).getDate()
   for (let i = dayOfWeek - 1; i >= 0; i--) {
     dates.push({
@@ -773,7 +764,6 @@ const calendarDates = computed(() => {
     })
   }
 
-  // Add current month days
   for (let i = 1; i <= lastDay.getDate(); i++) {
     const date = new Date(calendarYear.value, calendarMonth.value, i)
     const dateString = date.toISOString().split('T')[0]
@@ -789,7 +779,6 @@ const calendarDates = computed(() => {
     })
   }
 
-  // Add next month days to complete the grid
   const remainingDays = 42 - dates.length
   for (let i = 1; i <= remainingDays; i++) {
     dates.push({
@@ -808,7 +797,7 @@ const upcomingDays = computed(() => {
   const days = []
   const today = new Date()
   
-  for (let i = 0; i < 7; i++) {
+  for (let i = 0; i < 14; i++) {
     const date = new Date(today)
     date.setDate(date.getDate() + i)
     days.push({
@@ -822,6 +811,93 @@ const upcomingDays = computed(() => {
 })
 
 // Methods
+const setCategoryRef = (category: string, el: any) => {
+  if (el) {
+    categoryRefs.value[category] = el
+  }
+}
+
+const setupScrollObserver = () => {
+  if (scrollObserver.value) {
+    scrollObserver.value.disconnect()
+  }
+
+  const observerOptions = {
+    root: leftContentRef.value,
+    threshold: [0, 0.25, 0.5, 0.75, 1],
+    rootMargin: '-20% 0px -70% 0px'
+  }
+
+  scrollObserver.value = new IntersectionObserver(
+    (entries) => {
+      if (isUserScrolling.value) return
+
+      let maxRatio = 0
+      let visibleCategory = activeCategory.value
+
+      entries.forEach((entry) => {
+        if (entry.intersectionRatio > maxRatio) {
+          maxRatio = entry.intersectionRatio
+          const category = entry.target.getAttribute('data-category')
+          if (category) {
+            visibleCategory = category
+          }
+        }
+      })
+
+      if (maxRatio > 0) {
+        activeCategory.value = visibleCategory
+      }
+    },
+    observerOptions
+  )
+
+  Object.values(categoryRefs.value).forEach((ref) => {
+    if (ref) {
+      scrollObserver.value?.observe(ref)
+    }
+  })
+
+  // Track manual scrolling
+  if (leftContentRef.value) {
+    leftContentRef.value.addEventListener('scroll', handleScroll)
+  }
+}
+
+const handleScroll = () => {
+  isUserScrolling.value = true
+  
+  if (scrollTimeout) {
+    clearTimeout(scrollTimeout)
+  }
+  
+  scrollTimeout = setTimeout(() => {
+    isUserScrolling.value = false
+  }, 150)
+}
+
+const scrollToCategory = (category: string) => {
+  isUserScrolling.value = true
+  activeCategory.value = category
+  
+  const element = categoryRefs.value[category]
+  if (element && leftContentRef.value) {
+    const container = leftContentRef.value
+    const elementTop = element.offsetTop
+    const containerTop = container.scrollTop
+    const offset = 100 // Offset for sticky header
+    
+    container.scrollTo({
+      top: elementTop - offset,
+      behavior: 'smooth'
+    })
+    
+    setTimeout(() => {
+      isUserScrolling.value = false
+    }, 1000)
+  }
+}
+
 const closeModal = () => {
   emit('close')
 }
@@ -837,7 +913,6 @@ const isServiceInCart = (serviceId: string) => {
 }
 
 const handleServiceClick = (service: any) => {
-  // Check if service has variants
   if (service.pricingAndDuration.variants && service.pricingAndDuration.variants.length > 0) {
     selectedServiceForVariant.value = service
     selectedVariant.value = null
@@ -883,9 +958,22 @@ const closeVariantModal = () => {
   selectedVariant.value = null
 }
 
-const proceedToDateTime = () => {
+// const proceedToDateTime = () => {
+//   if (cart.value.length > 0) {
+//     currentStep.value = 2
+//   }
+// }
+
+const proceedToDateTime = async () => {
   if (cart.value.length > 0) {
     currentStep.value = 2
+    
+    // Auto-select today's date if none selected
+    if (!selectedDate.value) {
+      const today = new Date()
+      selectedDate.value = today.toISOString().split('T')[0]
+      await fetchTimeSlots()
+    }
   }
 }
 
@@ -919,6 +1007,7 @@ const selectDate = (date: any) => {
 const selectDateFromQuick = (day: any) => {
   selectedDate.value = day.dateString
   selectedTime.value = null
+  showDatePicker.value = false
   fetchTimeSlots()
 }
 
@@ -940,7 +1029,6 @@ const fetchTimeSlots = async () => {
 
 const proceedToConfirm = () => {
   if (selectedDate.value && selectedTime.value) {
-    // Show extra service modal if only 1 service in cart
     if (cart.value.length === 1 && availableExtraServices.value.length > 0) {
       showExtraServiceModal.value = true
     } else {
@@ -950,7 +1038,6 @@ const proceedToConfirm = () => {
 }
 
 const addExtraService = (service: any) => {
-  // Check if has variants
   if (service.pricingAndDuration.variants && service.pricingAndDuration.variants.length > 0) {
     showExtraServiceModal.value = false
     selectedServiceForVariant.value = service
@@ -1074,7 +1161,6 @@ const confirmBooking = async () => {
 
     const data = await createBooking(payload)
     
-    // Initialize payment
     const paymentPayload = {
       email: currentUser.value?.email || '',
       amount: totalPrice.value.amount,
@@ -1129,15 +1215,111 @@ const formatDisplayDate = (dateString: string | null) => {
 // Watch for modal open
 watch(() => props.isOpen, (newVal) => {
   if (newVal) {
-    // Load services when modal opens
     if (route.query.subdomain && (!services.value || services.value.length === 0)) {
       getServices(route.query.subdomain as string)
     }
   }
 }, { immediate: true })
 
+// Setup scroll observer when step 1 is active
+watch([() => currentStep.value, () => services.value], async ([step, servs]) => {
+  if (step === 1 && servs && servs.length > 0) {
+    await nextTick()
+    setupScrollObserver()
+  }
+})
+
+watch(() => currentStep.value, async (newStep) => {
+  if (newStep === 2 && !selectedDate.value) {
+    // Auto-select today when moving to date/time step
+    const today = new Date()
+    selectedDate.value = today.toISOString().split('T')[0]
+    
+    if (cart.value.length > 0 && business.value) {
+      await fetchTimeSlots()
+    }
+  }
+}, { immediate: true })
+
+watch(() => currentStep.value === 2, async (newDate) => {
+  if (newDate) {
+    selectedTime.value = null
+    await fetchTimeSlots()
+  }
+})
+
 // Initialize
 onMounted(() => {
   checkUserAuthentication()
+  
+  // Auto-select today's date and fetch slots
+  if (currentStep.value === 2 || props.isOpen) {
+    const today = new Date()
+    selectedDate.value = today.toISOString().split('T')[0]
+    
+    // Fetch slots for today if we have services in cart
+    if (cart.value.length > 0 && business.value) {
+      fetchTimeSlots()
+    }
+  }
+})
+
+onUnmounted(() => {
+  if (scrollObserver.value) {
+    scrollObserver.value.disconnect()
+  }
+  if (leftContentRef.value) {
+    leftContentRef.value.removeEventListener('scroll', handleScroll)
+  }
+  if (scrollTimeout) {
+    clearTimeout(scrollTimeout)
+  }
 })
 </script>
+
+<style scoped>
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.safe-area-top {
+  padding-top: env(safe-area-inset-top);
+}
+
+.safe-area-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.active\:scale-98:active {
+  transform: scale(0.98);
+}
+
+.overscroll-contain {
+  overscroll-behavior: contain;
+}
+
+.scroll-mt-32 {
+  scroll-margin-top: 8rem;
+}
+
+.snap-x {
+  scroll-snap-type: x mandatory;
+}
+
+.snap-start {
+  scroll-snap-align: start;
+}
+
+@media (max-width: 640px) {
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}
+</style>

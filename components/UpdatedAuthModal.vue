@@ -1,4 +1,4 @@
-
+<!-- components/AuthModal.vue -->
 <template>
   <ClientOnly>
     <Teleport to="body">
@@ -6,7 +6,7 @@
         <div
           v-if="isOpen"
           class="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
-          @click.stop
+          @click.self="closeModal"
         >
           <div class="relative w-full max-w-5xl h-auto md:h-[600px] bg-white rounded-2xl shadow-2xl overflow-hidden">
             <!-- Close Button -->
@@ -24,7 +24,7 @@
               <div class="w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-center overflow-y-auto">
                 <div class="max-w-md mx-auto w-full">
                   <!-- Logo -->
-                  <div class="mb-8 pt-10">
+                  <div class="mb-8">
                     <h2 class="lg:text-2xl text-xl font-bold text-primary-600 mb-2">
                       {{ getTitle }}
                     </h2>
@@ -34,9 +34,9 @@
                   </div>
 
                   <!-- Error Messages -->
-                  <!-- <div v-if="displayError" class="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+                  <div v-if="displayError" class="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
                     <p class="text-sm text-red-800">{{ displayError }}</p>
-                  </div> -->
+                  </div>
 
                   <!-- Signup Form -->
                   <form v-if="mode === 'signup'" @submit.prevent="handleSignup" class="space-y-4">
@@ -115,7 +115,7 @@
                     <button
                       type="button"
                       @click="handleGoogleAuth"
-                      class="w-full flex items-center justify-center gap-3 bg-white border-[0.5px] border-gray-100 hover:border-gray-100 text-gray-700 font-semibold py-3 rounded-full transition-all"
+                      class="w-full flex items-center justify-center gap-3 bg-white border-2 border-gray-300 hover:border-gray-400 text-gray-700 font-semibold py-3 rounded-full transition-all"
                     >
                       <svg class="w-5 h-5" viewBox="0 0 24 24">
                         <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -168,7 +168,7 @@
                       <button 
                         type="button" 
                         @click="switchMode('forgot')"
-                        class="text-sm font-medium text-primary-600 hover:text-primary-700"
+                        class="text-sm text-primary-600 hover:text-primary-700"
                       >
                         Forgot password?
                       </button>
@@ -198,7 +198,7 @@
                     <button
                       type="button"
                       @click="handleGoogleAuth"
-                      class="w-full flex items-center justify-center gap-3 bg-white border-[0.5px] border-gray-100 hover:border-gray-100 text-gray-700 font-medium py-3 rounded-full transition-all"
+                      class="w-full flex items-center justify-center gap-3 bg-white border-2 border-gray-300 hover:border-gray-400 text-gray-700 font-semibold py-3 rounded-full transition-all"
                     >
                       <svg class="w-5 h-5" viewBox="0 0 24 24">
                         <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -280,7 +280,7 @@
                           @input="handleOTPInput(index, $event)"
                           @keydown="handleOTPKeydown(index, $event)"
                           @paste="handleOTPPaste"
-                          class="w-16 h-14 text-center text-2xl font-bold rounded-lg border-[0.5px] border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all outline-none"
+                          class="w-12 h-14 text-center text-2xl font-bold rounded-lg border-2 border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all outline-none"
                           :class="{ 'border-primary-500': otpDigits[index] }"
                         />
                       </div>
@@ -350,8 +350,8 @@
                       />
                     </div>
 
-                    <div v-if="passwordMismatch" class="p-3.5 bg-red-50 border border-red-50 rounded-xl">
-                      <p class="text-xs font-medium text-red-500">Passwords do not match</p>
+                    <div v-if="passwordMismatch" class="p-3 bg-red-50 border border-red-200 rounded-lg">
+                      <p class="text-sm text-red-800">Passwords do not match</p>
                     </div>
 
                     <div class="pt-6">
@@ -427,7 +427,6 @@ import { useLogin } from "@/composables/modules/auth/useLogin"
 import { useForgotPassword } from "@/composables/modules/auth/useForgotPassword"
 import { useResetPassword } from "@/composables/modules/auth/useResetPassword"
 import { useVerifyResetPasswordOtp } from "@/composables/modules/auth/useVerifyResetPasswordOTP"
-import { useGoogleSignin } from "@/composables/modules/auth/useGoogleSignin"
 
 const props = defineProps<{
   isOpen: boolean
@@ -439,12 +438,11 @@ const emit = defineEmits<{
 }>()
 
 // Composables
-const { loading: loginLoading, login } = useLogin()
-const { loading: registerLoading, register } = useRegister()
-const { loading: forgotLoading, forgotPassword } = useForgotPassword()
-const { loading: resetLoading, resetPassword } = useResetPassword()
-const { loading: verifyLoading, verifyResetPasswordOtp } = useVerifyResetPasswordOtp()
-const { signInWithGoogle } = useGoogleSignin()
+const { loading: loginLoading, error: loginError, login } = useLogin()
+const { loading: registerLoading, error: registerError, register } = useRegister()
+const { loading: forgotLoading, error: forgotError, forgotPassword } = useForgotPassword()
+const { loading: resetLoading, error: resetError, resetPassword } = useResetPassword()
+const { loading: verifyLoading, error: verifyError, verifyResetPasswordOtp } = useVerifyResetPasswordOtp()
 
 type AuthMode = 'login' | 'signup' | 'forgot' | 'verify-otp' | 'reset-password'
 
@@ -490,41 +488,7 @@ const getTitle = computed(() => {
     case 'reset-password': return 'Reset Password'
     default: return 'Welcome'
   }
-})
-
-const getSubtitle = computed(() => {
-  switch (mode.value) {
-    case 'signup': return 'Join Lola April Wellness Spa'
-    case 'login': return 'Sign in to your account'
-    case 'forgot': return 'Enter your email to receive a reset code'
-    case 'verify-otp': return 'Enter the 6-digit code sent to your email'
-    case 'reset-password': return 'Create a new password for your account'
-    default: return ''
-  }
-})
-
-const isOTPComplete = computed(() => {
-  return otpDigits.value.every(digit => digit !== '' && /^\d$/.test(digit))
-})
-
-const passwordMismatch = computed(() => {
-  return resetPasswordForm.value.newPassword !== '' && 
-         resetPasswordForm.value.confirmPassword !== '' &&
-         resetPasswordForm.value.newPassword !== resetPasswordForm.value.confirmPassword
-})
-
-// const displayError = computed(() => {
-//   return loginError.value || registerError.value || forgotError.value || resetError.value || verifyError.value
-// })
-
-let resendInterval: NodeJS.Timeout | null = null
-
-// Watch for initialMode changes
-watch(() => props.initialMode, (newMode) => {
-  if (newMode) {
-    mode.value = newMode
-  }
-})
+}
 
 const closeModal = () => {
   emit('close')
@@ -659,20 +623,101 @@ const handleResetPassword = async () => {
 }
 
 const handleGoogleAuth = async () => {
-  await signInWithGoogle()
-  // try {
-  //   // TODO: Implement Google OAuth
-  //   // This would typically redirect to your backend OAuth endpoint
-  //   // Example: window.location.href = '/api/auth/google'
-  //   console.log('Google authentication initiated')
+  try {
+    // TODO: Implement Google OAuth
+    // This would typically redirect to your backend OAuth endpoint
+    // Example: window.location.href = '/api/auth/google'
+    console.log('Google authentication initiated')
     
-  //   // Placeholder - replace with your actual Google OAuth implementation
-  //   const redirectUrl = `${window.location.origin}/api/auth/google`
-  //   window.location.href = redirectUrl
-  // } catch (error) {
-  //   console.error('Google authentication error:', error)
-  // }
+    // Placeholder - replace with your actual Google OAuth implementation
+    const redirectUrl = `${window.location.origin}/api/auth/google`
+    window.location.href = redirectUrl
+  } catch (error) {
+    console.error('Google authentication error:', error)
+  }
 }
+
+// Prevent body scroll when modal is open
+watch(() => props.isOpen, (isOpen) => {
+  if (process.client) {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = ''
+    }
+  }
+})
+
+// Cleanup on unmount
+onUnmounted(() => {
+  if (process.client) {
+    document.body.style.overflow = ''
+  }
+  if (resendInterval) {
+    clearInterval(resendInterval)
+  }
+})
+</script>
+
+<style scoped>
+.modal-enter-active,
+.modal-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.modal-enter-from,
+.modal-leave-to {
+  opacity: 0;
+}
+
+.modal-enter-active > div,
+.modal-leave-active > div {
+  transition: transform 0.3s ease;
+}
+
+.modal-enter-from > div,
+.modal-leave-to > div {
+  transform: scale(0.95);
+}
+
+.custom-checkbox {
+  @apply w-4 h-4 text-primary-600 bg-gray-100 border-gray-300 rounded focus:ring-primary-500 focus:ring-2;
+}
+</style>)
+
+const getSubtitle = computed(() => {
+  switch (mode.value) {
+    case 'signup': return 'Join Lola April Wellness Spa'
+    case 'login': return 'Sign in to your account'
+    case 'forgot': return 'Enter your email to receive a reset code'
+    case 'verify-otp': return 'Enter the 6-digit code sent to your email'
+    case 'reset-password': return 'Create a new password for your account'
+    default: return ''
+  }
+})
+
+const isOTPComplete = computed(() => {
+  return otpDigits.value.every(digit => digit !== '' && /^\d$/.test(digit))
+})
+
+const passwordMismatch = computed(() => {
+  return resetPasswordForm.value.newPassword !== '' && 
+         resetPasswordForm.value.confirmPassword !== '' &&
+         resetPasswordForm.value.newPassword !== resetPasswordForm.value.confirmPassword
+})
+
+const displayError = computed(() => {
+  return loginError.value || registerError.value || forgotError.value || resetError.value || verifyError.value
+})
+
+let resendInterval: NodeJS.Timeout | null = null
+
+// Watch for initialMode changes
+watch(() => props.initialMode, (newMode) => {
+  if (newMode) {
+    mode.value = newMode
+  }
+})
 
 // Methods
 const switchMode = (newMode: AuthMode) => {
@@ -699,7 +744,6 @@ const startResendTimer = () => {
     }
   }, 1000)
 }
-
 
 const handleOTPInput = (index: number, event: Event) => {
   const input = event.target as HTMLInputElement
@@ -745,22 +789,20 @@ const handleOTPKeydown = (index: number, event: KeyboardEvent) => {
   }
 }
 
-
 const handleOTPPaste = (event: ClipboardEvent) => {
   event.preventDefault()
-
   const pasteData = event.clipboardData?.getData('text') || ''
   const digits = pasteData.replace(/\D/g, '').slice(0, 6).split('')
-
+  
   digits.forEach((digit, index) => {
-    if (index < 6) {
+    if (index <script 6) {
       otpDigits.value[index] = digit
       if (otpInputs.value[index]) {
         otpInputs.value[index].value = digit
       }
     }
   })
-
+  
   // Focus the next empty input or the last one
   const nextEmptyIndex = otpDigits.value.findIndex(d => !d)
   if (nextEmptyIndex !== -1) {
@@ -770,28 +812,6 @@ const handleOTPPaste = (event: ClipboardEvent) => {
   }
 }
 
-
-
-// Prevent body scroll when modal is open
-watch(() => props.isOpen, (isOpen) => {
-  if (process.client) {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden'
-    } else {
-      document.body.style.overflow = ''
-    }
-  }
-})
-
-// Cleanup on unmount
-onUnmounted(() => {
-  if (process.client) {
-    document.body.style.overflow = ''
-  }
-  if (resendInterval) {
-    clearInterval(resendInterval)
-  }
-})
 
 // Prevent body scroll when modal is open
 watch(() => props.isOpen, (isOpen) => {
@@ -814,3 +834,25 @@ onUnmounted(() => {
   }
 })
 </script>
+
+<style scoped>
+.modal-enter-active,
+.modal-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.modal-enter-from,
+.modal-leave-to {
+  opacity: 0;
+}
+
+.modal-enter-active > div,
+.modal-leave-active > div {
+  transition: transform 0.3s ease;
+}
+
+.modal-enter-from > div,
+.modal-leave-to > div {
+  transform: scale(0.95);
+}
+</style>
