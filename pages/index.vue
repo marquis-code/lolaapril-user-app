@@ -10,13 +10,6 @@
       <WhoWeAreSection />
       <GallerySection />
       <BookingSection @open-booking="openBookingModal" />
-
-          <!-- Booking Modal -->
-    <BookingModal
-      :is-open="showBookingModal"
-      @close="showBookingModal = false"
-      @success="handleBookingSuccess"
-    />
     </main>
   </div>
 </template>
@@ -48,14 +41,9 @@ useHead({
   ]
 })
 
-const showBookingModal = ref(false)
+const router = useRouter()
 
 const openBookingModal = () => {
-  showBookingModal.value = true
-}
-
-const handleBookingSuccess = () => {
-  showBookingModal.value = false
-  // Show success message or redirect
+  router.push('/book?subdomain=lola-beauty')
 }
 </script>

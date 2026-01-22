@@ -258,7 +258,7 @@ const formatPrice = (price: number) => {
 }
 
 const goToBookings = () => {
-  navigateTo('/bookings')
+  navigateTo('/dashboard/bookings')
 }
 
 const downloadReceipt = () => {

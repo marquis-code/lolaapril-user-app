@@ -1,179 +1,161 @@
 <template>
-  <div class="min-h-screen bg-gray-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
-      <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-6 sm:mb-8">Profile</h1>
+  <div class="min-h-screen bg-white">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+      <!-- Header -->
+      <div class="mb-8">
+        <h1 class="text-container text-lg font-bold text-gray-900">Profile Settings</h1>
+        <p class="mt-2 text-gray-600">Manage your personal information and preferences</p>
+      </div>
 
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
-        <!-- Profile Card -->
-        <div class="bg-white rounded-xl sm:rounded-2xl border border-gray-200 p-6 sm:p-8">
-          <div class="flex justify-between items-start mb-4 sm:mb-6">
-            <div class="flex-1"></div>
-            <button
-              @click="isEditMode = !isEditMode"
-              class="text-sm font-medium text-primary hover:text-primary-700"
-            >
-              {{ isEditMode ? 'Cancel' : 'Edit' }}
-            </button>
-          </div>
-
-          <div class="flex flex-col items-center mb-6 sm:mb-8">
-            <div class="relative mb-4">
-              <div
-                v-if="profilePreview || user?.profileImage"
-                class="w-24 h-24 sm:w-32 sm:h-32 rounded-full overflow-hidden border-4 border-gray-100"
-              >
-                <img
-                  :src="profilePreview || user?.profileImage"
-                  alt="Profile"
-                  class="w-full h-full object-cover"
+      <!-- Main Profile Card -->
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+        <!-- Cover Background -->
+        <div class="h-32 bg-primary"></div>
+        
+        <!-- Profile Content -->
+        <div class="px-6 sm:px-8 pb-8">
+          <!-- Profile Picture Section -->
+          <div class="relative -mt-16 mb-6">
+            <div class="flex items-end justify-between">
+              <div class="relative">
+                <div
+                  v-if="profilePreview || user?.profileImage"
+                  class="w-32 h-32 rounded-2xl overflow-hidden border-4 border-white shadow-lg bg-white"
+                >
+                  <img
+                    :src="profilePreview || user?.profileImage"
+                    alt="Profile"
+                    class="w-full h-full object-cover"
+                  />
+                </div>
+                <div
+                  v-else
+                  class="w-32 h-32 rounded-2xl bg-primary flex items-center justify-center text-4xl font-bold text-white border-4 border-white shadow-lg"
+                >
+                  {{ userInitials }}
+                </div>
+                
+                <button
+                  v-if="isEditMode"
+                  @click="$refs.fileInput?.click()"
+                  class="absolute -bottom-2 -right-2 bg-gray-900 text-white p-3 rounded-xl hover:bg-gray-800 transition-all shadow-lg hover:scale-105"
+                >
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                  </svg>
+                </button>
+                <input
+                  ref="fileInput"
+                  type="file"
+                  accept="image/*"
+                  class="hidden"
+                  @change="handleFileSelect"
                 />
               </div>
-              <div
-                v-else
-                class="w-24 h-24 sm:w-32 sm:h-32 rounded-full bg-gray-200 flex items-center justify-center text-2xl sm:text-3xl font-bold text-gray-600"
-              >
-                {{ userInitials }}
-              </div>
-              
+
               <button
-                v-if="isEditMode"
-                @click="$refs.fileInput?.click()"
-                class="absolute bottom-0 right-0 bg-primary text-white p-2 rounded-full hover:bg-primary-700 transition-colors"
+                @click="isEditMode = !isEditMode"
+                class="px-6 py-2.5 rounded-xl font-medium transition-all"
+                :class="isEditMode 
+                  ? 'bg-gray-100 text-gray-700 hover:bg-gray-200' 
+                  : 'bg-gray-900 text-white hover:bg-gray-800'"
               >
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-                </svg>
+                {{ isEditMode ? 'Cancel' : 'Edit Profile' }}
               </button>
-              <input
-                ref="fileInput"
-                type="file"
-                accept="image/*"
-                class="hidden"
-                @change="handleFileSelect"
-              />
             </div>
-            
-            <h2 class="text-xl sm:text-2xl font-bold text-gray-900">
-              {{ user?.firstName }} {{ user?.lastName }}
-            </h2>
+
+            <div class="mt-4">
+              <h2 class="text-2xl font-bold text-gray-900">
+                {{ user?.firstName }} {{ user?.lastName }}
+              </h2>
+              <p class="text-gray-600 mt-1">{{ user?.email }}</p>
+            </div>
           </div>
 
-          <div class="space-y-4 sm:space-y-6">
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">First name</label>
-              <input
+          <!-- Form Section -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-8">
+            <div class="space-y-2">
+              <UiAnimatedInput
                 v-model="formData.firstName"
                 :disabled="!isEditMode"
                 type="text"
-                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent disabled:bg-gray-50 disabled:text-gray-500"
+                label="First Name"
+                :class="!isEditMode && 'bg-gray-50 cursor-not-allowed'"
               />
             </div>
 
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">Last name</label>
-              <input
+            <div class="space-y-2">
+              <UiAnimatedInput
                 v-model="formData.lastName"
                 :disabled="!isEditMode"
                 type="text"
-                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent disabled:bg-gray-50 disabled:text-gray-500"
+                 label="Last Name"
+                :class="!isEditMode && 'bg-gray-50 cursor-not-allowed'"
               />
             </div>
 
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">Mobile number</label>
-              <input
+                        <div class="space-y-2">
+              <UiSelectInput 
+                :options="['male', 'female', 'other', 'prefer_not_to_say']" 
+                v-model="formData.gender" 
+                :disabled="!isEditMode"
+                label="Gender"
+                :class="!isEditMode && 'bg-gray-50 cursor-not-allowed'"
+              />
+            </div>
+
+            <!-- <div class="space-y-2">
+              <label class="block text-sm font-medium text-gray-700">Mobile Number</label>
+              <UiAnimatedInput
                 v-model="formData.phone"
                 :disabled="!isEditMode"
                 type="tel"
-                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent disabled:bg-gray-50 disabled:text-gray-500"
+                label="Mobile number"
+                :class="!isEditMode && 'bg-gray-50 cursor-not-allowed'"
               />
-            </div>
+            </div> -->
 
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
-              <input
+            <div class="space-y-2">
+              <UiAnimatedInput
                 v-model="formData.email"
                 disabled
+                label="Email Address"
                 type="email"
-                class="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-50 text-gray-500"
               />
             </div>
 
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">Date of birth</label>
-              <input
+            <div class="space-y-2">
+              <UiAnimatedInput
                 v-model="formData.dateOfBirth"
                 :disabled="!isEditMode"
                 type="date"
-                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent disabled:bg-gray-50 disabled:text-gray-500"
+                label="Date Of bIRTH"
+                :class="!isEditMode && 'bg-gray-50 cursor-not-allowed'"
               />
             </div>
 
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">Gender</label>
-              <select
-                v-model="formData.gender"
+            <div class="space-y-2">
+              <UiAnimatedInput
+                v-model="formData.phone"
                 :disabled="!isEditMode"
-                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent disabled:bg-gray-50 disabled:text-gray-500"
-              >
-                <option value="">Select gender</option>
-                <option value="male">Male</option>
-                <option value="female">Female</option>
-                <option value="other">Other</option>
-                <option value="prefer_not_to_say">Prefer not to say</option>
-              </select>
-            </div>
+                type="tel"
+                label="Mobile number"
+                :class="!isEditMode && 'bg-gray-50 cursor-not-allowed'"
+              />
+            </div> 
+          </div>
 
+          <!-- Update Button -->
+          <div v-if="isEditMode" class="mt-8 flex gap-4">
             <button
-              v-if="isEditMode"
               @click="handleUpdateProfile"
               :disabled="loading"
-              class="w-full bg-gray-900 text-white font-semibold py-3.5 rounded-full hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              class="flex-1 bg-primary text-white font-semibold py-4 rounded-full text-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
             >
-              {{ loading ? 'Updating...' : 'Update profile' }}
+              {{ loading ? 'Updating...' : 'Save Changes' }}
             </button>
           </div>
-        </div>
-
-        <!-- Addresses Card -->
-        <div class="bg-white rounded-xl sm:rounded-2xl border border-gray-200 p-6 sm:p-8">
-          <h3 class="text-lg sm:text-xl font-bold text-gray-900 mb-4 sm:mb-6">My addresses</h3>
-
-          <div class="space-y-4 mb-6">
-            <div class="flex items-center gap-4 p-4 border border-gray-200 rounded-lg">
-              <div class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center">
-                <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                </svg>
-              </div>
-              <div class="flex-1">
-                <h4 class="font-semibold text-gray-900">Home</h4>
-                <p class="text-sm text-gray-500">Add a home address</p>
-              </div>
-            </div>
-
-            <div class="flex items-center gap-4 p-4 border border-gray-200 rounded-lg">
-              <div class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center">
-                <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                </svg>
-              </div>
-              <div class="flex-1">
-                <h4 class="font-semibold text-gray-900">Work</h4>
-                <p class="text-sm text-gray-500">Add a work address</p>
-              </div>
-            </div>
-          </div>
-
-          <button
-            @click="showAddAddressModal = true"
-            class="flex items-center gap-2 text-sm font-medium text-gray-700 hover:text-gray-900"
-          >
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-            </svg>
-            Add
-          </button>
         </div>
       </div>
     </div>
@@ -182,9 +164,12 @@
     <Transition name="slide-up">
       <div
         v-if="showSuccess"
-        class="fixed bottom-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg"
+        class="fixed bottom-6 right-6 bg-primary text-white px-6 py-4 rounded-xl shadow-2xl flex items-center gap-3"
       >
-        Profile updated successfully!
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+        </svg>
+        <span class="font-medium">Profile updated successfully!</span>
       </div>
     </Transition>
   </div>
@@ -200,14 +185,13 @@ definePageMeta({
   middleware: 'auth'
 })
 
-const { user, updateUser } = useUser()
-const { getProfile } = useGetProfile()
+// const { user, updateUser } = useUser()
+const { user } = useGetProfile()
 const { updateProfile } = useUpdateProfile()
 
 const isEditMode = ref(false)
 const loading = ref(false)
 const showSuccess = ref(false)
-const showAddAddressModal = ref(false)
 const fileInput = ref<HTMLInputElement | null>(null)
 const profilePreview = ref('')
 

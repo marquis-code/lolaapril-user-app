@@ -1,9 +1,9 @@
 <template>
-  <div class="min-h-screen bg-gray-50">
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <h1 class="text-3xl font-bold text-gray-900 mb-8">Wallet</h1>
+  <div class="min-h-screen bg-white">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <h1 class="text-xl font-bold text-gray-900 mb-8">Wallet</h1>
 
-      <div class="bg-white rounded-2xl border border-gray-200 p-8 mb-6">
+      <div class="bg-white rounded-2xl border-[0.5px] border-gray-100 p-8 mb-6">
         <div class="text-center">
           <p class="text-sm text-gray-600 mb-2">Available Balance</p>
           <p class="text-4xl font-bold text-gray-900 mb-6">₦0.00</p>
@@ -13,8 +13,8 @@
         </div>
       </div>
 
-      <div class="bg-white rounded-2xl border border-gray-200 p-8">
-        <h2 class="text-xl font-bold text-gray-900 mb-6">Transaction History</h2>
+      <div class="bg-white rounded-2xl border-[0.5px] border-gray-100 p-8">
+        <h2 class="text-lg font-bold text-gray-900 mb-6">Transaction History</h2>
         
         <div class="text-center py-12">
           <svg class="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

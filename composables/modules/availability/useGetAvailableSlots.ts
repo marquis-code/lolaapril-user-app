@@ -3,7 +3,7 @@ import { availability_api } from "@/api_factory/modules/availability"
 import { useLoader } from "@/composables/core/useLoader"
 
 export const useGetAvailableSlots = () => {
-    const loading = ref(false)
+    // const loading = ref(false)
     const error = ref<string | null>(null)
     const slots = ref<string[]>([])
     const { startLoading, stopLoading } = useLoader()
@@ -14,7 +14,7 @@ export const useGetAvailableSlots = () => {
         date: string
         serviceIds: string[] 
     }) => {
-        loading.value = true
+        // loading.value = true
         error.value = null
         slots.value = []
         startLoading('Fetching available slots...')
@@ -32,5 +32,5 @@ export const useGetAvailableSlots = () => {
         }
     }
 
-    return { loading, error, slots, getAvailableSlots }
+    return { error, slots, getAvailableSlots }
 }

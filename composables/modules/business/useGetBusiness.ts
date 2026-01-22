@@ -22,5 +22,13 @@ export const useGetBusiness = () => {
         }
     }
 
+    onMounted(() => {
+        const route = useRoute()
+        const subdomain = route.query.subdomain as string
+        if (subdomain) {
+            getBusiness(subdomain)
+        }
+    })
+
     return { loading, error, business, getBusiness }
 }

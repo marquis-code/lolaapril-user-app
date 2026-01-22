@@ -2,6 +2,7 @@ import { auth_api } from "@/api_factory/modules/auth"
 import { useUser } from "@/composables/modules/auth/user"
 import { useLoader } from "@/composables/core/useLoader"
 
+const user = ref({})
 export const useGetProfile = () => {
     const loading = ref(false)
     const { createUser } = useUser()
@@ -13,7 +14,7 @@ export const useGetProfile = () => {
         try {
             const res = (await auth_api.getProfile()) as any
             if (res.data?.user) {
-                createUser(res.data.user)
+                user.value = res.data.user
                 return res.data.user
             }
         } finally {
@@ -22,5 +23,9 @@ export const useGetProfile = () => {
         }
     }
 
-    return { loading, getProfile }
+    onMounted(() => {
+        getProfile()
+    })
+
+    return { loading, user, getProfile }
 }

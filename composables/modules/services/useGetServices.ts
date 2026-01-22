@@ -3,13 +3,13 @@ import type { Service } from "@/types/service"
 import { useLoader } from "@/composables/core/useLoader"
 
 export const useGetServices = () => {
-    // const loading = ref(false)
+    const loading = ref(false)
     const error = ref<string | null>(null)
     const services = ref<Service[]>([])
     const { startLoading, stopLoading } = useLoader()
 
     const getServices = async (subdomain: string) => {
-        // loading.value = true
+        loading.value = true
         error.value = null
          startLoading('Fetching services...')
         try {
@@ -20,9 +20,9 @@ export const useGetServices = () => {
             }
         } finally {
             stopLoading()
-            // loading.value = false
+            loading.value = false
         }
     }
 
-    return { error, services, getServices }
+    return { error, services, getServices, loading }
 }

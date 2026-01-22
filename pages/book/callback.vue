@@ -24,7 +24,7 @@
       
       <div class="space-y-4">
         <NuxtLink 
-          to="/bookings"
+          to="/dashboard/bookings"
           class="block w-full bg-primary  text-white font-bold py-3 px-6 rounded-lg transition duration-200"
         >
           View My Bookings

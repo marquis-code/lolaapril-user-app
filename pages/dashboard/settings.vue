@@ -1,11 +1,11 @@
 <template>
-  <div class="min-h-screen bg-gray-50">
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <h1 class="text-3xl font-bold text-gray-900 mb-8">Settings</h1>
+  <div class="min-h-screen bg-white">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <h1 class="text-xl font-bold text-gray-900 mb-8">Settings</h1>
 
       <div class="space-y-6">
         <!-- Notifications Section -->
-        <div class="bg-white rounded-2xl border border-gray-200 p-8">
+        <div class="bg-white rounded-2xl border-[0.5px] border-gray-100 p-8">
           <h2 class="text-xl font-bold text-gray-900 mb-2">My notifications</h2>
           <p class="text-sm text-gray-500 mb-6">
             We will send you updates about your appointments, news and offers.
@@ -22,7 +22,7 @@
                     @click="toggleNotification('sms')"
                     :class="[
                       'relative inline-flex h-6 w-11 items-center rounded-full transition-colors',
-                      notifications.sms ? 'bg-purple-600' : 'bg-gray-200'
+                      notifications.sms ? 'bg-primary' : 'bg-gray-200'
                     ]"
                   >
                     <span
@@ -40,7 +40,7 @@
                     @click="toggleNotification('whatsapp')"
                     :class="[
                       'relative inline-flex h-6 w-11 items-center rounded-full transition-colors',
-                      notifications.whatsapp ? 'bg-purple-600' : 'bg-gray-200'
+                      notifications.whatsapp ? 'bg-primary' : 'bg-gray-200'
                     ]"
                   >
                     <span
@@ -64,7 +64,7 @@
                     @click="toggleNotification('email')"
                     :class="[
                       'relative inline-flex h-6 w-11 items-center rounded-full transition-colors',
-                      notifications.email ? 'bg-purple-600' : 'bg-gray-200'
+                      notifications.email ? 'bg-primary' : 'bg-gray-200'
                     ]"
                   >
                     <span
@@ -82,7 +82,7 @@
                     @click="toggleNotification('marketingSms')"
                     :class="[
                       'relative inline-flex h-6 w-11 items-center rounded-full transition-colors',
-                      notifications.marketingSms ? 'bg-purple-600' : 'bg-gray-200'
+                      notifications.marketingSms ? 'bg-primary' : 'bg-gray-200'
                     ]"
                   >
                     <span
@@ -100,7 +100,7 @@
                     @click="toggleNotification('marketingWhatsapp')"
                     :class="[
                       'relative inline-flex h-6 w-11 items-center rounded-full transition-colors',
-                      notifications.marketingWhatsapp ? 'bg-purple-600' : 'bg-gray-200'
+                      notifications.marketingWhatsapp ? 'bg-primary' : 'bg-gray-200'
                     ]"
                   >
                     <span
@@ -127,7 +127,7 @@
 
           <button
             @click="showPasswordModal = true"
-            class="bg-gray-900 text-white font-semibold px-6 py-3 rounded-full hover:bg-gray-800 transition-colors"
+            class="bg-gray-900 text-white text-sm font-semibold px-6 py-3 rounded-full hover:bg-gray-800 transition-colors"
           >
             Update my password
           </button>
@@ -140,7 +140,7 @@
 
           <button
             @click="showDeleteModal = true"
-            class="text-red-600 font-semibold px-6 py-3 border-2 border-red-600 rounded-full hover:bg-red-50 transition-colors"
+            class="text-red-600 font-semibold text-sm px-6 py-3 border-2 border-red-600 rounded-full hover:bg-red-50 transition-colors"
           >
             Delete my account
           </button>
@@ -160,29 +160,26 @@
 
           <div class="space-y-4">
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">Current Password</label>
-              <input
+              <UiAnimatedInput
                 v-model="passwordForm.currentPassword"
                 type="password"
-                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                label="Current Password"
               />
             </div>
 
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">New Password</label>
-              <input
+              <UiAnimatedInput
                 v-model="passwordForm.newPassword"
                 type="password"
-                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                label="New Password"
               />
             </div>
 
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">Confirm New Password</label>
-              <input
+              <UiAnimatedInput
                 v-model="passwordForm.confirmPassword"
                 type="password"
-                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                label="Confirm New Password"
               />
             </div>
           </div>

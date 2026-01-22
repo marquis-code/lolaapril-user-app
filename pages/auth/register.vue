@@ -68,7 +68,7 @@ const handleRegister = async () => {
     if (data) {
         // Auto login
         await login({ email: form.email, password: form.password })
-        router.push('/bookings')
+        router.push('/dashboard/bookings')
     }
   } catch (e) {
     console.error(e)

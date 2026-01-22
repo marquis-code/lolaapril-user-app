@@ -81,7 +81,7 @@
 
               <!-- Menu Items -->
               <NuxtLink 
-                to="/bookings"
+                to="/dashboard/bookings"
                 @click="dropdownOpen = false"
                 class="flex items-center text-sm gap-3 px-4 py-2 text-gray-700 hover:bg-gray-25 transition-colors"
               >
@@ -92,7 +92,7 @@
               </NuxtLink>
 
               <NuxtLink 
-                to="/profile"
+                to="/dashboard/profile"
                 @click="dropdownOpen = false"
                 class="flex items-center text-sm gap-3 px-4 py-2 text-gray-700 hover:bg-gray-25 transition-colors"
               >
@@ -157,7 +157,7 @@
         <template v-if="isLoggedIn">
           <li class="pt-4 border-t-[0.5px] border-white/10">
             <NuxtLink 
-              to="/bookings" 
+              to="/dashboard/bookings" 
               @click="mobileMenuOpen = false" 
               class="flex items-center text-sm gap-3 hover:text-accent transition-colors"
             >
@@ -169,7 +169,7 @@
           </li>
           <li>
             <NuxtLink 
-              to="/profile" 
+              to="/dashboard/profile" 
               @click="mobileMenuOpen = false" 
               class="flex items-center text-sm gap-3 hover:text-accent transition-colors"
             >
