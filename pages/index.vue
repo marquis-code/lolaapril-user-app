@@ -2,6 +2,7 @@
   <div>
     <TheHeader />
     <main>
+      <ValentinesSpaModal />
       <HeroSection />
       <AboutSection />
       <ServicesSection />

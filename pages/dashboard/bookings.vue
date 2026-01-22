@@ -64,7 +64,7 @@
                     </p>
                     <button
                       class="text-sm text-primary font-medium hover:text-primary-700"
-                      @click.stop="selectBooking(booking)"
+                      @click.stop="navigateTo('/book?subdomain=lola-beauty')"
                     >
                       Book again
                     </button>
@@ -83,19 +83,19 @@
             <div
               v-for="booking in pastBookings"
               :key="booking._id"
-              class="bg-white rounded-2xl border border-gray-200 overflow-hidden hover:shadow-sm transition-shadow cursor-pointer"
+              class="bg-white rounded-2xl border-[0.5px] border-gray-100 overflow-hidden hover:shadow-sm transition-shadow cursor-pointer"
               @click="selectBooking(booking)"
             >
               <div class="p-6">
                 <div class="flex gap-4">
-                  <div v-if="booking.business?.images?.[0]" class="flex-shrink-0">
+                  <div class="flex-shrink-0">
                     <img
-                      :src="booking.business.images[0]"
+                      src="@/assets/img/logo.png"
                       alt="Business"
-                      class="w-20 h-20 rounded-lg object-cover"
+                      class="w-16 h-16 p-2 bg-primary rounded-lg object-cover"
                     />
                   </div>
-                  <div v-else class="flex-shrink-0 w-20 h-20 bg-gray-200 rounded-lg"></div>
+                  <!-- <div v-else class="flex-shrink-0 w-20 h-20 bg-gray-200 rounded-lg"></div> -->
                   
                   <div class="flex-1 min-w-0">
                     <h3 class="font-bold text-gray-900 mb-1">
@@ -109,7 +109,7 @@
                     </p>
                     <button
                       class="text-sm text-primary font-medium hover:text-primary-700"
-                      @click.stop="navigateTo('/#book')"
+                      @click.stop="navigateTo('/book?subdomain=lola-beauty')"
                     >
                       Book again
                     </button>
@@ -133,13 +133,12 @@
           <!-- Header Image -->
           <div class="relative h-48">
             <img
-              v-if="selectedBooking.business?.images?.[0]"
-              :src="selectedBooking.business.images[0]"
+              src="@/assets/img/logo.png"
               alt="Business"
               class="w-full h-full object-cover"
             />
-            <div v-else class="w-full h-full bg-gray-300"></div>
-            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+            <!-- <div v-else class="w-full h-full bg-gray-300"></div> -->
+            <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
             <h2 class="absolute bottom-4 left-6 text-2xl font-bold text-white">
               {{ selectedBooking.business?.name || 'Lola April Wellness Spa' }}
             </h2>
@@ -168,7 +167,7 @@
             <div class="flex gap-3 mb-6">
               <button
                 class="flex-1 flex items-center justify-center gap-2 bg-gray-900 text-white font-semibold py-3 rounded-full hover:bg-gray-800 transition-colors"
-                @click="navigateTo('/#book')"
+                @click="navigateTo('/book?subdomain=lola-beauty')"
               >
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />

@@ -36,9 +36,11 @@
 </template>
 
 <script setup lang="ts">
+import spa1 from '@/assets/img/spa1.png'
+import spa2 from '@/assets/img/spa2.png'
 const galleryImages = [
-  'https://images.unsplash.com/photo-1519824145371-296894a0daa9?w=600&h=800&fit=crop',
-  'https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?w=600&h=800&fit=crop',
+  spa2,
+  spa1,
   'https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=600&h=800&fit=crop',
   'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=600&h=800&fit=crop',
   'https://images.unsplash.com/photo-1560750588-73207b1ef5b8?w=600&h=800&fit=crop',
