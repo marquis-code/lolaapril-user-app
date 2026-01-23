@@ -2,13 +2,13 @@
   <div class="min-h-screen bg-white">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
       <!-- Header -->
-      <div class="mb-8">
+      <!-- <div class="mb-8">
         <h1 class="text-container text-lg font-bold text-gray-900">Profile Settings</h1>
         <p class="mt-2 text-gray-600">Manage your personal information and preferences</p>
-      </div>
+      </div> -->
 
       <!-- Main Profile Card -->
-      <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+      <div class="bg-white rounded-2xl shadow-sm border-[0.5px] border-gray-100 overflow-hidden">
         <!-- Cover Background -->
         <div class="h-32 bg-primary"></div>
         

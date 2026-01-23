@@ -1,7 +1,8 @@
 <template>
+  <FullScreenLoader />
   <div class="min-h-screen bg-gray-50">
     <!-- Desktop Sidebar -->
-    <aside class="hidden lg:block w-64 bg-white border-r border-gray-100 min-h-screen fixed left-0 top-0 shadow-sm">
+    <aside class="hidden lg:block w-64 bg-white border-r-[0.5px] border-gray-50 min-h-screen fixed left-0 top-0 shadow-sm">
       <!-- Logo -->
       <div class="p-6 border-b border-gray-100">
         <img src="@/assets/img/logo.png" class="h-10 w-auto" alt="Logo" />

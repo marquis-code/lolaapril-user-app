@@ -268,6 +268,255 @@ const goToBookings = () => {
   navigateTo('/dashboard/bookings')
 }
 
+// const downloadPDFReceipt = async () => {
+//   try {
+//     downloadingPDF.value = true
+    
+//     const doc = new jsPDF('p', 'mm', 'a4')
+//     const pageWidth = doc.internal.pageSize.getWidth()
+//     const pageHeight = doc.internal.pageSize.getHeight()
+//     const margin = 20
+//     const contentWidth = pageWidth - (margin * 2)
+    
+//     // Brand color
+//     const primaryColor = [0, 89, 103] // #005967
+//     const lightPrimary = [230, 245, 247]
+//     const darkGray = [51, 51, 51]
+//     const mediumGray = [107, 114, 128]
+//     const lightGray = [243, 244, 246]
+    
+//     let yPos = margin
+    
+//     // Header with brand color background
+//     doc.setFillColor(...primaryColor)
+//     doc.rect(0, 0, pageWidth, 60, 'F')
+    
+//     // Logo placeholder - you can replace this with actual logo loading
+//     doc.setFillColor(255, 255, 255)
+//     doc.circle(30, 30, 12, 'F')
+//     doc.setTextColor(0, 89, 103)
+//     doc.setFontSize(20)
+//     doc.setFont('helvetica', 'bold')
+//     doc.text('LA', 30, 33, { align: 'center' })
+    
+//     // Business Name
+//     doc.setTextColor(255, 255, 255)
+//     doc.setFontSize(22)
+//     doc.setFont('helvetica', 'bold')
+//     doc.text('Lola April Wellness Spa', 50, 28)
+    
+//     // Tagline
+//     doc.setFontSize(10)
+//     doc.setFont('helvetica', 'normal')
+//     doc.text('Outside Health Starts Inside', 50, 36)
+    
+//     // Payment Receipt Title
+//     yPos = 75
+//     doc.setTextColor(...darkGray)
+//     doc.setFontSize(24)
+//     doc.setFont('helvetica', 'bold')
+//     doc.text('Payment Receipt', pageWidth / 2, yPos, { align: 'center' })
+    
+//     // Success Badge
+//     yPos += 15
+//     doc.setFillColor(220, 252, 231)
+//     doc.setDrawColor(134, 239, 172)
+//     doc.roundedRect(pageWidth / 2 - 25, yPos - 5, 50, 10, 2, 2, 'FD')
+//     doc.setTextColor(22, 163, 74)
+//     doc.setFontSize(10)
+//     doc.setFont('helvetica', 'bold')
+//     doc.text('PAID', pageWidth / 2, yPos + 2, { align: 'center' })
+    
+//     // Booking Reference
+//     yPos += 18
+//     doc.setTextColor(...mediumGray)
+//     doc.setFontSize(10)
+//     doc.setFont('helvetica', 'normal')
+//     doc.text('Booking Reference', pageWidth / 2, yPos, { align: 'center' })
+    
+//     yPos += 6
+//     doc.setTextColor(...darkGray)
+//     doc.setFontSize(14)
+//     doc.setFont('helvetica', 'bold')
+//     doc.text(bookingData.value?.bookingNumber || 'N/A', pageWidth / 2, yPos, { align: 'center' })
+    
+//     // Divider
+//     yPos += 10
+//     doc.setDrawColor(...lightGray)
+//     doc.setLineWidth(0.5)
+//     doc.line(margin, yPos, pageWidth - margin, yPos)
+    
+//     // Client Information Section
+//     yPos += 12
+//     doc.setFillColor(...lightPrimary)
+//     doc.roundedRect(margin, yPos, contentWidth, 28, 2, 2, 'F')
+    
+//     yPos += 8
+//     doc.setTextColor(...primaryColor)
+//     doc.setFontSize(12)
+//     doc.setFont('helvetica', 'bold')
+//     doc.text('CLIENT INFORMATION', margin + 5, yPos)
+    
+//     yPos += 8
+//     doc.setTextColor(...darkGray)
+//     doc.setFontSize(10)
+//     doc.setFont('helvetica', 'normal')
+//     doc.text(`Name: ${clientData.value?.firstName} ${clientData.value?.lastName}`, margin + 5, yPos)
+    
+//     yPos += 6
+//     doc.text(`Email: ${clientData.value?.email}`, margin + 5, yPos)
+    
+//     yPos += 6
+//     doc.text(`Phone: ${bookingData.value?.clientPhone || 'N/A'}`, margin + 5, yPos)
+    
+//     // Appointment Details Section
+//     yPos += 12
+//     doc.setFillColor(...lightPrimary)
+//     doc.roundedRect(margin, yPos, contentWidth, 34, 2, 2, 'F')
+    
+//     yPos += 8
+//     doc.setTextColor(...primaryColor)
+//     doc.setFontSize(12)
+//     doc.setFont('helvetica', 'bold')
+//     doc.text('APPOINTMENT DETAILS', margin + 5, yPos)
+    
+//     yPos += 8
+//     doc.setTextColor(...darkGray)
+//     doc.setFontSize(10)
+//     doc.setFont('helvetica', 'normal')
+//     doc.text(`Service: ${bookingData.value?.services?.[0]?.serviceName || 'N/A'}`, margin + 5, yPos)
+    
+//     yPos += 6
+//     doc.text(`Duration: ${bookingData.value?.totalDuration || 0} minutes`, margin + 5, yPos)
+    
+//     yPos += 6
+//     doc.text(`Date: ${formatDate(bookingData.value?.preferredDate)}`, margin + 5, yPos)
+    
+//     yPos += 6
+//     doc.text(`Time: ${bookingData.value?.preferredStartTime} - ${bookingData.value?.estimatedEndTime}`, margin + 5, yPos)
+    
+//     // Payment Summary Section
+//     yPos += 12
+//     doc.setFillColor(...lightGray)
+//     doc.roundedRect(margin, yPos, contentWidth, 8, 2, 2, 'F')
+    
+//     yPos += 6
+//     doc.setTextColor(...primaryColor)
+//     doc.setFontSize(12)
+//     doc.setFont('helvetica', 'bold')
+//     doc.text('PAYMENT SUMMARY', margin + 5, yPos)
+    
+//     // Payment Items
+//     yPos += 10
+//     const lineItems = [
+//       { label: 'Subtotal', value: `₦${formatPrice(paymentData.value?.subtotal)}`, bold: false },
+//     ]
+    
+//     if (paymentData.value?.totalDiscount > 0) {
+//       lineItems.push({ label: 'Discount', value: `-₦${formatPrice(paymentData.value?.totalDiscount)}`, bold: false })
+//     }
+    
+//     if (paymentData.value?.totalTax > 0) {
+//       lineItems.push({ label: 'Tax', value: `₦${formatPrice(paymentData.value?.totalTax)}`, bold: false })
+//     }
+    
+//     doc.setTextColor(...darkGray)
+//     doc.setFontSize(10)
+    
+//     lineItems.forEach(item => {
+//       doc.setFont('helvetica', item.bold ? 'bold' : 'normal')
+//       doc.text(item.label, margin + 5, yPos)
+//       doc.text(item.value, pageWidth - margin - 5, yPos, { align: 'right' })
+//       yPos += 6
+//     })
+    
+//     // Total Line
+//     yPos += 2
+//     doc.setDrawColor(...primaryColor)
+//     doc.setLineWidth(0.8)
+//     doc.line(margin, yPos, pageWidth - margin, yPos)
+    
+//     yPos += 8
+//     doc.setTextColor(...primaryColor)
+//     doc.setFontSize(14)
+//     doc.setFont('helvetica', 'bold')
+//     doc.text('TOTAL PAID', margin + 5, yPos)
+//     doc.text(`₦${formatPrice(paymentData.value?.totalAmount)}`, pageWidth - margin - 5, yPos, { align: 'right' })
+    
+//     // Payment Details
+//     yPos += 12
+//     doc.setFillColor(...lightPrimary)
+//     doc.roundedRect(margin, yPos, contentWidth, 20, 2, 2, 'F')
+    
+//     yPos += 8
+//     doc.setTextColor(...primaryColor)
+//     doc.setFontSize(12)
+//     doc.setFont('helvetica', 'bold')
+//     doc.text('PAYMENT DETAILS', margin + 5, yPos)
+    
+//     yPos += 8
+//     doc.setTextColor(...darkGray)
+//     doc.setFontSize(9)
+//     doc.setFont('helvetica', 'normal')
+//     doc.text(`Payment Method: ${paymentData.value?.paymentMethod?.toUpperCase() || 'N/A'}`, margin + 5, yPos)
+    
+//     yPos += 5
+//     doc.setFontSize(8)
+//     doc.text(`Transaction ID: ${paymentData.value?.transactionId || 'N/A'}`, margin + 5, yPos)
+    
+//     yPos += 5
+//     const paidDate = paymentData.value?.paidAt ? new Date(paymentData.value.paidAt).toLocaleString() : 'N/A'
+//     doc.text(`Payment Date: ${paidDate}`, margin + 5, yPos)
+    
+//     // Important Reminders
+//     yPos += 15
+//     doc.setFillColor(239, 246, 255)
+//     doc.setDrawColor(191, 219, 254)
+//     doc.roundedRect(margin, yPos, contentWidth, 26, 2, 2, 'FD')
+    
+//     yPos += 7
+//     doc.setTextColor(30, 64, 175)
+//     doc.setFontSize(10)
+//     doc.setFont('helvetica', 'bold')
+//     doc.text('Important Reminders', margin + 5, yPos)
+    
+//     yPos += 6
+//     doc.setTextColor(51, 65, 85)
+//     doc.setFontSize(9)
+//     doc.setFont('helvetica', 'normal')
+//     doc.text('• Please arrive 10 minutes before your appointment', margin + 8, yPos)
+    
+//     yPos += 5
+//     doc.text('• Bring a valid form of identification', margin + 8, yPos)
+    
+//     yPos += 5
+//     doc.text('• Cancellations must be made 24 hours in advance', margin + 8, yPos)
+    
+//     // Footer
+//     const footerY = pageHeight - 25
+//     doc.setDrawColor(...lightGray)
+//     doc.setLineWidth(0.3)
+//     doc.line(margin, footerY, pageWidth - margin, footerY)
+    
+//     doc.setTextColor(...mediumGray)
+//     doc.setFontSize(8)
+//     doc.setFont('helvetica', 'normal')
+//     doc.text('Thank you for choosing Lola April Wellness Spa', pageWidth / 2, footerY + 5, { align: 'center' })
+//     doc.text('For inquiries, please contact us at info@lolaaprils pa.com', pageWidth / 2, footerY + 10, { align: 'center' })
+//     doc.text(`Receipt generated on ${new Date().toLocaleDateString()}`, pageWidth / 2, footerY + 15, { align: 'center' })
+    
+//     // Save the PDF
+//     const fileName = `receipt-${bookingData.value?.bookingNumber || 'payment'}.pdf`
+//     doc.save(fileName)
+    
+//   } catch (error) {
+//     console.error('Error generating PDF:', error)
+//     alert('Failed to generate PDF receipt. Please try again.')
+//   } finally {
+//     downloadingPDF.value = false
+//   }
+// }
+
 const downloadPDFReceipt = async () => {
   try {
     downloadingPDF.value = true
@@ -278,240 +527,325 @@ const downloadPDFReceipt = async () => {
     const margin = 20
     const contentWidth = pageWidth - (margin * 2)
     
-    // Brand color
-    const primaryColor = [0, 89, 103] // #005967
-    const lightPrimary = [230, 245, 247]
+    // Colors
+    const primaryColor = [0, 89, 103]
     const darkGray = [51, 51, 51]
     const mediumGray = [107, 114, 128]
-    const lightGray = [243, 244, 246]
+    const lightGray = [220, 220, 220]
     
     let yPos = margin
     
-    // Header with brand color background
+    // ============= HEADER =============
     doc.setFillColor(...primaryColor)
-    doc.rect(0, 0, pageWidth, 60, 'F')
+    doc.rect(0, 0, pageWidth, 55, 'F')
     
-    // Logo placeholder - you can replace this with actual logo loading
+    // Logo
     doc.setFillColor(255, 255, 255)
-    doc.circle(30, 30, 12, 'F')
-    doc.setTextColor(0, 89, 103)
-    doc.setFontSize(20)
+    doc.circle(30, 27, 10, 'F')
+    doc.setTextColor(...primaryColor)
+    doc.setFontSize(16)
     doc.setFont('helvetica', 'bold')
-    doc.text('LA', 30, 33, { align: 'center' })
+    doc.text('LA', 30, 30, { align: 'center' })
     
     // Business Name
     doc.setTextColor(255, 255, 255)
-    doc.setFontSize(22)
+    doc.setFontSize(20)
     doc.setFont('helvetica', 'bold')
-    doc.text('Lola April Wellness Spa', 50, 28)
+    doc.text('Lola April Wellness Spa', 48, 25)
     
     // Tagline
     doc.setFontSize(10)
     doc.setFont('helvetica', 'normal')
-    doc.text('Outside Health Starts Inside', 50, 36)
+    doc.text('Outside Health Starts Inside', 48, 33)
     
-    // Payment Receipt Title
-    yPos = 75
+    // ============= TITLE =============
+    yPos = 70
     doc.setTextColor(...darkGray)
-    doc.setFontSize(24)
+    doc.setFontSize(22)
     doc.setFont('helvetica', 'bold')
     doc.text('Payment Receipt', pageWidth / 2, yPos, { align: 'center' })
     
-    // Success Badge
-    yPos += 15
+    // Status Badge
+    yPos += 14
     doc.setFillColor(220, 252, 231)
     doc.setDrawColor(134, 239, 172)
-    doc.roundedRect(pageWidth / 2 - 25, yPos - 5, 50, 10, 2, 2, 'FD')
+    doc.roundedRect(pageWidth / 2 - 22, yPos - 5, 44, 10, 2, 2, 'FD')
     doc.setTextColor(22, 163, 74)
-    doc.setFontSize(10)
+    doc.setFontSize(11)
     doc.setFont('helvetica', 'bold')
-    doc.text('PAID', pageWidth / 2, yPos + 2, { align: 'center' })
+    doc.text('PAID', pageWidth / 2, yPos + 1, { align: 'center' })
     
     // Booking Reference
-    yPos += 18
+    yPos += 14
     doc.setTextColor(...mediumGray)
-    doc.setFontSize(10)
+    doc.setFontSize(11)
     doc.setFont('helvetica', 'normal')
     doc.text('Booking Reference', pageWidth / 2, yPos, { align: 'center' })
     
-    yPos += 6
+    yPos += 7
     doc.setTextColor(...darkGray)
     doc.setFontSize(14)
     doc.setFont('helvetica', 'bold')
     doc.text(bookingData.value?.bookingNumber || 'N/A', pageWidth / 2, yPos, { align: 'center' })
     
     // Divider
-    yPos += 10
+    yPos += 12
     doc.setDrawColor(...lightGray)
     doc.setLineWidth(0.5)
     doc.line(margin, yPos, pageWidth - margin, yPos)
     
-    // Client Information Section
+    // ============= CLIENT INFO =============
     yPos += 12
-    doc.setFillColor(...lightPrimary)
-    doc.roundedRect(margin, yPos, contentWidth, 28, 2, 2, 'F')
-    
-    yPos += 8
     doc.setTextColor(...primaryColor)
-    doc.setFontSize(12)
+    doc.setFontSize(13)
     doc.setFont('helvetica', 'bold')
-    doc.text('CLIENT INFORMATION', margin + 5, yPos)
+    doc.text('CLIENT INFORMATION', margin, yPos)
     
     yPos += 8
     doc.setTextColor(...darkGray)
-    doc.setFontSize(10)
+    doc.setFontSize(11)
     doc.setFont('helvetica', 'normal')
-    doc.text(`Name: ${clientData.value?.firstName} ${clientData.value?.lastName}`, margin + 5, yPos)
-    
-    yPos += 6
-    doc.text(`Email: ${clientData.value?.email}`, margin + 5, yPos)
-    
-    yPos += 6
-    doc.text(`Phone: ${bookingData.value?.clientPhone || 'N/A'}`, margin + 5, yPos)
-    
-    // Appointment Details Section
-    yPos += 12
-    doc.setFillColor(...lightPrimary)
-    doc.roundedRect(margin, yPos, contentWidth, 34, 2, 2, 'F')
-    
-    yPos += 8
-    doc.setTextColor(...primaryColor)
-    doc.setFontSize(12)
-    doc.setFont('helvetica', 'bold')
-    doc.text('APPOINTMENT DETAILS', margin + 5, yPos)
-    
-    yPos += 8
-    doc.setTextColor(...darkGray)
-    doc.setFontSize(10)
-    doc.setFont('helvetica', 'normal')
-    doc.text(`Service: ${bookingData.value?.services?.[0]?.serviceName || 'N/A'}`, margin + 5, yPos)
-    
-    yPos += 6
-    doc.text(`Duration: ${bookingData.value?.totalDuration || 0} minutes`, margin + 5, yPos)
-    
-    yPos += 6
-    doc.text(`Date: ${formatDate(bookingData.value?.preferredDate)}`, margin + 5, yPos)
-    
-    yPos += 6
-    doc.text(`Time: ${bookingData.value?.preferredStartTime} - ${bookingData.value?.estimatedEndTime}`, margin + 5, yPos)
-    
-    // Payment Summary Section
-    yPos += 12
-    doc.setFillColor(...lightGray)
-    doc.roundedRect(margin, yPos, contentWidth, 8, 2, 2, 'F')
-    
-    yPos += 6
-    doc.setTextColor(...primaryColor)
-    doc.setFontSize(12)
-    doc.setFont('helvetica', 'bold')
-    doc.text('PAYMENT SUMMARY', margin + 5, yPos)
-    
-    // Payment Items
-    yPos += 10
-    const lineItems = [
-      { label: 'Subtotal', value: `₦${formatPrice(paymentData.value?.subtotal)}`, bold: false },
-    ]
-    
-    if (paymentData.value?.totalDiscount > 0) {
-      lineItems.push({ label: 'Discount', value: `-₦${formatPrice(paymentData.value?.totalDiscount)}`, bold: false })
-    }
-    
-    if (paymentData.value?.totalTax > 0) {
-      lineItems.push({ label: 'Tax', value: `₦${formatPrice(paymentData.value?.totalTax)}`, bold: false })
-    }
-    
-    doc.setTextColor(...darkGray)
-    doc.setFontSize(10)
-    
-    lineItems.forEach(item => {
-      doc.setFont('helvetica', item.bold ? 'bold' : 'normal')
-      doc.text(item.label, margin + 5, yPos)
-      doc.text(item.value, pageWidth - margin - 5, yPos, { align: 'right' })
-      yPos += 6
-    })
-    
-    // Total Line
-    yPos += 2
-    doc.setDrawColor(...primaryColor)
-    doc.setLineWidth(0.8)
-    doc.line(margin, yPos, pageWidth - margin, yPos)
-    
-    yPos += 8
-    doc.setTextColor(...primaryColor)
-    doc.setFontSize(14)
-    doc.setFont('helvetica', 'bold')
-    doc.text('TOTAL PAID', margin + 5, yPos)
-    doc.text(`₦${formatPrice(paymentData.value?.totalAmount)}`, pageWidth - margin - 5, yPos, { align: 'right' })
-    
-    // Payment Details
-    yPos += 12
-    doc.setFillColor(...lightPrimary)
-    doc.roundedRect(margin, yPos, contentWidth, 20, 2, 2, 'F')
-    
-    yPos += 8
-    doc.setTextColor(...primaryColor)
-    doc.setFontSize(12)
-    doc.setFont('helvetica', 'bold')
-    doc.text('PAYMENT DETAILS', margin + 5, yPos)
-    
-    yPos += 8
-    doc.setTextColor(...darkGray)
-    doc.setFontSize(9)
-    doc.setFont('helvetica', 'normal')
-    doc.text(`Payment Method: ${paymentData.value?.paymentMethod?.toUpperCase() || 'N/A'}`, margin + 5, yPos)
-    
-    yPos += 5
-    doc.setFontSize(8)
-    doc.text(`Transaction ID: ${paymentData.value?.transactionId || 'N/A'}`, margin + 5, yPos)
-    
-    yPos += 5
-    const paidDate = paymentData.value?.paidAt ? new Date(paymentData.value.paidAt).toLocaleString() : 'N/A'
-    doc.text(`Payment Date: ${paidDate}`, margin + 5, yPos)
-    
-    // Important Reminders
-    yPos += 15
-    doc.setFillColor(239, 246, 255)
-    doc.setDrawColor(191, 219, 254)
-    doc.roundedRect(margin, yPos, contentWidth, 26, 2, 2, 'FD')
+    const clientName = `${clientData.value?.firstName || ''} ${clientData.value?.lastName || ''}`.trim()
+    doc.text(`Name: ${clientName}`, margin, yPos)
     
     yPos += 7
-    doc.setTextColor(30, 64, 175)
-    doc.setFontSize(10)
+    const clientEmail = clientData.value?.email || 'N/A'
+    doc.text(`Email: ${clientEmail}`, margin, yPos)
+    
+    yPos += 7
+    const clientPhone = bookingData.value?.clientPhone || 'N/A'
+    doc.text(`Phone: ${clientPhone}`, margin, yPos)
+    
+    // Divider
+    yPos += 10
+    doc.setDrawColor(...lightGray)
+    doc.line(margin, yPos, pageWidth - margin, yPos)
+    
+    // ============= SERVICES BOOKED =============
+    yPos += 12
+    doc.setTextColor(...primaryColor)
+    doc.setFontSize(13)
     doc.setFont('helvetica', 'bold')
-    doc.text('Important Reminders', margin + 5, yPos)
+    doc.text('SERVICES BOOKED', margin, yPos)
     
-    yPos += 6
-    doc.setTextColor(51, 65, 85)
-    doc.setFontSize(9)
+    yPos += 10
+    doc.setTextColor(...darkGray)
+    doc.setFontSize(11)
     doc.setFont('helvetica', 'normal')
-    doc.text('• Please arrive 10 minutes before your appointment', margin + 8, yPos)
     
-    yPos += 5
-    doc.text('• Bring a valid form of identification', margin + 8, yPos)
+    const services = bookingData.value?.services || []
     
-    yPos += 5
-    doc.text('• Cancellations must be made 24 hours in advance', margin + 8, yPos)
+    if (services.length > 0) {
+      services.forEach((service: any, index: number) => {
+        const serviceName = service.serviceName || service.name || 'Service'
+        const servicePrice = service.price || service.amount || 0
+        const serviceDuration = service.duration || ''
+        
+        // Service number and name
+        doc.setFont('helvetica', 'bold')
+        doc.text(`${index + 1}. ${serviceName}`, margin, yPos)
+        
+        // Price on the right
+        doc.text(`₦${formatPrice(servicePrice)}`, pageWidth - margin, yPos, { align: 'right' })
+        
+        yPos += 7
+        
+        // Duration below
+        if (serviceDuration) {
+          doc.setFont('helvetica', 'normal')
+          doc.setTextColor(...mediumGray)
+          doc.setFontSize(10)
+          doc.text(`${serviceDuration} minutes`, margin + 5, yPos)
+          doc.setTextColor(...darkGray)
+          doc.setFontSize(11)
+          yPos += 8
+        } else {
+          yPos += 4
+        }
+      })
+    } else {
+      doc.text('No services listed', margin, yPos)
+      yPos += 8
+    }
     
-    // Footer
-    const footerY = pageHeight - 25
+    // Divider
+    yPos += 4
+    doc.setDrawColor(...lightGray)
+    doc.line(margin, yPos, pageWidth - margin, yPos)
+    
+    // ============= APPOINTMENT DETAILS =============
+    yPos += 12
+    doc.setTextColor(...primaryColor)
+    doc.setFontSize(13)
+    doc.setFont('helvetica', 'bold')
+    doc.text('APPOINTMENT DETAILS', margin, yPos)
+    
+    yPos += 10
+    doc.setTextColor(...darkGray)
+    doc.setFontSize(11)
+    doc.setFont('helvetica', 'normal')
+    
+    const totalDuration = bookingData.value?.totalDuration || 0
+    doc.text(`Total Duration: ${totalDuration} minutes`, margin, yPos)
+    
+    yPos += 7
+    const appointmentDate = bookingData.value?.preferredDate ? formatDate(bookingData.value.preferredDate) : 'N/A'
+    doc.text(`Date: ${appointmentDate}`, margin, yPos)
+    
+    yPos += 7
+    const startTime = bookingData.value?.preferredStartTime || ''
+    const endTime = bookingData.value?.estimatedEndTime || ''
+    doc.text(`Time: ${startTime} - ${endTime}`, margin, yPos)
+    
+    // Divider
+    yPos += 10
+    doc.setDrawColor(...lightGray)
+    doc.line(margin, yPos, pageWidth - margin, yPos)
+    
+    // ============= PAYMENT SUMMARY =============
+    yPos += 12
+    doc.setTextColor(...primaryColor)
+    doc.setFontSize(13)
+    doc.setFont('helvetica', 'bold')
+    doc.text('PAYMENT SUMMARY', margin, yPos)
+    
+    yPos += 10
+    doc.setTextColor(...darkGray)
+    doc.setFontSize(11)
+    doc.setFont('helvetica', 'normal')
+    
+    // Subtotal
+    doc.text('Subtotal', margin, yPos)
+    doc.text(`₦${formatPrice(paymentData.value?.subtotal || 0)}`, pageWidth - margin, yPos, { align: 'right' })
+    yPos += 7
+    
+    // Discount
+    if (paymentData.value?.totalDiscount > 0) {
+      doc.setTextColor(22, 163, 74)
+      doc.text('Discount', margin, yPos)
+      doc.text(`-₦${formatPrice(paymentData.value.totalDiscount)}`, pageWidth - margin, yPos, { align: 'right' })
+      doc.setTextColor(...darkGray)
+      yPos += 7
+    }
+    
+    // Tax
+    if (paymentData.value?.totalTax > 0) {
+      doc.text('Tax', margin, yPos)
+      doc.text(`₦${formatPrice(paymentData.value.totalTax)}`, pageWidth - margin, yPos, { align: 'right' })
+      yPos += 7
+    }
+    
+    // Total Line
+    yPos += 4
+    doc.setDrawColor(...primaryColor)
+    doc.setLineWidth(1)
+    doc.line(margin, yPos, pageWidth - margin, yPos)
+    
+    yPos += 10
+    doc.setTextColor(...primaryColor)
+    doc.setFontSize(15)
+    doc.setFont('helvetica', 'bold')
+    doc.text('TOTAL PAID', margin, yPos)
+    doc.text(`₦${formatPrice(paymentData.value?.totalAmount || 0)}`, pageWidth - margin, yPos, { align: 'right' })
+    
+    // Divider
+    yPos += 8
+    doc.setDrawColor(...lightGray)
+    doc.setLineWidth(0.5)
+    doc.line(margin, yPos, pageWidth - margin, yPos)
+    
+    // ============= PAYMENT DETAILS =============
+    yPos += 12
+    doc.setTextColor(...primaryColor)
+    doc.setFontSize(13)
+    doc.setFont('helvetica', 'bold')
+    doc.text('PAYMENT DETAILS', margin, yPos)
+    
+    yPos += 10
+    doc.setTextColor(...darkGray)
+    doc.setFontSize(11)
+    doc.setFont('helvetica', 'normal')
+    
+    const paymentMethod = paymentData.value?.paymentMethod?.toUpperCase() || 'N/A'
+    doc.text(`Payment Method: ${paymentMethod}`, margin, yPos)
+    
+    yPos += 7
+    const transactionId = paymentData.value?.transactionId || 'N/A'
+    doc.text(`Transaction ID: ${transactionId}`, margin, yPos, { maxWidth: contentWidth })
+    
+    yPos += 7
+    const paidDate = paymentData.value?.paidAt 
+      ? new Date(paymentData.value.paidAt).toLocaleString('en-US', { 
+          year: 'numeric', 
+          month: 'long', 
+          day: 'numeric', 
+          hour: '2-digit', 
+          minute: '2-digit' 
+        })
+      : 'N/A'
+    doc.text(`Payment Date: ${paidDate}`, margin, yPos, { maxWidth: contentWidth })
+    
+    // Divider
+    yPos += 10
+    doc.setDrawColor(...lightGray)
+    doc.line(margin, yPos, pageWidth - margin, yPos)
+    
+    // ============= IMPORTANT REMINDERS =============
+    yPos += 12
+    doc.setTextColor(30, 64, 175)
+    doc.setFontSize(13)
+    doc.setFont('helvetica', 'bold')
+    doc.text('Important Reminders', margin, yPos)
+    
+    yPos += 10
+    doc.setTextColor(...darkGray)
+    doc.setFontSize(10)
+    doc.setFont('helvetica', 'normal')
+    
+    doc.text('• Please arrive 10 minutes before your appointment', margin + 3, yPos)
+    yPos += 7
+    
+    doc.text('• Bring a valid form of identification', margin + 3, yPos)
+    yPos += 7
+    
+    doc.text('• Cancellations must be made 24 hours in advance', margin + 3, yPos)
+    yPos += 7
+    
+    doc.text(`• Confirmation email sent to ${clientData.value?.email}`, margin + 3, yPos, { maxWidth: contentWidth - 3 })
+    
+    // ============= FOOTER =============
+    yPos += 20
+    
+    // Check if we need a new page
+    if (yPos > pageHeight - 40) {
+      doc.addPage()
+      yPos = 30
+    }
+    
     doc.setDrawColor(...lightGray)
     doc.setLineWidth(0.3)
-    doc.line(margin, footerY, pageWidth - margin, footerY)
+    doc.line(margin, yPos, pageWidth - margin, yPos)
     
+    yPos += 7
     doc.setTextColor(...mediumGray)
-    doc.setFontSize(8)
+    doc.setFontSize(10)
     doc.setFont('helvetica', 'normal')
-    doc.text('Thank you for choosing Lola April Wellness Spa', pageWidth / 2, footerY + 5, { align: 'center' })
-    doc.text('For inquiries, please contact us at info@lolaaprils pa.com', pageWidth / 2, footerY + 10, { align: 'center' })
-    doc.text(`Receipt generated on ${new Date().toLocaleDateString()}`, pageWidth / 2, footerY + 15, { align: 'center' })
+    doc.text('Thank you for choosing Lola April Wellness Spa', pageWidth / 2, yPos, { align: 'center' })
     
-    // Save the PDF
-    const fileName = `receipt-${bookingData.value?.bookingNumber || 'payment'}.pdf`
+    yPos += 6
+    doc.text('For inquiries, please contact us at info@lolaaprilspa.com', pageWidth / 2, yPos, { align: 'center' })
+    
+    yPos += 6
+    doc.setFontSize(9)
+    doc.text(`Receipt generated on ${new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}`, pageWidth / 2, yPos, { align: 'center' })
+    
+    // Save PDF
+    const fileName = `Receipt-${bookingData.value?.bookingNumber || 'Payment'}.pdf`
     doc.save(fileName)
     
   } catch (error) {
-    console.error('Error generating PDF:', error)
-    alert('Failed to generate PDF receipt. Please try again.')
+    console.error('PDF Generation Error:', error)
+    alert('Failed to generate PDF. Please try again.')
   } finally {
     downloadingPDF.value = false
   }

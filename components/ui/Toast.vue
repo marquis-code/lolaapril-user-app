@@ -9,7 +9,7 @@
             'toast-base',
             {
               'bg-[#FEF3F2] border-[#FF383013]': toast.type === 'error',
-              'bg-green-50 border-green-200': toast.type === 'success',
+              'bg-green-50 border-primary-200': toast.type === 'success',
               'bg-yellow-50 border-yellow-200': toast.type === 'warning',
               'bg-blue-50 border-blue-200': toast.type === 'info'
             }
@@ -22,7 +22,7 @@
               'w-8 h-8 rounded-full flex items-center justify-center',
               {
                 'text-white': toast.type === 'error',
-                'bg-green-500 text-white': toast.type === 'success', 
+                'bg-primary-500 text-white': toast.type === 'success', 
                 'bg-yellow-500 text-white': toast.type === 'warning',
                 'bg-blue-500 text-white': toast.type === 'info'
               }
@@ -42,7 +42,7 @@
               'font-medium text-sm leading-tight',
               {
                 'text-[#FF3830]': toast.type === 'error',
-                'text-green-800': toast.type === 'success',
+                'text-primary-800': toast.type === 'success',
                 'text-yellow-800': toast.type === 'warning', 
                 'text-blue-800': toast.type === 'info'
               }

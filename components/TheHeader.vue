@@ -249,29 +249,44 @@
               class="bg-white rounded-lg shadow-xl flex justify-center space-y-6 items-center flex-col max-w-sm w-full p-6"
             >
               <!-- <div class="flex items-center gap-4 mb-4"> -->
-                <div class="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center">
-                  <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                  </svg>
-                </div>
+                 <div class="w-14 h-14 rounded-full bg-rose-50 flex items-center justify-center">
+          <svg
+            class="w-7 h-7 text-rose-500"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+            />
+          </svg>
+        </div>
                 <div class="flex  justify-center items-center flex-col">
-                  <h3 class="text-lg font-semibold text-gray-900">Confirm Logout</h3>
-                  <p class="text-sm text-gray-600">Are you sure you want to logout?</p>
+                      <h3 class="text-xl font-semibold text-gray-900">
+            Leaving already?
+          </h3>
+                       <p class="text-sm text-center text-gray-600 leading-relaxed">
+            You’ll be signed out of your account.  
+            Don’t worry — your appointments, favorites, and bookings will be waiting for you ✨
+          </p>
                 </div>
               <!-- </div> -->
 
               <div class="flex gap-3 justify-center w-full pt-4">
                 <button 
                   @click="logoutModalOpen = false"
-                  class="px-4 py-2 w-full text-sm font-medium text-gray-700 bg-gray-100 rounded-full hover:bg-gray-200 transition-colors"
+                  class="w-full px-4 py-3 rounded-full text-sm font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 transition-colors"
                 >
-                  Cancel
+                   Stay logged in
                 </button>
                 <button 
                   @click="confirmLogout"
-                  class="px-4 py-2 w-full text-sm font-medium text-white bg-red-600 rounded-full hover:bg-red-700 transition-colors"
+                  class="w-full px-4 py-3 rounded-full text-sm font-semibold text-white bg-rose-500 hover:bg-rose-600 transition-colors"
                 >
-                  Logout
+                  Log out
                 </button>
               </div>
             </div>
