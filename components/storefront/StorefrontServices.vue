@@ -150,7 +150,6 @@ const filteredServices = computed(() => {
 // Grid columns config - use inline style for dynamic columns
 const gridColumns = computed(() => {
   const cols = props.config?.columns || 3
-  console.log('Grid columns config:', props.config, 'Using columns:', cols)
   return cols
 })
 
