@@ -45,6 +45,6 @@ useHead({
 const router = useRouter()
 
 const openBookingModal = () => {
-  router.push('/book?subdomain=lola-beauty')
+  router.push('/book?subdomain=benn')
 }
 </script>

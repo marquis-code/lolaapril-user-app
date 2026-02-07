@@ -1,5 +1,5 @@
 <template>
-  <section class="section-padding bg-primary text-white">
+  <section class="section-padding bg-parentPrimary text-white">
     <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 items-center">
       <!-- Content -->
       <div>

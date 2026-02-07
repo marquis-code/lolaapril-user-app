@@ -6,21 +6,21 @@
         <div class="text-accent text-9xl font-bold mb-8">
            <img src="@/assets/img/logo.png" alt="Lola April Wellness Spa Logo" class="h-20 w-auto" />
         </div>
-        <h2 class="text-3xl md:text-4xl font-light text-primary mb-6">
+        <h2 class="text-3xl md:text-4xl font-light text-parentPrimary mb-6">
           When you leave us, we want you to have experienced true hospitality, not just good service.
         </h2>
-        <p class="text-primary/70 mb-4">
+        <p class="text-parentPrimary/70 mb-4">
           Despite challenges, including the economic downturn and the unexpected demolition of the spa, 
           Lola's unwavering spirit prevailed. Operating LA Wellness Spa from her home showcased her 
           resilience and dedication to offering the highest level of care.
         </p>
-        <p class="text-primary/70 italic">
+        <p class="text-parentPrimary/70 italic">
           Join us on this extraordinary journey—where your retreat is our story.
         </p>
       </div>
 
       <!-- Content -->
-      <div class="space-y-4 text-primary/80 leading-relaxed">
+      <div class="space-y-4 text-parentPrimary/80 leading-relaxed">
         <p>
           Welcome to the heartwarming journey of Lola April Wellness Spa—a story fueled by passion, 
           resilience, and the desire to redefine wellness. In 2011, our founder, Lola, embarked on 

@@ -49,7 +49,7 @@
 //     const response = await auth_api.googleAuth({idToken})
 //     createUser(response.data)
 
-//     await navigateTo('/book?subdomain=lola-beauty')
+//     await navigateTo('/book?subdomain=benn')
 
 //     stopLoading()
 //     return response
@@ -127,14 +127,14 @@ export const useGoogleAuth = () => {
 
       const result = await signInWithPopup($firebaseAuth, provider)
 
-      // 🔑 Get Google ID Token
-      const idToken = await result.user.getIdToken()
+      // 🔑 Get Google ID Token - Force refresh to ensure token is valid
+      const idToken = await result.user.getIdToken(true)
 
       // 🔥 Send to your backend
       const response = await auth_api.googleAuth({ idToken })
       createUser(response.data)
 
-      await navigateTo('/book?subdomain=lola-beauty')
+      await navigateTo('/book?subdomain=benn')
 
       user.value = result.user
       

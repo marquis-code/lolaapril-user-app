@@ -1,0 +1,156 @@
+/* assets/css/storefront-variables.css */
+:root {
+  /* Colors - Set dynamically by useTheme */
+  --color-primary: #3B82F6;
+  --color-secondary: #10B981;
+  --color-accent: #F59E0B;
+  --color-background: #FFFFFF;
+  --color-text: #1F2937;
+  --color-error: #EF4444;
+  --color-success: #10B981;
+  --color-muted: #6B7280;
+  --color-border: #E5E7EB;
+  --color-card-background: #FFFFFF;
+  --color-input-background: #F9FAFB;
+
+  /* Typography */
+  --font-family: 'Inter', sans-serif;
+  --font-heading: 'Inter', sans-serif;
+  --font-body: 'Inter', sans-serif;
+
+  /* Component Styles */
+  --btn-radius: 8px;
+  --btn-font-weight: 600;
+  --card-radius: 12px;
+  --card-border-color: #E5E7EB;
+  --input-radius: 8px;
+  --section-spacing: 24px;
+  --max-content-width: 1200px;
+}
+
+/* Button Styles */
+.btn-primary {
+  background-color: var(--color-primary);
+  color: white;
+  border-radius: var(--btn-radius);
+  font-weight: var(--btn-font-weight);
+  padding: 0.75rem 1.5rem;
+  transition: opacity 0.2s;
+}
+
+.btn-primary:hover {
+  opacity: 0.9;
+}
+
+.btn-secondary {
+  background-color: var(--color-secondary);
+  color: white;
+  border-radius: var(--btn-radius);
+  padding: 0.75rem 1.5rem;
+  transition: opacity 0.2s;
+}
+
+.btn-secondary:hover {
+  opacity: 0.9;
+}
+
+.btn-accent {
+  background-color: var(--color-accent);
+  color: var(--color-primary);
+  border-radius: var(--btn-radius);
+  font-weight: var(--btn-font-weight);
+  padding: 0.75rem 1.5rem;
+  transition: opacity 0.2s;
+}
+
+.btn-accent:hover {
+  opacity: 0.9;
+}
+
+/* Card Styles */
+.card {
+  background: var(--color-card-background);
+  border-radius: var(--card-radius);
+  border: 1px solid var(--card-border-color);
+}
+
+/* Container */
+.container {
+  max-width: var(--max-content-width);
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+/* Section spacing */
+.section {
+  padding: 4rem 0;
+}
+
+/* Section Title */
+.section-title {
+  font-family: var(--font-heading);
+  font-size: 2rem;
+  font-weight: 600;
+  color: var(--color-primary);
+  text-align: center;
+  margin-bottom: 0.75rem;
+}
+
+/* Section Subtitle */
+.section-subtitle {
+  font-size: 1rem;
+  color: var(--color-muted);
+  text-align: center;
+  margin-bottom: 2rem;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Input Styles */
+.input {
+  background: var(--color-input-background);
+  border: 1px solid var(--color-border);
+  border-radius: var(--input-radius);
+  padding: 0.75rem 1rem;
+  width: 100%;
+  transition: border-color 0.2s;
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+/* Utility classes */
+.text-primary {
+  color: var(--color-primary);
+}
+
+.text-secondary {
+  color: var(--color-secondary);
+}
+
+.text-accent {
+  color: var(--color-accent);
+}
+
+.text-muted {
+  color: var(--color-muted);
+}
+
+.bg-primary {
+  background-color: var(--color-primary);
+}
+
+.bg-secondary {
+  background-color: var(--color-secondary);
+}
+
+.bg-accent {
+  background-color: var(--color-accent);
+}
+
+.bg-background {
+  background-color: var(--color-background);
+}

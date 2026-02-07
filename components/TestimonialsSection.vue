@@ -1,8 +1,8 @@
 <template>
-  <section class="section-padding bg-secondary">
+  <section class="section-padding bg-parentSecondary">
     <div class="max-w-4xl mx-auto">
       <div class="text-center mb-12">
-        <div class="text-6xl md:text-8xl font-serif text-primary mb-8">"</div>
+        <div class="text-6xl md:text-8xl font-serif text-parentPrimary mb-8">"</div>
         
         <div class="relative h-64 overflow-hidden">
           <transition-group name="fade" mode="out-in">
@@ -12,7 +12,7 @@
               v-show="currentIndex === index"
               class="absolute inset-0 flex flex-col items-center justify-center"
             >
-              <p class="text-xl md:text-2xl text-primary mb-8 italic px-6">
+              <p class="text-xl md:text-2xl text-parentPrimary mb-8 italic px-6">
                 {{ testimonial.text }}
               </p>
               
@@ -22,7 +22,7 @@
                 </svg>
               </div>
               
-              <p class="text-primary font-medium">{{ testimonial.author }}</p>
+              <p class="text-parentPrimary font-medium">{{ testimonial.author }}</p>
             </div>
           </transition-group>
         </div>
@@ -34,7 +34,7 @@
             :key="index"
             @click="currentIndex = index"
             class="w-3 h-3 rounded-full transition-all duration-300"
-            :class="currentIndex === index ? 'bg-primary w-8' : 'bg-primary/30'"
+            :class="currentIndex === index ? 'bg-parentPrimary w-8' : 'bg-parentPrimary/30'"
           ></button>
         </div>
       </div>
@@ -42,10 +42,10 @@
       <!-- Marquee -->
       <div class="overflow-hidden">
         <div class="marquee whitespace-nowrap">
-          <span class="inline-block text-3xl md:text-4xl text-primary font-light mx-8">
+          <span class="inline-block text-3xl md:text-4xl text-parentPrimary font-light mx-8">
             a better life awaits you · a better life awaits you · a better life awaits you ·
           </span>
-          <span class="inline-block text-3xl md:text-4xl text-primary font-light mx-8">
+          <span class="inline-block text-3xl md:text-4xl text-parentPrimary font-light mx-8">
             a better life awaits you · a better life awaits you · a better life awaits you ·
           </span>
         </div>

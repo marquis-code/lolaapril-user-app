@@ -13,7 +13,7 @@
 //     // const backendUrl = 'https://af9e16900bbd.ngrok-free.app' // or use env variable
     
 //     // Optional: Add subdomain if needed
-//     const subdomain = 'lola-beauty' // or get from route/props
+//     const subdomain = 'benn' // or get from route/props
     
 //     // Redirect to backend Google OAuth endpoint
 //     const redirectUrl = subdomain 
@@ -55,8 +55,8 @@ export const useGoogleSignin = () => {
       // 1. Google popup
       const result = await signInWithPopup($firebaseAuth, provider)
 
-      // 2. Firebase ID token
-      const idToken = await result.user.getIdToken()
+      // 2. Firebase ID token - Force refresh to ensure token is valid
+      const idToken = await result.user.getIdToken(true)
 
       // 3. Send token to NestJS
       const response = await $fetch('/api/auth/google', {

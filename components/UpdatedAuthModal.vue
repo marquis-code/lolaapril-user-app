@@ -530,7 +530,7 @@ const handleSignup = async () => {
   try {
     await register(signupForm.value)
     closeModal()
-    await navigateTo('/book?subdomain=lola-beauty')
+    await navigateTo('/book?subdomain=benn')
   } catch (error) {
     console.error('Signup error:', error)
   }
@@ -540,7 +540,7 @@ const handleLogin = async () => {
   try {
     await login(loginForm.value)
     closeModal()
-    await navigateTo('/book?subdomain=lola-beauty')
+    await navigateTo('/book?subdomain=benn')
   } catch (error) {
     console.error('Login error:', error)
   }

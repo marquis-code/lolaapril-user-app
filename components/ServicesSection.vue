@@ -1,10 +1,10 @@
 <template>
   <section id="services" class="section-padding bg-white">
     <div class="max-w-7xl mx-auto">
-      <h2 class="text-4xl md:text-5xl font-light text-center text-primary mb-4">
+      <h2 class="text-4xl md:text-5xl font-light text-center text-parentPrimary mb-4">
         Our Key Offerings
       </h2>
-      <p class="text-center text-primary/70 mb-12">
+      <p class="text-center text-parentPrimary/70 mb-12">
         Achieve your self-care goals more effortlessly than ever with our extensive selection of 
         <span class="underline decoration-accent">thoughtfully curated services</span> and our invaluable 
         <span class="underline decoration-accent">Spa Membership package</span>.

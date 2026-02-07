@@ -3,12 +3,13 @@ import { getAuth } from 'firebase/auth'
 
 export default defineNuxtPlugin(() => {
   const firebaseConfig = {
-    apiKey: "AIzaSyD50Qk8iUpxuXxYrGXaHpftTk8d3pHtUyk",
-    authDomain: "lolaapril-wellness.firebaseapp.com",
-    projectId: "lolaapril-wellness",
-    storageBucket: "lolaapril-wellness.appspot.com",
-    messagingSenderId: "630281833424",
-    appId: "1:630281833424:web:99cdd66d7013d873a9c7d5",
+     apiKey: "AIzaSyB3blZmoQfuy1rZRwkIdm10Mns3k51rVr0",
+      authDomain: "lolaapril-ddec1.firebaseapp.com",
+      projectId: "lolaapril-ddec1",
+      storageBucket: "lolaapril-ddec1.firebasestorage.app",
+      messagingSenderId: "45278791445",
+      appId: "1:45278791445:web:e0e505de61c03ef91d4b1c",
+      measurementId: "G-2CJ1W7N7PY"
   }
 
   const app = initializeApp(firebaseConfig)

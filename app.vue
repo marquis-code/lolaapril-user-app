@@ -4,6 +4,7 @@
     <NuxtLayout class="z-10">
       <NuxtPage class="z-10" />
     </NuxtLayout>
+    <ChatWidget />
   </div>
 </template>
 
@@ -15,6 +16,10 @@ body {
 
 <script setup lang="ts">
 // Global app configuration
+import { useRealtimeNotifications } from '@/composables/core/useRealtimeNotifications'
+
+useRealtimeNotifications()
+
 useHead({
   title: 'Lola April Wellness Spa - Outside Health Starts Inside',
   htmlAttrs: {

@@ -1,5 +1,5 @@
 <template>
-  <section id="book" class="section-padding bg-primary text-white text-center">
+  <section id="book" class="section-padding bg-parentPrimary text-white text-center">
     <div class="max-w-2xl mx-auto">
       <h2 class="text-4xl md:text-5xl font-light mb-12">Book Now</h2>
       
@@ -11,7 +11,7 @@
         <p class="text-lg">E: reservations@lolaapril.com</p>
       </div>
 
-      <button @click="$emit('open-booking')" class="btn-primary text-lg">
+      <button @click="$emit('open-booking')" class="btn-parentPrimary text-lg">
         Reserve Your Experience
       </button>
 

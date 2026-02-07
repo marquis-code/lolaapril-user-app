@@ -1,7 +1,7 @@
 <template>
-  <section id="gallery" class="section-padding bg-secondary">
+  <section id="gallery" class="section-padding bg-parentSecondary">
     <div class="max-w-7xl mx-auto">
-      <h2 class="text-4xl md:text-5xl font-light text-center text-primary mb-12">Gallery</h2>
+      <h2 class="text-4xl md:text-5xl font-light text-center text-parentPrimary mb-12">Gallery</h2>
       
       <div 
         ref="galleryRef"
@@ -28,7 +28,7 @@
         </div>
       </div>
 
-      <p class="text-center text-primary mt-8">
+      <p class="text-center text-parentPrimary mt-8">
         ← Drag to explore →
       </p>
     </div>

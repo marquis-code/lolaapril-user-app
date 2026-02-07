@@ -66,7 +66,7 @@
 
                 <button
                   class="text-xs text-primary font-semibold hover:text-primary-700 px-3 py-1.5 rounded-full bg-primary/5 transition-colors flex-shrink-0"
-                  @click.stop="navigateTo('/book?subdomain=lola-beauty')"
+                  @click.stop="navigateTo('/book?subdomain=benn')"
                 >
                   Book again
                 </button>
@@ -111,7 +111,7 @@
 
                 <button
                   class="text-xs text-primary font-medium hover:text-primary-700 px-3 py-1.5 rounded-full bg-primary/5 transition-colors flex-shrink-0"
-                  @click.stop="navigateTo('/book?subdomain=lola-beauty')"
+                  @click.stop="navigateTo('/book?subdomain=benn')"
                 >
                   Book again
                 </button>
@@ -191,7 +191,7 @@
               <button
                 v-if="!isUpcoming(selectedBooking)"
                 class="flex-1 flex items-center justify-center gap-2 bg-gray-900 text-white font-medium text-sm py-2.5 rounded-lg hover:bg-gray-800 transition-colors"
-                @click="navigateTo('/book?subdomain=lola-beauty')"
+                @click="navigateTo('/book?subdomain=benn')"
               >
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
@@ -582,7 +582,7 @@ const fetchRescheduleSlots = async () => {
   loadingRescheduleSlots.value = true
   try {
     await getAvailableSlots({
-      subdomain: selectedBooking.value.business?.subdomain || 'lola-beauty',
+      subdomain: selectedBooking.value.business?.subdomain || 'benn',
       date: rescheduleDate.value,
       serviceIds
     })

@@ -2,7 +2,7 @@
 <template>
   <header 
     class="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
-    :class="scrolled ? 'bg-primary shadow-lg' : 'bg-transparent'"
+    :class="scrolled ? 'bg-parentPrimary shadow-lg' : 'bg-transparent'"
   >
     <nav class="max-w-7xl mx-auto px-6 md:px-12 py-4 flex items-center justify-between">
       <!-- Logo -->
@@ -35,7 +35,7 @@
         <button 
           v-if="!isLoggedIn"
           @click="openSignupModal"
-          class="btn-primary rounded-full"
+          class="btn-parentPrimary rounded-full"
         >
           Sign Up
         </button>
@@ -46,7 +46,7 @@
             @click="toggleDropdown"
             class="flex items-center gap-2 text-white hover:text-accent transition-colors focus:outline-none"
           >
-            <div class="w-10 h-10 rounded-full bg-accent flex items-center justify-center text-primary font-semibold">
+            <div class="w-10 h-10 rounded-full bg-accent flex items-center justify-center text-parentPrimary font-semibold">
               {{ userInitials }}
             </div>
             <svg 
@@ -131,13 +131,13 @@
     <!-- Mobile Menu -->
     <div 
       v-if="mobileMenuOpen"
-      class="md:hidden bg-primary border-t-[0.5px] border-white/10"
+      class="md:hidden bg-parentPrimary border-t-[0.5px] border-white/10"
     >
       <ul class="flex flex-col space-y-4 px-6 py-6 text-white">
         <!-- User Info (Mobile) - Show when logged in -->
         <li v-if="isLoggedIn" class="pb-4 border-b border-white/10">
           <div class="flex items-center gap-3">
-            <div class="w-12 h-12 rounded-full bg-accent flex items-center justify-center text-primary font-semibold text-lg">
+            <div class="w-12 h-12 rounded-full bg-accent flex items-center justify-center text-parentPrimary font-semibold text-lg">
               {{ userInitials }}
             </div>
             <div>
@@ -205,7 +205,7 @@
           <li>
             <button 
               @click="openSignupModal"
-              class="btn-primary w-full"
+              class="btn-parentPrimary w-full"
             >
               Sign Up
             </button>
@@ -421,7 +421,7 @@ const confirmLogout = () => {
 </script>
 
 <style scoped>
-.btn-primary {
-  @apply px-6 py-2 bg-accent text-primary font-medium rounded-full hover:bg-accent/90 transition-colors;
+.btn-parentPrimary {
+  @apply px-6 py-2 bg-accent text-parentPrimary font-medium rounded-full hover:opacity-90 transition-colors;
 }
 </style>

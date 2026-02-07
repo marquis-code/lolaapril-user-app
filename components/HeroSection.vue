@@ -1,6 +1,6 @@
 <template>
-  <section class="relative h-screen flex items-center justify-center bg-primary text-white overflow-hidden">
-    <div class="absolute inset-0 bg-gradient-to-b from-primary/50 to-primary"></div>
+  <section class="relative h-screen flex items-center justify-center bg-black text-white overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-b from-parentPrimary/50 to-parentPrimary"></div>
     
     <div class="relative z-10 text-center px-6">
       <h1 class="text-5xl md:text-7xl lg:text-8xl font-light mb-8 animate-fade-in">

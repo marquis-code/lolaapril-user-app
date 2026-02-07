@@ -2,9 +2,27 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Theme CSS Variables - These are dynamically overridden by useTheme composable */
+:root {
+  --color-primary: #005967;
+  --color-secondary: #F8EADC;
+  --color-accent: #FFA500;
+  --color-background: #FFFFFF;
+  --color-text: #1F2937;
+  --color-error: #EF4444;
+  --color-success: #10B981;
+  
+  --font-family: 'Roobert PRO', sans-serif;
+  --font-heading: 'Roobert PRO', sans-serif;
+  --font-body: 'Roobert PRO', sans-serif;
+}
+
 @layer base {
   body {
     @apply font-sans antialiased;
+    font-family: var(--font-family);
+    color: var(--color-text);
+    background-color: var(--color-background);
   }
 }
 

@@ -56,7 +56,7 @@ const goToBooking = () => {
   navigateTo({
     path: '/book',
     query: {
-      subdomain: 'lola-beauty',
+      subdomain: 'benn',
     },
   })
 }

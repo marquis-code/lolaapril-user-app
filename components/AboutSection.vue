@@ -1,6 +1,6 @@
 
 <template>
-  <section class="section-padding bg-secondary">
+  <section class="section-padding bg-parentSecondary">
     <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 items-center">
       <!-- Image -->
       <div class="relative">
@@ -20,10 +20,10 @@
 
       <!-- Content -->
       <div>
-        <h2 class="text-4xl md:text-5xl font-light text-primary mb-6">
+        <h2 class="text-4xl md:text-5xl font-light text-parentPrimary mb-6">
           Your Premier Destination for Holistic Rejuvenation
         </h2>
-        <div class="space-y-4 text-primary/80 leading-relaxed">
+        <div class="space-y-4 text-parentPrimary/80 leading-relaxed">
           <p>
             Lola April Wellness Spa is your premier destination for bespoke, conscious, 
             and intentional wellness, providing transformative experiences that revitalize 
