@@ -568,7 +568,7 @@ const handleSignup = async () => {
   try {
     await register(signupForm.value)
     closeModal()
-    await navigateTo('/book?subdomain=benn')
+    await navigateTo('/book?subdomain=lola-beauty')
   } catch (error) {
     console.error('Signup error:', error)
   }

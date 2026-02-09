@@ -49,7 +49,7 @@
 //     const response = await auth_api.googleAuth({idToken})
 //     createUser(response.data)
 
-//     await navigateTo('/book?subdomain=benn')
+//     await navigateTo('/book?subdomain=lola-beauty')
 
 //     stopLoading()
 //     return response
@@ -134,7 +134,7 @@ export const useGoogleAuth = () => {
       const response = await auth_api.googleAuth({ idToken })
       createUser(response.data)
 
-      await navigateTo('/book?subdomain=benn')
+      await navigateTo('/book?subdomain=lola-beauty')
 
       user.value = result.user
       

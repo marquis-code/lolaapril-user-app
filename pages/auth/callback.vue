@@ -43,7 +43,7 @@ onMounted(async () => {
     localStorage.setItem('user', JSON.stringify(userData))
     
     // Redirect to booking or home page
-    await navigateTo('/book?subdomain=benn')
+    await navigateTo('/book?subdomain=lola-beauty')
   } catch (err: any) {
     error.value = err.message || 'Authentication failed'
     loading.value = false

@@ -13,7 +13,7 @@
 //     // const backendUrl = 'https://af9e16900bbd.ngrok-free.app' // or use env variable
     
 //     // Optional: Add subdomain if needed
-//     const subdomain = 'benn' // or get from route/props
+//     const subdomain = 'lola-beauty' // or get from route/props
     
 //     // Redirect to backend Google OAuth endpoint
 //     const redirectUrl = subdomain 

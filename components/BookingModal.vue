@@ -117,7 +117,7 @@
           <div class="lg:grid lg:grid-cols-3 lg:gap-8 lg:p-6 h-full">
             <!-- Left Content - Scrollable -->
             <div
-              class="lg:col-span-2 p-4 sm:p-6 lg:p-0 pb-32 lg:pb-6 h-full overflow-y-auto"
+              class="lg:col-span-2 p-4 sm:p-6 lg:p-0 pb-[110px] lg:pb-6 h-full overflow-y-auto"
               ref="leftContentRef"
             >
               <!-- Step 1: Services -->
@@ -178,10 +178,10 @@
                     class="flex flex-col items-center text-center py-16 px-4"
                   >
                     <div
-                      class="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-4"
+                      class="w-16 h-16 rounded-full bg-parentPrimary/10 flex items-center justify-center mb-4"
                     >
                       <svg
-                        class="w-8 h-8 text-primary"
+                        class="w-8 h-8 text-parentPrimary"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -206,7 +206,7 @@
 
                     <button
                       @click="refetchServices"
-                      class="mt-6 px-6 py-3 rounded-full text-sm font-semibold bg-primary text-white hover:bg-primary/90 transition"
+                      class="mt-6 px-6 py-3 rounded-full text-sm font-semibold bg-parentPrimary text-white hover:bg-parentPrimary/90 transition"
                     >
                       Refresh
                     </button>
@@ -257,7 +257,7 @@
                           class="bg-white rounded-xl border-[0.5px] transition cursor-pointer p-3 sm:p-4 active:scale-98"
                           :class="
                             isServiceInCart(service._id)
-                              ? 'border-primary bg-primary/5'
+                              ? 'border-parentPrimary bg-parentPrimary/5'
                               : 'border-gray-100'
                           "
                           @click="handleServiceClick(service)"
@@ -302,7 +302,7 @@
                               class="ml-2 w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center transition flex-shrink-0"
                               :class="
                                 isServiceInCart(service._id)
-                                  ? 'bg-primary text-white'
+                                  ? 'bg-parentPrimary text-white'
                                   : 'border-[0.5px] border-gray-100'
                               "
                             >
@@ -337,7 +337,7 @@
                 class="ml-2 w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center transition flex-shrink-0"
                 :class="
                   isServiceInCart(service._id)
-                    ? 'bg-primary text-white'
+                    ? 'bg-parentPrimary text-white'
                     : 'border-[0.5px] border-gray-100'
                 "
               >
@@ -448,7 +448,7 @@
                           !date.isCurrentMonth ? 'text-gray-300' : '',
                           date.isToday ? 'font-bold' : '',
                           date.dateString === selectedDate
-                            ? 'bg-primary text-white'
+                            ? 'bg-parentPrimary text-white'
                             : 'hover:bg-gray-100',
                           !date.isAvailable
                             ? 'opacity-50 cursor-not-allowed'
@@ -473,7 +473,7 @@
                       :class="[
                         'flex-shrink-0 snap-start text-center py-2.5 px-3 min-w-[60px] rounded-full border-[0.5px] transition',
                         selectedDate === day.dateString
-                          ? 'border-primary bg-primary text-white'
+                          ? 'border-parentPrimary bg-parentPrimary text-white'
                           : 'border-gray-100 hover:border-gray-200',
                       ]"
                     >
@@ -503,7 +503,7 @@
                       :class="[
                         'py-2.5 rounded-full text-xs font-medium transition border-[0.5px]',
                         selectedTime === slot.startTime
-                          ? 'bg-primary text-white border-primary'
+                          ? 'bg-parentPrimary text-white border-parentPrimary'
                           : 'bg-white border-gray-100 hover:border-gray-200',
                       ]"
                     >
@@ -787,16 +787,18 @@
         </div>
       </div>
 
-      <!-- Mobile Bottom Bar -->
+      <!-- Mobile Bottom Bar - Floating, always on top -->
       <div
-        class="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t-[0.5px] border-gray-50 z-20 safe-area-bottom"
+        class="lg:hidden pointer-events-none"
+        style="position: fixed; bottom: 0; left: 0; right: 0; z-index: 99999;"
       >
-        <div class="p-4">
+        <div class="flex justify-center w-full pb-6">
           <div
             v-if="cart.length > 0"
-            class="flex items-center justify-between gap-4"
+            class="flex items-center gap-3 bg-white rounded-full shadow-xl px-4 py-2 pointer-events-auto border border-gray-100"
+            style="max-width: 95vw; min-width: 0;"
           >
-            <div class="flex-1 min-w-0">
+            <div class="flex flex-col items-start min-w-0 pr-2">
               <div class="text-xs text-gray-600">
                 {{ cart.length }} service{{ cart.length > 1 ? "s" : "" }}
               </div>
@@ -808,7 +810,8 @@
               v-if="currentStep === 1"
               @click="proceedToDateTime"
               :disabled="cart.length === 0"
-              class="px-6 py-3 bg-gray-900 text-white font-semibold rounded-full transition disabled:opacity-50 text-sm whitespace-nowrap"
+              class="px-6 py-3 bg-gray-900 text-white font-semibold rounded-full transition disabled:opacity-50 text-sm whitespace-nowrap min-w-[120px] pointer-events-auto shadow-lg"
+              style="z-index:100000;"
             >
               Continue
             </button>
@@ -816,19 +819,21 @@
               v-else-if="currentStep === 2"
               @click="proceedToConfirm"
               :disabled="!selectedDate || !selectedTime"
-              class="px-6 py-3 bg-gray-900 text-white font-semibold rounded-full transition disabled:opacity-50 text-sm whitespace-nowrap"
+              class="px-6 py-3 bg-gray-900 text-white font-semibold rounded-full transition disabled:opacity-50 text-sm whitespace-nowrap min-w-[120px] pointer-events-auto shadow-lg"
+              style="z-index:100000;"
             >
               Continue
             </button>
             <button
               v-else-if="currentStep === 3"
               @click="confirmBooking"
-              class="px-6 py-3 bg-gray-900 text-white font-semibold rounded-full transition disabled:opacity-50 text-sm whitespace-nowrap"
+              class="px-6 py-3 bg-gray-900 text-white font-semibold rounded-full transition disabled:opacity-50 text-sm whitespace-nowrap min-w-[120px] pointer-events-auto shadow-lg"
+              style="z-index:100000;"
             >
               Confirm
             </button>
           </div>
-          <div v-else class="text-center text-sm text-gray-500 py-2">
+          <div v-else class="text-center text-sm text-gray-500 py-2 bg-white rounded-full shadow-xl px-4 pointer-events-auto border border-gray-100">
             No services selected
           </div>
         </div>
@@ -884,7 +889,7 @@
                   :class="[
                     'p-4 border-2 rounded-lg cursor-pointer transition',
                     selectedVariant?.name === variant.name
-                      ? 'border-primary bg-primary/5'
+                      ? 'border-parentPrimary bg-parentPrimary/5'
                       : 'border-gray-200 hover:border-gray-300',
                   ]"
                 >
@@ -903,7 +908,7 @@
                         :class="[
                           'w-5 h-5 rounded-full border-2 flex items-center justify-center',
                           selectedVariant?.name === variant.name
-                            ? 'border-primary bg-primary'
+                            ? 'border-parentPrimary bg-parentPrimary'
                             : 'border-gray-300',
                         ]"
                       >
@@ -1004,7 +1009,7 @@
                 v-for="service in availableExtraServices"
                 :key="service._id"
                 @click="addExtraService(service)"
-                class="p-3.5 border-[0.5px] border-gray-100 rounded-xl hover:border-primary hover:bg-primary/5 cursor-pointer transition active:scale-[0.98]"
+                class="p-3.5 border-[0.5px] border-gray-100 rounded-xl hover:border-parentPrimary hover:bg-parentPrimary/5 cursor-pointer transition active:scale-[0.98]"
               >
                 <h3 class="font-semibold text-sm mb-0.5">
                   {{ service.basicDetails.serviceName }}
@@ -1057,7 +1062,7 @@
                   :class="[
                     'pb-2 w-full font-semibold transition',
                     authTab === 'login'
-                      ? 'text-primary border-b-2 border-primary'
+                      ? 'text-parentPrimary border-b-2 border-parentPrimary'
                       : 'text-gray-600 hover:text-gray-800',
                   ]"
                 >
@@ -1068,7 +1073,7 @@
                   :class="[
                     'pb-2 w-full font-semibold transition',
                     authTab === 'signup'
-                      ? 'text-primary border-b-2 border-primary'
+                      ? 'text-parentPrimary border-b-2 border-parentPrimary'
                       : 'text-gray-600 hover:text-gray-800',
                   ]"
                 >
@@ -1104,7 +1109,7 @@
                 <div class="pt-6">
                   <button
                     type="submit"
-                    class="w-full bg-primary text-sm text-white font-bold py-3 rounded-full transition disabled:opacity-50 disabled:cursor-not-allowed hover:bg-primary/90"
+                    class="w-full bg-parentPrimary text-sm text-white font-bold py-3 rounded-full transition disabled:opacity-50 disabled:cursor-not-allowed hover:bg-parentPrimary/90"
                   >
                     Continue
                   </button>
@@ -1165,7 +1170,7 @@
                 <div class="pt-6">
                   <button
                     type="submit"
-                    class="w-full bg-primary text-sm text-white font-bold py-3 rounded-full transition disabled:opacity-50 disabled:cursor-not-allowed hover:bg-primary/90"
+                    class="w-full bg-parentPrimary text-sm text-white font-bold py-3 rounded-full transition disabled:opacity-50 disabled:cursor-not-allowed hover:bg-parentPrimary/90"
                   >
                     Continue
                   </button>

@@ -25,7 +25,7 @@ export const useLogin = () => {
           toastType: "success",
           duration: 3000,
         });
-        await navigateTo("/book?subdomain=benn");
+        await navigateTo("/book?subdomain=lola-beauty");
         return true;
       }
     } finally {
