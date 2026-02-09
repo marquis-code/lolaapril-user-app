@@ -180,12 +180,18 @@
 const isOpen = ref(false)
 
 const spaImages = [
-  'https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=800&q=80',
-  'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=800&q=80',
-  'https://images.unsplash.com/photo-1507652313519-d4e9174996dd?w=800&q=80',
-  'https://images.unsplash.com/photo-1610875461587-c3bb0a78e2f6?w=800&q=80',
-  'https://images.unsplash.com/photo-1519823551278-64ac92734fb1?w=800&q=80',
-  'https://images.unsplash.com/photo-1600334089648-b0d9d3028eb2?w=800&q=80',
+  // Strictly spa/wellness-related, Black African/diaspora, massages, facials, ambience
+  'https://images.pexels.com/photos/3997985/pexels-photo-3997985.jpeg?auto=compress&w=800&q=80', // African couple spa massage
+  'https://images.pexels.com/photos/5938605/pexels-photo-5938605.jpeg?auto=compress&w=800&q=80', // African woman facial
+  'https://images.pexels.com/photos/3997987/pexels-photo-3997987.jpeg?auto=compress&w=800&q=80', // African couple relaxing at spa
+  'https://images.pexels.com/photos/3997986/pexels-photo-3997986.jpeg?auto=compress&w=800&q=80', // African woman massage
+  'https://images.pexels.com/photos/3997988/pexels-photo-3997988.jpeg?auto=compress&w=800&q=80', // African couple spa
+  'https://images.pexels.com/photos/6148107/pexels-photo-6148107.jpeg?auto=compress&w=800&q=80', // Black woman relaxing spa
+  'https://images.pexels.com/photos/3757942/pexels-photo-3757942.jpeg?auto=compress&w=800&q=80', // Black woman spa luxury
+  'https://images.pexels.com/photos/5709005/pexels-photo-5709005.jpeg?auto=compress&w=800&q=80', // Black woman with towel at spa
+  'https://images.pexels.com/photos/3997989/pexels-photo-3997989.jpeg?auto=compress&w=800&q=80', // African couple spa
+  'https://images.pexels.com/photos/3997984/pexels-photo-3997984.jpeg?auto=compress&w=800&q=80', // African woman spa facial
+  'https://images.pexels.com/photos/3997983/pexels-photo-3997983.jpeg?auto=compress&w=800&q=80', // African woman spa treatment
 ]
 
 const spaImagesReverse = [...spaImages].reverse()

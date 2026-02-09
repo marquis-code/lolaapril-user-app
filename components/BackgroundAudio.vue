@@ -4,7 +4,7 @@
     <button
       v-if="!showControls"
       @click="showControls = true"
-      class="group relative w-8 h-8 rounded-full bg-primary shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center transform hover:scale-110"
+      class="group relative w-8 h-8 rounded-full bg-parentPrimary shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center transform hover:scale-110"
       title="Music controls"
     >
       <!-- Music Note Icon -->
@@ -31,7 +31,7 @@
       <!-- Header with Close Button -->
       <div class="flex items-center justify-between mb-4">
         <div class="flex items-center gap-2">
-          <div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center">
+          <div class="w-10 h-10 rounded-full bg-parentPrimary flex items-center justify-center">
             <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
               <path d="M18 3a1 1 0 00-1.196-.98l-10 2A1 1 0 006 5v9.114A4.369 4.369 0 005 14c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V7.82l8-1.6v5.894A4.37 4.37 0 0015 12c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V3z" />
             </svg>
@@ -58,7 +58,7 @@
       <div class="flex items-center justify-center mb-4">
         <button
           @click="togglePlay"
-          class="w-14 h-14 rounded-full bg-primary shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center transform hover:scale-105"
+          class="w-14 h-14 rounded-full bg-parentPrimary shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center transform hover:scale-105"
         >
           <!-- Play Icon -->
           <svg 
