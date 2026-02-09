@@ -4,7 +4,11 @@
       <Transition name="fade">
         <div
           v-if="isOpen"
-          class="w-[380px] sm:w-[420px] md:w-[480px] max-h-[75vh] bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden flex flex-col"
+          :class="[
+            'max-h-[75vh] bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden flex flex-col',
+            'w-[520px] sm:w-[600px] md:w-[700px]',
+            isMobile() ? 'fixed inset-0 w-screen h-screen max-h-none rounded-none z-[999999]' : ''
+          ]"
         >
           <div class="flex items-center justify-between px-4 py-3 bg-gray-900 text-white">
             <div>
@@ -72,22 +76,24 @@
 
             <!-- Messages -->
             <div
-              v-for="message in messages"
+              v-for="(message, idx) in messages"
               :key="message.id || message.createdAt"
               class="flex"
-              :class="isMine(message) ? 'justify-end' : 'justify-start'"
+              :class="getBubblePosition(message)"
+              :style="{
+                marginTop: idx > 0 && messages[idx-1]?.senderType !== message.senderType ? '40px' : '6px',
+                marginBottom: idx < messages.length - 1 && messages[idx+1]?.senderType !== message.senderType ? '40px' : '',
+              }"
             >
               <div
-                class="max-w-[75%] rounded-2xl px-4 py-3 text-sm shadow-sm"
-                :class="isMine(message)
-                  ? 'bg-gray-900 text-white rounded-br-sm ml-auto'
-                  : 'bg-white text-gray-800 rounded-bl-sm border border-gray-100 mr-auto'"
+                class="max-w-[85%] rounded-2xl px-5 py-3 text-xs shadow-sm"
+                :class="getBubbleStyle(message)"
               >
-                <p class="text-[11px] font-medium mb-1" :class="isMine(message) ? 'text-white/70' : 'text-primary'" v-if="!isMine(message)">
-                  {{ message.senderName || 'Support' }}
+                <p class="text-[12px] font-semibold mb-1" :class="getBubbleLabelStyle(message)" v-if="showSenderLabel(message)">
+                  {{ message.senderName || (message.senderType === 'bot' ? 'Bot' : 'Support') }}
                 </p>
-                <p class="whitespace-pre-wrap leading-relaxed">{{ message.content }}</p>
-                <p class="text-[10px] mt-1.5 text-right" :class="isMine(message) ? 'text-white/50' : 'text-gray-400'" v-if="message.createdAt">
+                <p class="whitespace-pre-wrap leading-relaxed text-[13px]">{{ message.content }}</p>
+                <p class="text-[10px] mt-1.5 text-right" :class="getBubbleTimeStyle(message)" v-if="message.createdAt">
                   {{ formatTime(message.createdAt) }}
                 </p>
               </div>
@@ -137,6 +143,11 @@
 </template>
 
 <script setup lang="ts">
+import { onMounted, ref } from 'vue'
+// Helper to detect mobile
+function isMobile() {
+  return window.innerWidth <= 640;
+}
 import { useChat } from '@/composables/modules/chat/useChat'
 import { useRealtimeSocket } from '@/composables/core/useRealtimeSocket'
 
@@ -163,6 +174,40 @@ const {
   detachSocketListeners,
   isMine,
 } = useChat()
+
+// Helper: always right for customer/guest, always left for staff/bot
+function getBubblePosition(message) {
+  if (message.senderType === 'customer' || message.senderType === 'guest') {
+    return 'justify-end';
+  }
+  return 'justify-start';
+}
+
+function getBubbleStyle(message) {
+  if (message.senderType === 'customer' || message.senderType === 'guest') {
+    return 'bg-gray-900 text-white rounded-br-sm ml-auto';
+  }
+  return 'bg-white text-gray-800 rounded-bl-sm border border-gray-100 mr-auto';
+}
+
+function getBubbleLabelStyle(message) {
+  if (message.senderType === 'customer' || message.senderType === 'guest') {
+    return 'text-white/70';
+  }
+  return 'text-primary';
+}
+
+function getBubbleTimeStyle(message) {
+  if (message.senderType === 'customer' || message.senderType === 'guest') {
+    return 'text-white/50';
+  }
+  return 'text-gray-400';
+}
+
+function showSenderLabel(message) {
+  // Only show label for staff/bot, not for customer/guest
+  return message.senderType !== 'customer' && message.senderType !== 'guest';
+}
 
 const { socket, connectSocket, isConnected } = useRealtimeSocket()
 

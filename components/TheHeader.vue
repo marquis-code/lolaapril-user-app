@@ -10,209 +10,54 @@
         <img src="@/assets/img/logo.png" alt="Lola April Wellness Spa Logo" class="h-10 w-auto" />
       </NuxtLink>
 
-      <!-- Desktop Navigation -->
-      <ul class="hidden md:flex items-center space-x-8 text-white">
-        <li><NuxtLink to="/" class="hover:text-accent transition-colors">Home</NuxtLink></li>
-        <li><NuxtLink to="#services" class="hover:text-accent transition-colors">Services</NuxtLink></li>
-        <li><NuxtLink to="#story" class="hover:text-accent transition-colors">Our Story</NuxtLink></li>
-        <li><NuxtLink to="#gallery" class="hover:text-accent transition-colors">Gallery</NuxtLink></li>
-        <li><NuxtLink to="#book" class="hover:text-accent transition-colors">Book Now</NuxtLink></li>
-        
-        <!-- Show Login button only when not logged in -->
-        <li v-if="!isLoggedIn">
-          <button 
-            @click="openLoginModal"
-            class="hover:text-accent transition-colors"
-          >
-            Login
-          </button>
-        </li>
-      </ul>
 
-      <!-- Desktop Auth Section -->
-      <div class="hidden md:flex items-center gap-4">
-        <!-- Show Sign Up button only when not logged in -->
+      <!-- Hamburger Menu Button (Desktop & Mobile) -->
+      <div class="relative group">
         <button 
-          v-if="!isLoggedIn"
-          @click="openSignupModal"
-          class="btn-parentPrimary rounded-full"
+          @click="mobileMenuOpen = !mobileMenuOpen"
+          class="md:flex items-center justify-center text-white focus:outline-none bg-parentPrimary/80 rounded-full p-2 shadow-lg transition-all duration-300 hover:bg-parentPrimary/90"
+          style="box-shadow: 0 4px 24px 0 rgba(0,0,0,0.12);"
         >
-          Sign Up
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path v-if="!mobileMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+            <path v-else stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
         </button>
-
-        <!-- Show User Profile when logged in -->
-        <div v-else class="relative" ref="dropdownRef">
-          <button 
-            @click="toggleDropdown"
-            class="flex items-center gap-2 text-white hover:text-accent transition-colors focus:outline-none"
-          >
-            <div class="w-10 h-10 rounded-full bg-accent flex items-center justify-center text-parentPrimary font-semibold">
-              {{ userInitials }}
-            </div>
-            <svg 
-              class="w-4 h-4 transition-transform"
-              :class="dropdownOpen ? 'rotate-180' : ''"
-              fill="none" 
-              stroke="currentColor" 
-              viewBox="0 0 24 24"
-            >
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-            </svg>
-          </button>
-
-          <!-- Dropdown Menu -->
-          <Transition
-            enter-active-class="transition ease-out duration-200"
-            enter-from-class="opacity-0 scale-95"
-            enter-to-class="opacity-100 scale-100"
-            leave-active-class="transition ease-in duration-150"
-            leave-from-class="opacity-100 scale-100"
-            leave-to-class="opacity-0 scale-95"
-          >
-            <div 
-              v-if="dropdownOpen"
-              class="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-xl border-[0.5px] border-gray-50 py-2 z-50"
-            >
-              <!-- User Info -->
-              <div class="px-4 py-3 border-b-[0.5px] border-gray-100">
-                <p class="text-sm font-semibold text-gray-900">{{ currentUser?.name }}</p>
-                <p class="text-xs text-gray-500 truncate">{{ currentUser?.email }}</p>
+        <!-- Animated Sidebar (Partial Width, Full Height) -->
+        <transition name="sidebar-fade">
+          <div v-if="mobileMenuOpen" class="fixed inset-0 z-[1000] flex items-end sm:items-center justify-end" @click.self="mobileMenuOpen = false">
+            <div class="h-full w-[90vw] sm:w-[420px] max-w-full bg-[#005967]/80 backdrop-blur-md flex flex-col items-center justify-center animate-sidebar-drawer shadow-2xl" @click.stop>
+              <div class="w-full flex flex-col items-center pt-16 px-6">
+              <ul class="flex flex-col space-y-6 text-white text-center text-2xl md:text-3xl font-light mb-8 w-full">
+                <li><NuxtLink to="/" @click="mobileMenuOpen = false" class="hover:text-accent transition-colors">Home</NuxtLink></li>
+                <li><NuxtLink to="#services" @click="mobileMenuOpen = false" class="hover:text-accent transition-colors">Services</NuxtLink></li>
+                <li><NuxtLink to="#story" @click="mobileMenuOpen = false" class="hover:text-accent transition-colors">Our Story</NuxtLink></li>
+                <li><NuxtLink to="#gallery" @click="mobileMenuOpen = false" class="hover:text-accent transition-colors">Gallery</NuxtLink></li>
+                <li><NuxtLink to="#book" @click="mobileMenuOpen = false" class="hover:text-accent transition-colors">Book Now</NuxtLink></li>
+              </ul>
+              <div class="w-full flex flex-col items-center">
+                <template v-if="!isLoggedIn">
+                  <button @click="openLoginModal" class="w-full mb-3 py-2 px-4 text-base text-white bg-accent rounded-full hover:opacity-90 transition font-medium">Login</button>
+                  <button @click="openSignupModal" class="w-full py-2 px-4 text-base btn-parentPrimary font-medium">Sign Up</button>
+                </template>
+                <template v-else>
+                  <div class="flex flex-col items-center w-full mb-3">
+                    <div class="w-12 h-12 rounded-full bg-accent flex items-center justify-center text-parentPrimary font-semibold text-xl mb-1">{{ userInitials }}</div>
+                    <div class="text-white text-base font-semibold">{{ currentUser?.name }}</div>
+                    <div class="text-white text-xs mb-1">{{ currentUser?.email }}</div>
+                  </div>
+                  <NuxtLink to="/dashboard/bookings" @click="mobileMenuOpen = false" class="w-full mb-2 py-2 px-4 text-base text-white bg-primary-600 rounded-full hover:bg-primary-700 transition text-center font-medium">My Bookings</NuxtLink>
+                  <NuxtLink to="/dashboard/profile" @click="mobileMenuOpen = false" class="w-full mb-2 py-2 px-4 text-base text-white bg-primary-600 rounded-full hover:bg-primary-700 transition text-center font-medium">Profile</NuxtLink>
+                  <button @click="handleLogoutClick" class="w-full py-2 px-4 text-base text-white bg-red-500 rounded-full hover:bg-red-600 transition font-medium">Logout</button>
+                </template>
               </div>
-
-              <!-- Menu Items -->
-              <NuxtLink 
-                to="/dashboard/bookings"
-                @click="dropdownOpen = false"
-                class="flex items-center text-sm gap-3 px-4 py-2 text-gray-700 hover:bg-gray-25 transition-colors"
-              >
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
-                My Bookings
-              </NuxtLink>
-
-              <NuxtLink 
-                to="/dashboard/profile"
-                @click="dropdownOpen = false"
-                class="flex items-center text-sm gap-3 px-4 py-2 text-gray-700 hover:bg-gray-25 transition-colors"
-              >
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                </svg>
-                Profile
-              </NuxtLink>
-
-              <button 
-                @click="handleLogoutClick"
-                class="flex items-center text-sm gap-3 w-full px-4 py-2 text-red-600 hover:bg-red-25 transition-colors"
-              >
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                </svg>
-                Logout
-              </button>
             </div>
-          </Transition>
-        </div>
-      </div>
-
-      <!-- Mobile Menu Button -->
-      <button 
-        @click="mobileMenuOpen = !mobileMenuOpen"
-        class="md:hidden text-white focus:outline-none"
-      >
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path v-if="!mobileMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-          <path v-else stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-        </svg>
-      </button>
-    </nav>
-
-    <!-- Mobile Menu -->
-    <div 
-      v-if="mobileMenuOpen"
-      class="md:hidden bg-parentPrimary border-t-[0.5px] border-white/10"
-    >
-      <ul class="flex flex-col space-y-4 px-6 py-6 text-white">
-        <!-- User Info (Mobile) - Show when logged in -->
-        <li v-if="isLoggedIn" class="pb-4 border-b border-white/10">
-          <div class="flex items-center gap-3">
-            <div class="w-12 h-12 rounded-full bg-accent flex items-center justify-center text-parentPrimary font-semibold text-lg">
-              {{ userInitials }}
-            </div>
-            <div>
-              <p class="font-semibold">{{ currentUser?.name }}</p>
-              <p class="text-xs text-gray-300">{{ currentUser?.email }}</p>
-            </div>
+            <!-- Removed contact info section for cleaner sidebar -->
           </div>
-        </li>
-
-        <li><NuxtLink to="/" @click="mobileMenuOpen = false" class="block hover:text-accent transition-colors">Home</NuxtLink></li>
-        <li><NuxtLink to="#services" @click="mobileMenuOpen = false" class="block hover:text-accent transition-colors">Services</NuxtLink></li>
-        <li><NuxtLink to="#story" @click="mobileMenuOpen = false" class="block hover:text-accent transition-colors">Our Story</NuxtLink></li>
-        <li><NuxtLink to="#gallery" @click="mobileMenuOpen = false" class="block hover:text-accent transition-colors">Gallery</NuxtLink></li>
-        <li><NuxtLink to="#book" @click="mobileMenuOpen = false" class="block hover:text-accent transition-colors">Book Now</NuxtLink></li>
-        
-        <!-- Show these only when logged in -->
-        <template v-if="isLoggedIn">
-          <li class="pt-4 border-t-[0.5px] border-white/10">
-            <NuxtLink 
-              to="/dashboard/bookings" 
-              @click="mobileMenuOpen = false" 
-              class="flex items-center text-sm gap-3 hover:text-accent transition-colors"
-            >
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-              </svg>
-              My Bookings
-            </NuxtLink>
-          </li>
-          <li>
-            <NuxtLink 
-              to="/dashboard/profile" 
-              @click="mobileMenuOpen = false" 
-              class="flex items-center text-sm gap-3 hover:text-accent transition-colors"
-            >
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-              </svg>
-              Profile
-            </NuxtLink>
-          </li>
-          <li>
-            <button 
-              @click="handleLogoutClick"
-              class="flex items-center text-sm gap-3 text-red-400 hover:text-red-300 transition-colors w-full text-left"
-            >
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-              </svg>
-              Logout
-            </button>
-          </li>
-        </template>
-
-        <!-- Show these only when NOT logged in -->
-        <template v-else>
-          <li class="pt-4 border-t border-white/10">
-            <button 
-              @click="openLoginModal"
-              class="block hover:text-accent transition-colors w-full text-left"
-            >
-              Login
-            </button>
-          </li>
-          <li>
-            <button 
-              @click="openSignupModal"
-              class="btn-parentPrimary w-full"
-            >
-              Sign Up
-            </button>
-          </li>
-        </template>
-      </ul>
-    </div>
+          </div>
+        </transition>
+      </div>
+    </nav>
 
     <!-- Auth Modal -->
     <AuthModal 
@@ -298,6 +143,7 @@
 </template>
 
 <script setup lang="ts">
+  const desktopDrawerOpen = ref(false)
   import { useUser } from '@/composables/modules/auth/user'
   const { isLoggedIn, user: currentUser } = useUser()
 interface User {
@@ -346,7 +192,7 @@ onUnmounted(() => {
 })
 
 const checkAuthStatus = () => {
-  if (process.client) {
+  if (typeof window !== "undefined") {
     const userStr = localStorage.getItem('user')
     if (userStr) {
       try {
@@ -400,7 +246,7 @@ const handleLogoutClick = () => {
 }
 
 const confirmLogout = () => {
-  if (process.client) {
+  if (typeof window !== "undefined") {
     // Clear user from localStorage
     localStorage.removeItem('user')
     localStorage.removeItem('token') // If you store token separately
@@ -421,7 +267,99 @@ const confirmLogout = () => {
 </script>
 
 <style scoped>
+/* Fullscreen sidebar animation */
+
+.animate-sidebar-drawer {
+  animation: sidebarDrawerIn 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes sidebarDrawerIn {
+  0% {
+    opacity: 0;
+    transform: translateX(100vw);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.sidebar-fade-enter-active {
+  transition: all 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.sidebar-fade-leave-active {
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.sidebar-fade-enter-from {
+  opacity: 0;
+  transform: translateX(100vw);
+}
+.sidebar-fade-enter-to {
+  opacity: 1;
+  transform: translateX(0);
+}
+.sidebar-fade-leave-from {
+  opacity: 1;
+  transform: translateX(0);
+}
+.sidebar-fade-leave-to {
+  opacity: 0;
+  transform: translateX(100vw);
+}
+/* Animated drawer styles */
+.animate-drawer {
+  animation: drawerSlideIn 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes drawerSlideIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-24px) scale(0.98);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.slide-fade-enter-active {
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.slide-fade-leave-active {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.slide-fade-enter-from {
+  opacity: 0;
+  transform: translateY(-24px) scale(0.98);
+}
+.slide-fade-enter-to {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+.slide-fade-leave-from {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+.slide-fade-leave-to {
+  opacity: 0;
+  transform: translateY(-24px) scale(0.98);
+}
 .btn-parentPrimary {
-  @apply px-6 py-2 bg-accent text-parentPrimary font-medium rounded-full hover:opacity-90 transition-colors;
+  /* Equivalent Tailwind classes */
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  background-color: var(--color-accent);
+  color: var(--color-parentPrimary);
+  font-weight: 500;
+  border-radius: 9999px;
+  transition-property: opacity, background-color, color;
+  transition-duration: 150ms;
+}
+@media (hover: hover) {
+  .btn-parentPrimary:hover {
+    opacity: 0.9;
+  }
 }
 </style>

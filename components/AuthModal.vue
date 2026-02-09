@@ -25,7 +25,7 @@
                 <div class="max-w-md mx-auto w-full">
                   <!-- Logo -->
                   <div class="mb-8 pt-10">
-                    <h2 class="lg:text-2xl text-xl font-bold text-primary-600 mb-2">
+                    <h2 class="lg:text-2xl text-xl font-bold text-parentPrimary-600 mb-2">
                       {{ getTitle }}
                     </h2>
                     <p class="text-gray-600">
@@ -95,7 +95,7 @@
                       <button
                         type="submit"
                         :disabled="registerLoading"
-                        class="w-full bg-primary hover:bg-primary-700 text-white text-sm font-semibold py-3 rounded-full transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                        class="w-full bg-parentPrimary hover:bg-parentPrimary-700 text-white text-sm font-semibold py-3 rounded-full transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         {{ registerLoading ? 'Creating Account...' : 'Sign Up' }}
                       </button>
@@ -133,7 +133,7 @@
                       <button
                         type="button"
                         @click="switchMode('login')"
-                        class="text-primary-600 hover:text-primary-700 font-semibold"
+                        class="text-parentPrimary-600 hover:text-parentPrimary-700 font-semibold"
                       >
                         Sign In
                       </button>
@@ -170,7 +170,7 @@
                       <button 
                         type="button" 
                         @click="switchMode('forgot')"
-                        class="text-sm font-medium text-primary-600 hover:text-primary-700"
+                        class="text-sm font-medium text-parentPrimary-600 hover:text-parentPrimary-700"
                       >
                         Forgot password?
                       </button>
@@ -180,7 +180,7 @@
                       <button
                         type="submit"
                         :disabled="loginLoading"
-                        class="w-full bg-primary hover:bg-primary-700 text-white text-sm font-semibold py-3 rounded-full transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                        class="w-full bg-parentPrimary hover:bg-parentPrimary-700 text-white text-sm font-semibold py-3 rounded-full transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         {{ loginLoading ? 'Signing In...' : 'Sign In' }}
                       </button>
@@ -217,7 +217,7 @@
                       <button
                         type="button"
                         @click="switchMode('signup')"
-                        class="text-primary-600 hover:text-primary-700 font-semibold"
+                        class="text-parentPrimary-600 hover:text-parentPrimary-700 font-semibold"
                       >
                         Sign Up
                       </button>
@@ -249,7 +249,7 @@
                       <button
                         type="submit"
                         :disabled="forgotLoading"
-                        class="w-full bg-primary hover:bg-primary-700 text-white font-semibold py-3 rounded-full text-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                        class="w-full bg-parentPrimary hover:bg-parentPrimary-700 text-white font-semibold py-3 rounded-full text-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         {{ forgotLoading ? 'Sending...' : 'Send Reset Code' }}
                       </button>
@@ -260,7 +260,7 @@
                       <button
                         type="button"
                         @click="switchMode('login')"
-                        class="text-primary-600 hover:text-primary-700 font-semibold"
+                        class="text-parentPrimary-600 hover:text-parentPrimary-700 font-semibold"
                       >
                         Sign In
                       </button>
@@ -283,8 +283,8 @@
                           @input="handleOTPInput(index, $event)"
                           @keydown="handleOTPKeydown(index, $event)"
                           @paste="handleOTPPaste"
-                          class="w-16 h-14 text-center text-2xl font-bold rounded-lg border-[0.5px] border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all outline-none"
-                          :class="{ 'border-primary-500': otpDigits[index] }"
+                          class="w-16 h-14 text-center text-2xl font-bold rounded-lg border-[0.5px] border-gray-300 focus:ring-2 focus:ring-parentPrimary-500 focus:border-parentPrimary-500 transition-all outline-none"
+                          :class="{ 'border-parentPrimary-500': otpDigits[index] }"
                         />
                       </div>
                     </div>
@@ -298,7 +298,7 @@
                         type="button"
                         @click="handleResendOTP"
                         :disabled="forgotLoading"
-                        class="text-sm text-primary-600 hover:text-primary-700 font-semibold disabled:opacity-50"
+                        class="text-sm text-parentPrimary-600 hover:text-parentPrimary-700 font-semibold disabled:opacity-50"
                       >
                         {{ forgotLoading ? 'Sending...' : 'Resend Code' }}
                       </button>
@@ -310,7 +310,7 @@
                     <button
                       type="submit"
                       :disabled="verifyLoading || !isOTPComplete"
-                      class="w-full bg-primary hover:bg-primary-700 text-white font-semibold py-3 rounded-full transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                      class="w-full bg-parentPrimary hover:bg-parentPrimary-700 text-white font-semibold py-3 rounded-full transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       {{ verifyLoading ? 'Verifying...' : 'Verify Code' }}
                     </button>
@@ -319,7 +319,7 @@
                       <button
                         type="button"
                         @click="switchMode('forgot')"
-                        class="text-primary-600 hover:text-primary-700 font-semibold"
+                        class="text-parentPrimary-600 hover:text-parentPrimary-700 font-semibold"
                       >
                         ← Back to email
                       </button>
@@ -361,7 +361,7 @@
                       <button
                         type="submit"
                         :disabled="resetLoading || passwordMismatch || !resetPasswordForm.newPassword"
-                        class="w-full bg-primary hover:bg-primary-700 text-white text-sm font-semibold py-3 rounded-full transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                        class="w-full bg-parentPrimary hover:bg-parentPrimary-700 text-white text-sm font-semibold py-3 rounded-full transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         {{ resetLoading ? 'Resetting...' : 'Reset Password' }}
                       </button>
@@ -371,7 +371,7 @@
               </div>
 
               <!-- Right Side - Image/Brand -->
-              <div class="hidden md:block md:w-1/2 bg-gradient-to-br from-primary to-primary-700 relative overflow-hidden">
+              <div class="hidden md:block md:w-1/2 bg-gradient-to-br from-parentPrimary to-parentPrimary-700 relative overflow-hidden">
                 <div class="absolute inset-0 bg-green-striped opacity-10"></div>
                 <div class="relative h-full flex flex-col items-center justify-center p-12 text-white">
                   <div class="max-w-md text-center">
