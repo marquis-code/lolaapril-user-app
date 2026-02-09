@@ -11,7 +11,7 @@
     >
       <div 
         v-if="isLoading"
-        class="fixed inset-0 z-[9999] flex items-center justify-center bg-gradient-to-br from-primary via-primary/95 to-primary/90 backdrop-blur-sm"
+        class="fixed inset-0 z-[9999] flex items-center justify-center bg-gradient-to-br from-parentPrimary via-parentPrimary/95 to-parentPrimary/90 backdrop-blur-sm"
       >
         <!-- Animated Background Circles -->
         <div class="absolute inset-0 overflow-hidden">

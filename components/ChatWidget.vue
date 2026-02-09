@@ -1,6 +1,6 @@
 <template>
   <ClientOnly>
-    <div class="fixed bottom-6 right-5 z-[99999] flex flex-col items-end gap-3">
+    <div class="z-[99999] flex flex-col items-end gap-3">
       <Transition name="fade">
         <div
           v-if="isOpen"
@@ -131,12 +131,15 @@
         class="w-14 h-14 rounded-full bg-gray-900 text-white shadow-xl flex items-center justify-center hover:scale-105 transition"
         aria-label="Open chat"
       >
-        <svg v-if="!isOpen" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h6m-6 4h8m4-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+      <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#fafafa" viewBox="0 0 256 256"><path d="M216,80H184V48a16,16,0,0,0-16-16H40A16,16,0,0,0,24,48V176a8,8,0,0,0,13,6.22L72,154V184a16,16,0,0,0,16,16h93.59L219,230.22a8,8,0,0,0,5,1.78,8,8,0,0,0,8-8V96A16,16,0,0,0,216,80ZM66.55,137.78,40,159.25V48H168v88H71.58A8,8,0,0,0,66.55,137.78ZM216,207.25l-26.55-21.47a8,8,0,0,0-5-1.78H88V152h80a16,16,0,0,0,16-16V96h32Z"></path></svg>
+        <!-- <svg v-if="!isOpen" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 10.5V7a5 5 0 00-10 0v3.5A5.5 5.5 0 0012 19a5.5 5.5 0 005-8.5z" />
+          <circle cx="12" cy="15" r="1" fill="currentColor" />
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 17v.01" />
         </svg>
         <svg v-else class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-        </svg>
+        </svg> -->
       </button>
     </div>
   </ClientOnly>
