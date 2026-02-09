@@ -1,4 +1,3 @@
-
 <template>
   <ClientOnly>
     <Teleport to="body">

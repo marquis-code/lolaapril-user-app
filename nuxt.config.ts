@@ -18,7 +18,7 @@ export default defineNuxtConfig({
   },
   app: {
     head: {
-       title: 'Lola April Wellness Spa - Outside Health Starts Inside',
+       title: 'Lola April Wellness Spa - User Portal',
       htmlAttrs: { lang: "en" },
       meta: [
         { charset: "utf-8" },
@@ -28,11 +28,11 @@ export default defineNuxtConfig({
         // ✅ SEO meta
         {
           name: "description",
-            content: 'Premier destination for holistic rejuvenation. Bespoke wellness experiences with 24/7 spa services in Lagos, Nigeria.' 
+            content: 'Login, signup, and manage your Lola April Wellness Spa bookings. Secure, fast, and user-friendly portal.' 
         },
         {
           name: "keywords",
-           content: 'Premier destination for holistic rejuvenation. Bespoke wellness experiences with 24/7 spa services in Lagos, Nigeria.' 
+           content: 'Login, signup, and manage your Lola April Wellness Spa bookings. Secure, fast, and user-friendly portal.' 
         },
         { name: "author", content: "Lola April Wellness Spa" },
 
@@ -87,6 +87,29 @@ export default defineNuxtConfig({
     "@nuxtjs/tailwindcss",
     "@nuxtjs/google-fonts",
     "@nuxtjs/robots",
+    "@nuxtjs/sitemap",
+    "@nuxtjs/seo",
   ],
+  robots: {
+    UserAgent: '*',
+    Disallow: '',
+    Allow: '/',
+    Sitemap: 'https://lolaapril.com/sitemap.xml',
+  },
+  sitemap: {
+    hostname: 'https://lolaapril.com',
+    gzip: true,
+    routes: [
+      '/user',
+    ]
+  },
+  seo: {
+    siteName: 'Lola April Wellness Spa',
+    siteUrl: 'https://lolaapril.com',
+    description: 'Login, signup, and manage your Lola April Wellness Spa bookings. Secure, fast, and user-friendly portal.',
+    twitterCard: 'summary_large_image',
+    twitterSite: '@lolaaprilspa',
+    image: 'https://lolaapril.com/assets/img/logo.png',
+  },
   compatibilityDate: "2025-11-01"
 });

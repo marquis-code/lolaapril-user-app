@@ -235,14 +235,25 @@ onMounted(async () => {
       // Set page meta
       const seo = storefront.value.theme?.seo
       useHead({
-        title: seo?.title || `${storefront.value.business?.businessName} - Book Now`,
+        title: seo?.title || `${storefront.value.business?.businessName || subdomain.value} - Book Now | Lola April Wellness Spa` ,
         meta: [
-          { name: 'description', content: seo?.description || storefront.value.business?.businessDescription },
-          { property: 'og:image', content: seo?.ogImage }
-        ].filter(m => m.content),
-        link: storefront.value.theme?.favicon?.url 
-          ? [{ rel: 'icon', href: storefront.value.theme.favicon.url }] 
-          : []
+          { name: 'description', content: seo?.description || storefront.value.business?.businessDescription || 'Book your wellness experience at Lola April Wellness Spa.' },
+          { name: 'robots', content: 'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1' },
+          { name: 'googlebot', content: 'index, follow' },
+          { property: 'og:type', content: 'website' },
+          { property: 'og:title', content: seo?.title || `${storefront.value.business?.businessName || subdomain.value} - Book Now | Lola April Wellness Spa` },
+          { property: 'og:description', content: seo?.description || storefront.value.business?.businessDescription || 'Book your wellness experience at Lola April Wellness Spa.' },
+          { property: 'og:url', content: `https://lolaapril.com/book/${subdomain.value}` },
+          { property: 'og:image', content: seo?.ogImage || 'https://lolaapril.com/assets/img/logo.png' },
+          { property: 'og:site_name', content: 'Lola April Wellness Spa' },
+          { name: 'twitter:card', content: 'summary_large_image' },
+          { name: 'twitter:title', content: seo?.title || `${storefront.value.business?.businessName || subdomain.value} - Book Now | Lola April Wellness Spa` },
+          { name: 'twitter:description', content: seo?.description || storefront.value.business?.businessDescription || 'Book your wellness experience at Lola April Wellness Spa.' },
+          { name: 'twitter:image', content: seo?.ogImage || 'https://lolaapril.com/assets/img/logo.png' },
+        ],
+        link: [
+          { rel: 'canonical', href: `https://lolaapril.com/book/${subdomain.value}` }
+        ]
       })
     }
   } catch (err) {
