@@ -1,5 +1,5 @@
 <template>
-  <div class="z-[999999]">
+  <div class="z-[999999] hidden">
     <!-- Compact Music Icon (Always Visible) -->
     <button
       v-if="!showControls"

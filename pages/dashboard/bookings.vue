@@ -1,10 +1,10 @@
 <template>
-  <div class="min-h-screen">
+  <div class="min-h-screen pt-10">
     <div class="container mx-auto py-6 px-6">
       <!-- <h1 class="text-lg font-bold text-gray-900 mb-6">Appointments</h1> -->
 
       <div v-if="loading" class="flex justify-center py-12">
-        <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-primary"></div>
+        <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-parentPrimary"></div>
       </div>
 
       <div v-else-if="error" class="text-center py-8 bg-white rounded-xl border-[0.5px] border-gray-50">
@@ -47,7 +47,7 @@
                 <img
                   src="@/assets/img/logo.png"
                   alt="Business"
-                  class="w-12 h-12 p-1.5 bg-primary rounded-lg object-cover flex-shrink-0"
+                  class="w-12 h-12 p-1.5 bg-parentPrimary rounded-lg object-cover flex-shrink-0"
                 />
                 
                 <div class="flex-1 min-w-0">
@@ -65,7 +65,7 @@
                 </div>
 
                 <button
-                  class="text-xs text-primary font-semibold hover:text-primary-700 px-3 py-1.5 rounded-full bg-primary/5 transition-colors flex-shrink-0"
+                  class="text-xs text-parentPrimary font-semibold hover:text-parentPrimary-700 px-3 py-1.5 rounded-full bg-parentPrimary/5 transition-colors flex-shrink-0"
                   @click.stop="navigateTo('/book?subdomain=lola-beauty')"
                 >
                   Book again
@@ -110,7 +110,7 @@
                 </div>
 
                 <button
-                  class="text-xs text-primary font-medium hover:text-primary-700 px-3 py-1.5 rounded-full bg-primary/5 transition-colors flex-shrink-0"
+                  class="text-xs text-parentPrimary font-medium hover:text-parentPrimary-700 px-3 py-1.5 rounded-full bg-parentPrimary/5 transition-colors flex-shrink-0"
                   @click.stop="navigateTo('/book?subdomain=lola-beauty')"
                 >
                   Book again
@@ -307,7 +307,7 @@
 
                   <div class="grid grid-cols-7 gap-1 text-center">
                     <div v-for="day in ['M', 'T', 'W', 'T', 'F', 'S', 'S']" :key="day" class="text-xs text-gray-500 font-medium py-1">{{ day }}</div>
-                    <div v-for="date in rescheduleCalendarDates" :key="date.dateString || date.day" @click="selectRescheduleDate(date)" :class="['py-2 rounded-full cursor-pointer transition text-xs', !date.isCurrentMonth ? 'text-gray-300' : '', date.isToday ? 'font-bold' : '', date.dateString === rescheduleDate ? 'bg-primary text-white' : 'hover:bg-gray-100', !date.isAvailable ? 'opacity-50 cursor-not-allowed' : '']">
+                    <div v-for="date in rescheduleCalendarDates" :key="date.dateString || date.day" @click="selectRescheduleDate(date)" :class="['py-2 rounded-full cursor-pointer transition text-xs', !date.isCurrentMonth ? 'text-gray-300' : '', date.isToday ? 'font-bold' : '', date.dateString === rescheduleDate ? 'bg-parentPrimary text-white' : 'hover:bg-gray-100', !date.isAvailable ? 'opacity-50 cursor-not-allowed' : '']">
                       {{ date.day }}
                     </div>
                   </div>
@@ -319,7 +319,7 @@
               <label class="block text-sm font-medium text-gray-700 mb-2">New Time *</label>
 
               <div v-if="loadingRescheduleSlots" class="text-center py-8">
-                <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
+                <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-parentPrimary mx-auto"></div>
                 <p class="text-sm text-gray-500 mt-2">Loading available times...</p>
               </div>
 
@@ -332,7 +332,7 @@
               </div>
 
               <div v-else class="grid grid-cols-3 gap-2">
-                <button v-for="slot in rescheduleTimeSlots" :key="slot.startTime" @click="selectRescheduleTime(slot.startTime)" :disabled="slot.isBooked" :class="['py-2.5 rounded-full text-xs font-medium transition border-[0.5px]', rescheduleTime === slot.startTime ? 'bg-primary text-white border-primary' : slot.isBooked ? 'bg-gray-50 text-gray-400 border-gray-50 cursor-not-allowed' : 'bg-white border-gray-300 hover:border-primary']">
+                <button v-for="slot in rescheduleTimeSlots" :key="slot.startTime" @click="selectRescheduleTime(slot.startTime)" :disabled="slot.isBooked" :class="['py-2.5 rounded-full text-xs font-medium transition border-[0.5px]', rescheduleTime === slot.startTime ? 'bg-parentPrimary text-white border-parentPrimary' : slot.isBooked ? 'bg-gray-50 text-gray-400 border-gray-50 cursor-not-allowed' : 'bg-white border-gray-300 hover:border-parentPrimary']">
                   {{ formatTime(slot.startTime) }}
                 </button>
               </div>
@@ -344,7 +344,7 @@
 
             <div class="flex gap-3">
               <button @click="closeRescheduleModal" class="flex-1 px-4  py-3 border-[0.5px] border-gray-50 rounded-full font-medium text-sm hover:bg-gray-25 transition-colors">Cancel</button>
-              <button @click="handleRescheduleBooking" :disabled="!rescheduleDate || !rescheduleTime || !rescheduleReason.trim() || rescheduleLoading" class="flex-1 px-4 py-3 bg-primary text-white rounded-full font-medium text-sm hover:bg-primary-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+              <button @click="handleRescheduleBooking" :disabled="!rescheduleDate || !rescheduleTime || !rescheduleReason.trim() || rescheduleLoading" class="flex-1 px-4 py-3 bg-parentPrimary text-white rounded-full font-medium text-sm hover:bg-parentPrimary-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
                 {{ rescheduleLoading ? 'Rescheduling...' : 'Reschedule' }}
               </button>
             </div>

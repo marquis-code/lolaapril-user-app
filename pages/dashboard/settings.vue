@@ -26,7 +26,7 @@
                     @click="toggleNotification('sms')"
                     :class="[
                       'relative inline-flex h-6 w-11 items-center rounded-full transition-colors',
-                      notifications.sms ? 'bg-primary' : 'bg-gray-300',
+                      notifications.sms ? 'bg-parentPrimary' : 'bg-gray-300',
                     ]"
                   >
                     <span
@@ -44,7 +44,7 @@
                     @click="toggleNotification('whatsapp')"
                     :class="[
                       'relative inline-flex h-6 w-11 items-center rounded-full transition-colors',
-                      notifications.whatsapp ? 'bg-primary' : 'bg-gray-300',
+                      notifications.whatsapp ? 'bg-parentPrimary' : 'bg-gray-300',
                     ]"
                   >
                     <span
@@ -70,7 +70,7 @@
                     @click="toggleNotification('email')"
                     :class="[
                       'relative inline-flex h-6 w-11 items-center rounded-full transition-colors',
-                      notifications.email ? 'bg-primary' : 'bg-gray-300',
+                      notifications.email ? 'bg-parentPrimary' : 'bg-gray-300',
                     ]"
                   >
                     <span
@@ -90,7 +90,7 @@
                     @click="toggleNotification('marketingSms')"
                     :class="[
                       'relative inline-flex h-6 w-11 items-center rounded-full transition-colors',
-                      notifications.marketingSms ? 'bg-primary' : 'bg-gray-300',
+                      notifications.marketingSms ? 'bg-parentPrimary' : 'bg-gray-300',
                     ]"
                   >
                     <span
@@ -111,7 +111,7 @@
                     :class="[
                       'relative inline-flex h-6 w-11 items-center rounded-full transition-colors',
                       notifications.marketingWhatsapp
-                        ? 'bg-primary'
+                        ? 'bg-parentPrimary'
                         : 'bg-gray-300',
                     ]"
                   >

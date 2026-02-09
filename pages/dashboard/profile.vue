@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-white">
+  <div class="min-h-screen bg-white pt-6">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
       <!-- Header -->
       <!-- <div class="mb-8">
@@ -10,7 +10,7 @@
       <!-- Main Profile Card -->
       <div class="bg-white rounded-2xl shadow-sm border-[0.5px] border-gray-100 overflow-hidden">
         <!-- Cover Background -->
-        <div class="h-32 bg-primary"></div>
+        <div class="h-32 bg-parentPrimary"></div>
         
         <!-- Profile Content -->
         <div class="px-6 sm:px-8 pb-8">
@@ -30,7 +30,7 @@
                 </div>
                 <div
                   v-else
-                  class="w-32 h-32 rounded-2xl bg-primary flex items-center justify-center text-4xl font-bold text-white border-4 border-white shadow-lg"
+                  class="w-32 h-32 rounded-2xl bg-parentPrimary flex items-center justify-center text-4xl font-bold text-white border-4 border-white shadow-lg"
                 >
                   {{ userInitials }}
                 </div>
@@ -151,7 +151,7 @@
             <button
               @click="handleUpdateProfile"
               :disabled="loading"
-              class="flex-1 bg-primary text-white font-semibold py-4 rounded-full text-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+              class="flex-1 bg-parentPrimary text-white font-semibold py-4 rounded-full text-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
             >
               {{ loading ? 'Updating...' : 'Save Changes' }}
             </button>
@@ -164,7 +164,7 @@
     <Transition name="slide-up">
       <div
         v-if="showSuccess"
-        class="fixed bottom-6 right-6 bg-primary text-white px-6 py-4 rounded-xl shadow-2xl flex items-center gap-3"
+        class="fixed bottom-6 right-6 bg-parentPrimary text-white px-6 py-4 rounded-xl shadow-2xl flex items-center gap-3"
       >
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />

@@ -1936,7 +1936,18 @@ const confirmBooking = async () => {
     const paymentRes: any = await initializePayment(paymentPayload);
 
     if (paymentRes && paymentRes.authorization_url) {
-      window.location.href = paymentRes.authorization_url;
+      try {
+        window.location.href = paymentRes.authorization_url;
+        // Fallback: open in new tab if not redirected
+        setTimeout(() => {
+          if (window.location.href !== paymentRes.authorization_url) {
+            window.open(paymentRes.authorization_url, '_blank');
+          }
+        }, 1500);
+      } catch (e) {
+        // Fallback: open in new tab
+        window.open(paymentRes.authorization_url, '_blank');
+      }
     }
   } catch (err) {
     console.error("Booking error:", err);

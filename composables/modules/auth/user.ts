@@ -45,8 +45,7 @@ export const useUser = () => {
     get: () => runtimeData?.auth?.value?.id ?? "",
     set: () => {},
   });
-
-
+  
   const isLoggedIn = computed({
     get: () => {
       if (!runtimeData.token?.value) return false;

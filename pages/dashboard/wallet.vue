@@ -1,18 +1,18 @@
 <template>
-  <div class="min-h-screen">
+  <div class="min-h-screen pt-6">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
       <!-- <h1 class="text-xl sm:text-2xl font-bold text-gray-900 mb-6 sm:mb-8">Wallet</h1> -->
 
       <!-- Balance Card -->
       <div class="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl p-6 sm:p-8 mb-6 shadow-lg">
         <div class="text-center">
-          <p class="text-sm text-gray-300 mb-2">Available Balance</p>
+          <p class="text-sm text-gray-300 mb-2">Total Transactions Amount</p>
           <p class="text-3xl sm:text-4xl font-bold text-white mb-6">₦{{ formatAmount(totalBalance) }}</p>
-          <button
+          <!-- <button
             class="bg-white text-gray-900 font-semibold px-6 py-3 rounded-full hover:bg-gray-100 transition-colors text-sm sm:text-base"
           >
             Add Funds
-          </button>
+          </button> -->
         </div>
       </div>
 
@@ -91,7 +91,7 @@
                   <div class="flex items-center gap-2">
                     <button
                       @click="selectTransaction(transaction)"
-                      class="text-primary hover:text-primary-700 font-medium text-sm"
+                      class="text-parentPrimary hover:text-parentPrimary-700 font-medium text-sm"
                     >
                       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#000000" viewBox="0 0 256 256"><path d="M247.31,124.76c-.35-.79-8.82-19.58-27.65-38.41C194.57,61.26,162.88,48,128,48S61.43,61.26,36.34,86.35C17.51,105.18,9,124,8.69,124.76a8,8,0,0,0,0,6.5c.35.79,8.82,19.57,27.65,38.4C61.43,194.74,93.12,208,128,208s66.57-13.26,91.66-38.34c18.83-18.83,27.3-37.61,27.65-38.4A8,8,0,0,0,247.31,124.76ZM128,192c-30.78,0-57.67-11.19-79.93-33.25A133.47,133.47,0,0,1,25,128,133.33,133.33,0,0,1,48.07,97.25C70.33,75.19,97.22,64,128,64s57.67,11.19,79.93,33.25A133.46,133.46,0,0,1,231.05,128C223.84,141.46,192.43,192,128,192Zm0-112a48,48,0,1,0,48,48A48.05,48.05,0,0,0,128,80Zm0,80a32,32,0,1,1,32-32A32,32,0,0,1,128,160Z"></path></svg>
                     </button>
@@ -133,7 +133,7 @@
                 :class="[
                   'px-3 py-2 rounded-lg text-sm font-medium transition-colors',
                   currentPage === page
-                    ? 'bg-primary text-white'
+                    ? 'bg-parentPrimary text-white'
                     : 'border border-gray-300 hover:bg-gray-50'
                 ]"
               >
@@ -435,7 +435,7 @@ const downloadReceipt = async (transaction: any) => {
     const contentWidth = pageWidth - (margin * 2)
     
     // Colors
-    const primaryColor = [0, 89, 103]
+    const parentPrimaryColor = [0, 89, 103]
     const darkGray = [51, 51, 51]
     const mediumGray = [107, 114, 128]
     const lightGray = [220, 220, 220]
@@ -443,13 +443,13 @@ const downloadReceipt = async (transaction: any) => {
     let yPos = margin
     
     // ============= HEADER =============
-    doc.setFillColor(...primaryColor)
+    doc.setFillColor(...parentPrimaryColor)
     doc.rect(0, 0, pageWidth, 55, 'F')
     
     // Logo
     doc.setFillColor(255, 255, 255)
     doc.circle(30, 27, 10, 'F')
-    doc.setTextColor(...primaryColor)
+    doc.setTextColor(...parentPrimaryColor)
     doc.setFontSize(16)
     doc.setFont('helvetica', 'bold')
     const businessInitials = (transaction.businessId?.businessName || 'BU').substring(0, 2).toUpperCase()
@@ -504,7 +504,7 @@ const downloadReceipt = async (transaction: any) => {
     
     // ============= TRANSACTION INFO =============
     yPos += 12
-    doc.setTextColor(...primaryColor)
+    doc.setTextColor(...parentPrimaryColor)
     doc.setFontSize(13)
     doc.setFont('helvetica', 'bold')
     doc.text('TRANSACTION INFORMATION', margin, yPos)
@@ -536,7 +536,7 @@ const downloadReceipt = async (transaction: any) => {
     
     // ============= ITEMS =============
     yPos += 12
-    doc.setTextColor(...primaryColor)
+    doc.setTextColor(...parentPrimaryColor)
     doc.setFontSize(13)
     doc.setFont('helvetica', 'bold')
     doc.text('ITEMS', margin, yPos)
@@ -581,7 +581,7 @@ const downloadReceipt = async (transaction: any) => {
     
     // ============= PAYMENT SUMMARY =============
     yPos += 12
-    doc.setTextColor(...primaryColor)
+    doc.setTextColor(...parentPrimaryColor)
     doc.setFontSize(13)
     doc.setFont('helvetica', 'bold')
     doc.text('PAYMENT SUMMARY', margin, yPos)
@@ -614,12 +614,12 @@ const downloadReceipt = async (transaction: any) => {
     
     // Total Line
     yPos += 4
-    doc.setDrawColor(...primaryColor)
+    doc.setDrawColor(...parentPrimaryColor)
     doc.setLineWidth(1)
     doc.line(margin, yPos, pageWidth - margin, yPos)
     
     yPos += 10
-    doc.setTextColor(...primaryColor)
+    doc.setTextColor(...parentPrimaryColor)
     doc.setFontSize(15)
     doc.setFont('helvetica', 'bold')
     doc.text('TOTAL PAID', margin, yPos)
@@ -643,7 +643,7 @@ const downloadReceipt = async (transaction: any) => {
     // ============= PLATFORM FEE (if available) =============
     if (transaction.metadata?.feeCalculation) {
       yPos += 12
-      doc.setTextColor(...primaryColor)
+      doc.setTextColor(...parentPrimaryColor)
       doc.setFontSize(13)
       doc.setFont('helvetica', 'bold')
       doc.text('FEE BREAKDOWN', margin, yPos)
@@ -709,15 +709,15 @@ watch(currentPage, () => {
 </script>
 
 <style scoped>
-.bg-primary {
+.bg-parentPrimary {
   background-color: #005967;
 }
 
-.text-primary {
+.text-parentPrimary {
   color: #005967;
 }
 
-.text-primary-700 {
+.text-parentPrimary-700 {
   color: #004552;
 }
 

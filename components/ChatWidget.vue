@@ -1,6 +1,6 @@
 <template>
   <ClientOnly>
-    <div class="z-[99999] flex flex-col items-end gap-3">
+    <div v-if="showChatWidget" class="z-[99999] flex flex-col items-end gap-3">
       <Transition name="fade">
         <div
           v-if="isOpen"
@@ -29,23 +29,23 @@
 
           <div v-if="isGuest && needsGuestInfo" class="px-4 py-4 space-y-3 border-b border-gray-100">
             <p class="text-xs text-gray-600">Tell us your name and email to start.</p>
-            <input
+            <UiAnimatedInput
               v-model="guestProfile.name"
               type="text"
+              label="Name"
               placeholder="Your name"
-              class="w-full rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900"
             />
-            <input
+            <UiAnimatedInput
               v-model="guestProfile.email"
               type="email"
+              label="Email"
               placeholder="Email address"
-              class="w-full rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900"
             />
-            <input
+            <UiAnimatedInput
               v-model="guestProfile.phone"
               type="tel"
+              label="Phone"
               placeholder="Phone (optional)"
-              class="w-full rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900"
             />
             <button
               @click="startChat"
@@ -146,13 +146,13 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
-// Helper to detect mobile
+import { onMounted, ref, computed } from 'vue'
 function isMobile() {
   return window.innerWidth <= 640;
 }
 import { useChat } from '@/composables/modules/chat/useChat'
 import { useRealtimeSocket } from '@/composables/core/useRealtimeSocket'
+import { useGetBusiness } from '@/composables/modules/business/useGetBusiness'
 
 const isOpen = ref(false)
 const newMessage = ref('')
@@ -178,36 +178,45 @@ const {
   isMine,
 } = useChat()
 
+// Only show chat widget if user is logged in and cachedBusiness is set
+const { cachedBusiness } = useGetBusiness()
+const showChatWidget = computed(() => {
+  // You can adjust this logic if you want to allow guests with business loaded
+  return !!cachedBusiness.value || !isGuest.value
+})
+
 // Helper: always right for customer/guest, always left for staff/bot
-function getBubblePosition(message) {
+import type { ChatMessage } from '@/composables/modules/chat/useChat'
+
+function getBubblePosition(message: ChatMessage) {
   if (message.senderType === 'customer' || message.senderType === 'guest') {
     return 'justify-end';
   }
   return 'justify-start';
 }
 
-function getBubbleStyle(message) {
+function getBubbleStyle(message: ChatMessage) {
   if (message.senderType === 'customer' || message.senderType === 'guest') {
     return 'bg-gray-900 text-white rounded-br-sm ml-auto';
   }
   return 'bg-white text-gray-800 rounded-bl-sm border border-gray-100 mr-auto';
 }
 
-function getBubbleLabelStyle(message) {
+function getBubbleLabelStyle(message: ChatMessage) {
   if (message.senderType === 'customer' || message.senderType === 'guest') {
     return 'text-white/70';
   }
   return 'text-primary';
 }
 
-function getBubbleTimeStyle(message) {
+function getBubbleTimeStyle(message: ChatMessage) {
   if (message.senderType === 'customer' || message.senderType === 'guest') {
     return 'text-white/50';
   }
   return 'text-gray-400';
 }
 
-function showSenderLabel(message) {
+function showSenderLabel(message: ChatMessage) {
   // Only show label for staff/bot, not for customer/guest
   return message.senderType !== 'customer' && message.senderType !== 'guest';
 }

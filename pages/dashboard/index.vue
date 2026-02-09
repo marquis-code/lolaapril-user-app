@@ -4,7 +4,7 @@
       <h1 class="text-3xl font-bold text-gray-900 mb-8">Appointments</h1>
 
       <div v-if="loading" class="flex justify-center py-12">
-        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-parentPrimary"></div>
       </div>
 
       <div v-else-if="error" class="text-center py-12 bg-white rounded-2xl border border-gray-200">
@@ -63,7 +63,7 @@
                       ₦{{ formatPrice(booking.estimatedTotal) }} • {{ booking.services?.length || 1 }} item{{ booking.services?.length > 1 ? 's' : '' }}
                     </p>
                     <button
-                      class="text-sm text-primary font-medium hover:text-primary-700"
+                      class="text-sm text-parentPrimary font-medium hover:text-parentPrimary-700"
                       @click.stop="selectBooking(booking)"
                     >
                       Book again
@@ -108,7 +108,7 @@
                       ₦{{ formatPrice(booking.estimatedTotal) }} • {{ booking.services?.length || 1 }} item{{ booking.services?.length > 1 ? 's' : '' }}
                     </p>
                     <button
-                      class="text-sm text-primary font-medium hover:text-primary-700"
+                      class="text-sm text-parentPrimary font-medium hover:text-parentPrimary-700"
                       @click.stop="navigateTo('/#book')"
                     >
                       Book again

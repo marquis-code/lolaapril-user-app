@@ -4,8 +4,8 @@
     <!-- Desktop Sidebar -->
     <aside class="hidden lg:block w-64 bg-white border-r-[0.5px] border-gray-50 min-h-screen fixed left-0 top-0 shadow-sm">
       <!-- Logo -->
-      <div class="p-6 border-b border-gray-100">
-        <img src="@/assets/img/logo.png" class="h-10 w-auto" alt="Logo" />
+      <div class="p-3 border-b border-gray-100 bg-parentPrimary/10 flex items-center justify-center">
+        <img src="@/assets/img/logo.png" class="h-10 w-auto bg-parentPrimary rounded-xl p-2" alt="Logo" />
       </div>
       
       <!-- Navigation -->
@@ -16,8 +16,8 @@
           :to="item.path"
           class="flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-all group"
           :class="isActive(item.path) 
-            ? 'bg-primary text-white shadow-sm' 
-            : 'text-gray-700 hover:bg-gray-50 hover:text-primary'"
+            ? 'bg-parentPrimary text-white shadow-sm' 
+            : 'text-gray-700 hover:bg-gray-50 hover:text-parentPrimary'"
         >
           <img :src="item.icon" class="w-5 h-5 mr-3" />
           {{ item.label }}
@@ -78,9 +78,9 @@
         </div>
 
         <!-- User Info -->
-        <div class="p-4 bg-gradient-to-br from-primary/5 to-primary/10 border-b border-gray-100">
+        <div class="p-4 bg-gradient-to-br from-parentPrimary/5 to-parentPrimary/10 border-b border-gray-100">
           <div class="flex items-center gap-3">
-            <div class="w-12 h-12 rounded-full bg-primary text-white flex items-center justify-center font-semibold text-lg">
+            <div class="w-12 h-12 rounded-full bg-parentPrimary text-white flex items-center justify-center font-semibold text-lg">
               {{ userInitials }}
             </div>
             <div class="flex-1 min-w-0">
@@ -98,8 +98,8 @@
             :to="item.path"
             class="flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-all"
             :class="isActive(item.path) 
-              ? 'bg-primary text-white shadow-sm' 
-              : 'text-gray-700 hover:bg-gray-50 hover:text-primary'"
+              ? 'bg-parentPrimary text-white shadow-sm' 
+              : 'text-gray-700 hover:bg-gray-50 hover:text-parentPrimary'"
             @click="showMobileMenu = false"
           >
             <img :src="item.icon" class="w-5 h-5 mr-3 flex-shrink-0" />
@@ -135,7 +135,7 @@
             <div class="flex items-center gap-3">
               <!-- User Profile -->
               <div class="flex items-center gap-3 px-4 py-2 bg-gray-50 rounded-xl">
-                <div class="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center font-semibold">
+                <div class="w-10 h-10 rounded-full bg-parentPrimary text-white flex items-center justify-center font-semibold">
                   {{ userInitials }}
                 </div>
                 <div class="text-left">
