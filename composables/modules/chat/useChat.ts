@@ -288,9 +288,16 @@ export const useChat = () => {
       // Try WebSocket first for real-time experience
       if (isConnected.value && socket.value) {
         const response = await emitWithAck<any>('chat:send-message', {
-          roomId: room.value._id,
-          content,
-          attachments: [],
+             roomId: room.value._id,
+            content,
+            attachments: [],
+            senderType: 'customer',
+            senderId: isGuest.value ? mySessionId.value : userId.value,
+            senderName: displayName.value,
+            messageType: 'text'
+          // roomId: room.value._id,
+          // content,
+          // attachments: [],
         })
 
         if (!response?.success) {
