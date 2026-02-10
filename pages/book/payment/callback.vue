@@ -185,7 +185,7 @@
         </div>
         <!-- Right: Success Image -->
         <div class="flex-1 min-w-0 flex items-center justify-center">
-          <img src="/img/payment-success.svg" alt="Payment Success" class="w-full max-w-xs lg:max-w-md h-auto object-contain" />
+          <img src="@/assets/icons/success.svg" alt="Payment Success" class="w-full max-w-xs lg:max-w-md h-auto object-contain" />
         </div>
       </div>
 
