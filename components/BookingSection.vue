@@ -7,11 +7,14 @@
         <p class="text-lg">11B Rasheed Alaba Williams,</p>
         <p class="text-lg">Lekki Phase 1,</p>
         <p class="text-lg">Lagos, Nigeria</p>
-        <p class="text-lg mt-6">T: +234 704 222 0934</p>
-        <p class="text-lg">E: reservations@lolaapril.com</p>
+        <p class="text-lg mt-6">T:
+          <a href="tel:+2347042220934" class="underline">+234 704 222 0934</a>
+        </p>
+        <p class="text-lg">E: 
+          <a href="mailto:reservations@lolaapril.com" class="underline">reservations@lolaapril.com</a></p>
       </div>
 
-      <button @click="$emit('open-booking')" class="btn-parentPrimary text-lg">
+      <button @click="$emit('open-booking')" class="bg-accent py-3 rounded-full px-6 text-lg">
         Reserve Your Experience
       </button>
 

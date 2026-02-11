@@ -5,13 +5,13 @@
       <!-- Image -->
       <div class="relative">
         <img 
-          src="https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=600&h=800&fit=crop" 
+          src="@/assets/img/spa13.jpg" 
           alt="Spa interior" 
           class="rounded-lg shadow-xl w-full object-cover h-[500px]"
         />
         <div class="absolute bottom-8 right-8 bg-white p-4 rounded-lg shadow-lg">
           <img 
-            src="https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=300&h=300&fit=crop" 
+            src="@/assets/img/spa7.jpg" 
             alt="Wellness" 
             class="rounded-lg w-48 h-48 object-cover"
           />

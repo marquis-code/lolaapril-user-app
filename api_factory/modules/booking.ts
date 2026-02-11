@@ -15,6 +15,7 @@ export const booking_api = {
         const url = `/bookings/${id}/cancel`
         return GATEWAY_ENDPOINT_WITH_AUTH.post(url, { reason })
     },
+
     rescheduleBooking: (id: string, payload: { newPreferredDate: string, newPreferredStartTime: string, reason: string }) => {
         const url = `/bookings/${id}/reschedule`
         return GATEWAY_ENDPOINT_WITH_AUTH.post(url, payload)

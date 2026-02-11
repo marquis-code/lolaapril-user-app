@@ -4,32 +4,33 @@
     <Transition name="fade">
       <div
         v-if="isOpen"
-        class="fixed inset-0 z-[99999] flex items-end sm:items-center justify-center bg-black/60 backdrop-blur-sm p-0 sm:p-4"
+        class="fixed inset-0 z-[99999] flex items-end sm:items-center justify-center bg-black/70 backdrop-blur-md p-0 sm:p-4"
         @click.self="isOpen = false"
       >
-        <div class="relative w-full h-[95vh] sm:h-auto sm:max-w-4xl sm:max-h-[90vh] bg-white rounded-t-3xl sm:rounded-3xl overflow-hidden shadow-2xl">
+        <div class="relative w-full h-[95vh] sm:h-auto sm:max-w-4xl sm:max-h-[90vh] bg-white rounded-t-[2.5rem] sm:rounded-[2.5rem] overflow-y-auto overflow-x-hidden custom-scrollbar shadow-2xl border border-white/10">
+          
           <!-- Close Button -->
           <button
             @click="isOpen = false"
-            class="absolute top-3 right-3 sm:top-4 sm:right-4 z-50 w-9 h-9 sm:w-10 sm:h-10 bg-white/90 backdrop-blur-sm hover:bg-white rounded-full flex items-center justify-center transition-all hover:scale-110 shadow-lg group"
+            class="absolute top-4 right-4 z-50 w-10 h-10 bg-white/10 backdrop-blur-xl hover:bg-white/20 text-white rounded-full flex items-center justify-center transition-all hover:rotate-90 shadow-lg border border-white/20"
           >
-            <svg class="w-5 h-5 sm:w-6 sm:h-6 text-gray-700 group-hover:text-gray-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
 
-          <!-- Floating Hearts Animation - Hidden on mobile for performance -->
-          <div class="hidden sm:block absolute inset-0 pointer-events-none overflow-hidden z-10">
+          <!-- Floating Hearts Animation -->
+          <div class="absolute inset-0 pointer-events-none overflow-hidden z-20">
             <svg
-              v-for="i in 10"
+              v-for="i in 15"
               :key="i"
-              class="absolute text-pink-300/20 animate-float-heart"
+              class="absolute text-rose-400/30 animate-float-heart"
               :style="{
                 left: `${Math.random() * 100}%`,
-                animationDelay: `${Math.random() * 5}s`,
-                animationDuration: `${8 + Math.random() * 4}s`,
-                width: `${20 + Math.random() * 20}px`,
-                height: `${20 + Math.random() * 20}px`,
+                animationDelay: `${Math.random() * 8}s`,
+                animationDuration: `${10 + Math.random() * 5}s`,
+                width: `${15 + Math.random() * 25}px`,
+                height: `${15 + Math.random() * 25}px`,
               }"
               fill="currentColor"
               viewBox="0 0 24 24"
@@ -38,137 +39,97 @@
             </svg>
           </div>
 
-          <!-- Content Container -->
-          <div class="h-full overflow-y-auto custom-scrollbar">
-            <!-- Hero Section -->
-            <div class="relative bg-gradient-to-br from-[#005967] via-[#006a7a] to-[#005967] text-white px-4 sm:px-6 py-8 sm:py-12 text-center overflow-hidden">
-              <div class="relative z-20 max-w-2xl mx-auto">
-                <div class="inline-flex items-center gap-1.5 bg-pink-500/20 backdrop-blur-sm px-3 sm:px-4 py-1.5 rounded-full mb-4">
-                  <svg class="w-4 h-4 text-pink-300" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M5 4a1 1 0 00-2 0v7.268a2 2 0 000 3.464V16a1 1 0 102 0v-1.268a2 2 0 000-3.464V4zM11 4a1 1 0 10-2 0v1.268a2 2 0 000 3.464V16a1 1 0 102 0V8.732a2 2 0 000-3.464V4zM16 3a1 1 0 011 1v7.268a2 2 0 010 3.464V16a1 1 0 11-2 0v-1.268a2 2 0 010-3.464V4a1 1 0 011-1z" />
-                  </svg>
-                  <span class="text-xs sm:text-sm font-semibold text-pink-100">Limited Time Offer</span>
-                </div>
-                
-                <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold mb-2 sm:mb-3">
-                  Valentine's Day
-                  <span class="block text-pink-300 mt-1">Romance Package</span>
-                </h1>
-                
-                <p class="text-sm sm:text-base md:text-lg text-teal-100 mb-5 sm:mb-6">
-                  Celebrate love with an exclusive couples spa experience
-                </p>
+          <!-- Hero Carousel Section (Taller & Clear) -->
+          <div class="relative h-[450px] sm:h-[700px] w-full group overflow-hidden">
+            <TransitionGroup name="slide">
+              <div
+                v-for="(img, idx) in carouselImages"
+                :key="img"
+                v-show="currentSlide === idx"
+                class="absolute inset-0 transition-all duration-1000"
+              >
+                <img
+                  :src="img"
+                  class="w-full h-full object-cover scale-105 animate-subtle-zoom"
+                  alt="Valentine Experience"
+                />
+              </div>
+            </TransitionGroup>
 
-                <div class="flex flex-wrap gap-2 sm:gap-3 justify-center items-center mb-5 sm:mb-6">
-                  <div class="bg-white/10 backdrop-blur-md px-3 sm:px-4 py-2 sm:py-3 rounded-xl border border-white/20">
-                    <div class="text-lg sm:text-2xl font-bold text-pink-300">50% OFF</div>
-                    <div class="text-xs sm:text-sm text-teal-100">Couples Treatment</div>
-                  </div>
-                  <div class="bg-white/10 backdrop-blur-md px-3 sm:px-4 py-2 sm:py-3 rounded-xl border border-white/20">
-                    <div class="text-lg sm:text-2xl font-bold text-pink-300">Free</div>
-                    <div class="text-xs sm:text-sm text-teal-100">Champagne</div>
-                  </div>
-                  <div class="bg-white/10 backdrop-blur-md px-3 sm:px-4 py-2 sm:py-3 rounded-xl border border-white/20">
-                    <div class="text-lg sm:text-2xl font-bold text-pink-300">VIP</div>
-                    <div class="text-xs sm:text-sm text-teal-100">Private Suite</div>
-                  </div>
-                </div>
+            <!-- Indicators -->
+            <div class="absolute bottom-6 right-6 z-30 flex gap-2">
+              <button
+                v-for="(_, i) in carouselImages"
+                :key="i"
+                @click="currentSlide = i"
+                class="h-1.5 transition-all duration-500 rounded-full shadow-sm"
+                :class="currentSlide === i ? 'w-8 bg-rose-500' : 'w-2 bg-white/60 hover:bg-white/90'"
+              />
+            </div>
+          </div>
 
-                <NuxtLink to="/book?subdomain=lola-beauty" class="group text-xs sm:text-sm bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white font-bold px-6 sm:px-8 py-2.5 sm:py-3 rounded-full shadow-2xl transition-all hover:scale-105 inline-flex items-center gap-2">
-                  <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                  </svg>
+          <!-- Hero Content (Dedicated Text Area) -->
+          <div class="px-6 sm:px-12 py-10 sm:py-16 bg-white relative">
+            <div class="max-w-2xl mx-auto text-center animate-fade-in-up">
+              <div class="inline-flex items-center gap-2 bg-rose-100 text-rose-600 px-4 py-1.5 rounded-full mb-6 border border-rose-200">
+                <span class="animate-pulse text-sm">✨</span>
+                <span class="text-xs sm:text-sm font-bold tracking-wider uppercase">Valentine's Special 2026</span>
+              </div>
+              <h1 class="text-3xl sm:text-5xl font-black mb-4 leading-[1.1] tracking-tight text-gray-900">
+                Love is in the <span class="text-rose-600">Air</span>, <br class="hidden sm:block" />
+                Spa is in the <span class="text-rose-600">Soul</span>
+              </h1>
+              <p class="text-sm sm:text-lg text-gray-600 mb-8 font-medium leading-relaxed max-w-lg mx-auto">
+                Celebrate your love with a curated sanctuary of relaxation. Exclusive Valentine's packages designed for unforgettable moments.
+              </p>
+              <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <button
+                  @click="onServiceClick"
+                  class="inline-flex items-center justify-center gap-3 bg-rose-600 text-white hover:bg-rose-700 px-10 py-4 rounded-full font-bold text-sm sm:text-base transition-all hover:scale-105 active:scale-95 shadow-xl shadow-rose-200 group"
+                >
                   Book Your Experience
-                  <svg class="w-4 h-4 sm:w-5 sm:h-5 group-hover:scale-125 transition-transform" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                  <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
                   </svg>
-                </NuxtLink>
+                </button>
               </div>
+            </div>
+          </div>
 
-              <!-- Decorative Elements -->
-              <div class="absolute top-0 left-0 w-32 h-32 sm:w-48 sm:h-48 bg-pink-400/10 rounded-full blur-3xl"></div>
-              <div class="absolute bottom-0 right-0 w-48 h-48 sm:w-64 sm:h-64 bg-purple-400/10 rounded-full blur-3xl"></div>
+          <!-- Features Section -->
+          <div class="bg-rose-50/30 px-6 py-12 sm:py-20 border-t border-rose-100">
+            <div class="max-w-4xl mx-auto grid grid-cols-2 sm:grid-cols-3 gap-6 sm:gap-10">
+              <div v-for="(item, idx) in valentineHighlights" :key="idx" class="text-center group p-4 rounded-2xl transition-all hover:bg-white hover:shadow-xl hover:shadow-rose-100/50">
+                <div class="w-14 h-14 sm:w-16 sm:h-16 bg-white rounded-2xl flex items-center justify-center text-3xl mb-4 mx-auto shadow-md group-hover:scale-110 transition-transform bg-gradient-to-br from-white to-rose-50">
+                  {{ item.icon }}
+                </div>
+                <h3 class="font-bold text-gray-900 text-sm sm:text-base mb-1 truncate">{{ item.title }}</h3>
+                <p class="text-xs sm:text-sm text-gray-500 leading-tight">{{ item.desc }}</p>
+              </div>
             </div>
 
-            <!-- Marquee Image Gallery - Top Row -->
-            <div class="relative overflow-hidden bg-gradient-to-r from-gray-50 to-white py-4 sm:py-6">
-              <div class="flex gap-3 sm:gap-4 animate-marquee">
-                <div
-                  v-for="(img, idx) in [...spaImages, ...spaImages]"
-                  :key="`top-${idx}`"
-                  class="flex-shrink-0 w-48 h-32 sm:w-64 sm:h-48 rounded-xl sm:rounded-2xl overflow-hidden shadow-lg border-2 border-white"
+            <div class="mt-16 sm:mt-24 bg-gradient-to-r from-rose-600 to-pink-600 rounded-3xl p-8 sm:p-12 text-white text-center relative overflow-hidden shadow-2xl shadow-rose-200">
+              <div class="relative z-10 flex flex-col items-center">
+                <div class="text-rose-200 font-bold tracking-widest uppercase text-xs mb-2">Exclusive Offer</div>
+                <div class="text-3xl sm:text-5xl font-black mb-2">50% DISCOUNT</div>
+                <p class="text-rose-100 text-sm sm:text-lg mb-8 max-w-sm font-medium">For all couples treatments booked before February 14th</p>
+                <button
+                  @click="onServiceClick"
+                  class="bg-white text-rose-600 px-12 py-4 rounded-2xl font-black text-sm uppercase tracking-wider hover:bg-rose-50 transition-all shadow-xl shadow-black/10 active:scale-95"
                 >
-                  <img
-                    :src="img"
-                    :alt="`Spa treatment ${idx + 1}`"
-                    class="w-full h-full object-cover"
-                  />
-                </div>
+                  Claim Offer Now
+                </button>
               </div>
+
+              
+              <!-- Abstract shapes for decor -->
+              <div class="absolute -top-10 -left-10 w-40 h-40 bg-white/10 rounded-full blur-2xl" />
+              <div class="absolute -bottom-10 -right-10 w-40 h-40 bg-rose-400/30 rounded-full blur-2xl" />
             </div>
-
-            <!-- Package Details -->
-            <div class="px-4 sm:px-6 py-8 sm:py-12 bg-white">
-              <div class="max-w-3xl mx-auto">
-                <h2 class="text-xl sm:text-2xl md:text-3xl font-bold text-center mb-2 sm:mb-3 text-[#005967]">
-                  What's Included
-                </h2>
-                <p class="text-center text-gray-600 mb-6 sm:mb-8 text-sm sm:text-base">
-                  Indulge in a day of pure romance and relaxation
-                </p>
-
-                <div class="grid sm:grid-cols-2 gap-3 sm:gap-4">
-                  <div
-                    v-for="(item, idx) in packages"
-                    :key="idx"
-                    class="flex gap-3 p-4 sm:p-5 bg-gradient-to-br from-teal-50 to-pink-50 rounded-xl sm:rounded-2xl border border-[#005967]/10 hover:shadow-lg transition-all"
-                  >
-                    <div class="text-2xl sm:text-3xl">{{ item.icon }}</div>
-                    <div>
-                      <h3 class="text-sm sm:text-base font-bold text-[#005967] mb-1">{{ item.title }}</h3>
-                      <p class="text-xs sm:text-sm text-gray-600">{{ item.desc }}</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Marquee Image Gallery - Bottom Row (Reverse) -->
-            <div class="relative overflow-hidden bg-gradient-to-r from-white to-gray-50 py-4 sm:py-6">
-              <div class="flex gap-3 sm:gap-4 animate-marquee-reverse">
-                <div
-                  v-for="(img, idx) in [...spaImagesReverse, ...spaImagesReverse]"
-                  :key="`bottom-${idx}`"
-                  class="flex-shrink-0 w-48 h-32 sm:w-64 sm:h-48 rounded-xl sm:rounded-2xl overflow-hidden shadow-lg border-2 border-white"
-                >
-                  <img
-                    :src="img"
-                    :alt="`Spa treatment ${idx + 1}`"
-                    class="w-full h-full object-cover"
-                  />
-                </div>
-              </div>
-            </div>
-
-            <!-- CTA Section -->
-            <div class="bg-gradient-to-br from-[#005967] to-[#006a7a] text-white px-4 sm:px-6 py-8 sm:py-12 text-center">
-              <div class="max-w-2xl mx-auto">
-                <h2 class="text-xl sm:text-2xl md:text-3xl font-bold mb-2 sm:mb-3">Ready to Make This Valentine's Unforgettable?</h2>
-                <p class="text-sm sm:text-base md:text-lg text-teal-100 mb-5 sm:mb-6">
-                  Book now and receive an exclusive 50% discount. Limited slots available!
-                </p>
-                
-                <div class="flex flex-col sm:flex-row gap-3 justify-center">
-                  <NuxtLink to="/book?subdomain=lola-beauty" class="bg-pink-500 hover:bg-pink-600 text-sm sm:text-base text-white font-bold px-6 sm:px-8 py-3 rounded-full transition-all hover:scale-105 shadow-xl">
-                    Book Online
-                  </NuxtLink>
-                </div>
-
-                <p class="text-xs sm:text-sm text-teal-200 mt-4 sm:mt-5">
-                  *Offer valid until February 14th, 2026
-                </p>
-              </div>
-            </div>
+            
+            <p class="text-center text-gray-400 text-[10px] sm:text-xs mt-8 font-medium italic">
+              *Terms and conditions apply. Limited slots available for peak hours.
+            </p>
           </div>
         </div>
       </div>
@@ -176,116 +137,92 @@
   </div>
 </template>
 
+
 <script setup lang="ts">
+import { ref, onMounted, onUnmounted } from 'vue'
+
 const isOpen = ref(false)
+const currentSlide = ref(0)
+let slideInterval: any = null
 
-const spaImages = [
-  // Strictly spa/wellness-related, Black African/diaspora, massages, facials, ambience
-  'https://images.pexels.com/photos/3997985/pexels-photo-3997985.jpeg?auto=compress&w=800&q=80', // African couple spa massage
-  'https://images.pexels.com/photos/5938605/pexels-photo-5938605.jpeg?auto=compress&w=800&q=80', // African woman facial
-  'https://images.pexels.com/photos/3997987/pexels-photo-3997987.jpeg?auto=compress&w=800&q=80', // African couple relaxing at spa
-  'https://images.pexels.com/photos/3997986/pexels-photo-3997986.jpeg?auto=compress&w=800&q=80', // African woman massage
-  'https://images.pexels.com/photos/3997988/pexels-photo-3997988.jpeg?auto=compress&w=800&q=80', // African couple spa
-  'https://images.pexels.com/photos/6148107/pexels-photo-6148107.jpeg?auto=compress&w=800&q=80', // Black woman relaxing spa
-  'https://images.pexels.com/photos/3757942/pexels-photo-3757942.jpeg?auto=compress&w=800&q=80', // Black woman spa luxury
-  'https://images.pexels.com/photos/5709005/pexels-photo-5709005.jpeg?auto=compress&w=800&q=80', // Black woman with towel at spa
-  'https://images.pexels.com/photos/3997989/pexels-photo-3997989.jpeg?auto=compress&w=800&q=80', // African couple spa
-  'https://images.pexels.com/photos/3997984/pexels-photo-3997984.jpeg?auto=compress&w=800&q=80', // African woman spa facial
-  'https://images.pexels.com/photos/3997983/pexels-photo-3997983.jpeg?auto=compress&w=800&q=80', // African woman spa treatment
+// Real images from assets/img/valentine
+import val1 from '@/assets/img/valentine/val1.jpg'
+import val2 from '@/assets/img/valentine/val2.jpg'
+import val4 from '@/assets/img/valentine/val4.jpg'
+import val5 from '@/assets/img/valentine/val5.jpg'
+import avl3 from '@/assets/img/valentine/avl3.jpg'
+
+const carouselImages = [val1, val2, val4, val5, avl3]
+
+const valentineHighlights = [
+  { icon: '💝', title: 'Couples Massage', desc: 'Indulge in side-by-side relaxation' },
+  { icon: '🌹', title: 'Rose Rituals', desc: 'Organic rose-infused skin treatments' },
+  { icon: '🥂', title: 'Luxury Bubbles', desc: 'Complimentary champagne toast' },
+  { icon: '🧖‍♀️', title: 'Private Suite', desc: 'Decorated VIP therapy rooms' },
+  { icon: '🍓', title: 'Sweet Treats', desc: 'Gourmet chocolate strawberries' },
+  { icon: '✨', title: 'Gold Facial', desc: 'Radiance for your special night' },
 ]
 
-const spaImagesReverse = [...spaImages].reverse()
-
-const packages = [
-  { icon: '💆‍♀️', title: 'Couples Massage', desc: '90-minute full body massage with aromatherapy' },
-  { icon: '🌹', title: 'Rose Petal Bath', desc: 'Private jacuzzi with rose petals and candles' },
-  { icon: '🥂', title: 'Champagne Toast', desc: 'Premium champagne with chocolate-dipped strawberries' },
-  { icon: '🧖‍♀️', title: 'Facial Treatment', desc: 'Rejuvenating facial for both partners' },
-  { icon: '🎁', title: 'Gift Package', desc: 'Luxury spa products to take home' },
-  { icon: '🍽️', title: 'Light Refreshments', desc: 'Gourmet appetizers and herbal teas' },
-]
+const startSlideShow = () => {
+  slideInterval = setInterval(() => {
+    currentSlide.value = (currentSlide.value + 1) % carouselImages.length
+  }, 4500)
+}
 
 onMounted(() => {
   setTimeout(() => {
     isOpen.value = true
-  }, 500)
+    startSlideShow()
+  }, 800)
 })
+
+onUnmounted(() => {
+  if (slideInterval) clearInterval(slideInterval)
+})
+
+function onServiceClick() {
+      navigateTo({
+    path: '/book',
+    query: {
+      subdomain: 'lola-beauty',
+    },
+  })
+}
 </script>
 
 <style scoped>
 @keyframes float-heart {
-  0% {
-    transform: translateY(100vh) rotate(0deg);
-    opacity: 0;
-  }
-  10% {
-    opacity: 0.3;
-  }
-  90% {
-    opacity: 0.3;
-  }
-  100% {
-    transform: translateY(-100px) rotate(360deg);
-    opacity: 0;
-  }
+  0% { transform: translateY(110vh) rotate(0deg); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { transform: translateY(-20vh) rotate(360deg); opacity: 0; }
 }
 
-@keyframes marquee {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
+@keyframes subtle-zoom {
+  0% { transform: scale(1); }
+  100% { transform: scale(1.1); }
 }
 
-@keyframes marquee-reverse {
-  0% { transform: translateX(-50%); }
-  100% { transform: translateX(0); }
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-.animate-float-heart {
-  animation: float-heart linear infinite;
-}
+.animate-float-heart { animation: float-heart linear infinite; }
+.animate-subtle-zoom { animation: subtle-zoom 10s linear infinite alternate; }
+.animate-fade-in-up { animation: fade-in-up 1s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
 
-.animate-marquee {
-  animation: marquee 30s linear infinite;
-  width: max-content;
-}
+.fade-enter-active, .fade-leave-active { transition: opacity 0.5s ease; }
+.fade-enter-from, .fade-leave-to { opacity: 0; }
 
-.animate-marquee-reverse {
-  animation: marquee-reverse 30s linear infinite;
-  width: max-content;
+.slide-enter-active, .slide-leave-active {
+  transition: all 1.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
+.slide-enter-from { opacity: 0; transform: scale(1.05); }
+.slide-leave-to { opacity: 0; }
 
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.3s ease;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
-
-.custom-scrollbar::-webkit-scrollbar {
-  width: 6px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-track {
-  background: #f1f1f1;
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb {
-  background: #005967;
-  border-radius: 3px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: #004552;
-}
-
-/* Mobile optimizations */
-@media (max-width: 640px) {
-  .animate-marquee,
-  .animate-marquee-reverse {
-    animation-duration: 25s;
-  }
-}
+/* Custom Scrollbar for better UX */
+.custom-scrollbar::-webkit-scrollbar { width: 5px; }
+.custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+.custom-scrollbar::-webkit-scrollbar-thumb { background: #e11d48; border-radius: 10px; }
 </style>

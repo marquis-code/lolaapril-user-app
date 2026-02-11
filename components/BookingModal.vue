@@ -224,16 +224,16 @@
                     <div class="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
                       <button
                         v-for="category in serviceCategories"
-                        :key="category"
+                        :key="category._id || 'featured'"
                         @click="scrollToCategory(category)"
                         :class="[
                           'flex-shrink-0 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full font-medium text-sm transition',
-                          activeCategory === category
+                          activeCategory === (category._id || 'featured')
                             ? 'bg-gray-900 text-white'
                             : 'bg-gray-50 text-gray-700 hover:bg-gray-100',
                         ]"
                       >
-                        {{ category?.categoryName ?? "All Services" }}
+                        {{ category.categoryName || "Featured" }}
                       </button>
                     </div>
                   </div>
@@ -242,13 +242,19 @@
                   <div ref="servicesContainerRef" class="space-y-8">
                     <div
                       v-for="category in serviceCategories"
-                      :key="category"
+                      :key="category._id || 'featured'"
+                      :data-category="category._id || 'featured'"
                       :ref="(el) => setCategoryRef(category, el)"
                       class="scroll-mt-32"
                     >
-                      <h2 class="text-lg font-bold text-gray-900 mb-3">
+                      <h2 class="text-lg font-bold text-gray-900 mb-1">
                         {{ category?.categoryName ?? "Featured" }}
                       </h2>
+                      <!-- <p>{{ category }}</p> -->
+                      <p v-if="category?.description" class="text-sm text-gray-500 mb-3">
+                        {{ category.description }}
+                      </p>
+
 
                       <div class="space-y-3">
                         <div
@@ -731,13 +737,35 @@
                           )
                         }}
                       </div>
-                      <div class="font-semibold text-sm">
-                        {{
-                          formatPrice(
-                            item.selectedVariant?.price ||
-                              item.service.pricingAndDuration.price
-                          )
-                        }}
+                      <!-- Quantity Controls -->
+                      <div class="flex items-center justify-between mb-1">
+                        <div class="flex items-center gap-2">
+                          <button
+                            @click="updateCartItemQuantity(item.service._id, -1)"
+                            class="w-6 h-6 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition text-gray-600"
+                          >
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
+                            </svg>
+                          </button>
+                          <span class="text-sm font-semibold w-5 text-center">{{ item.quantity || 1 }}</span>
+                          <button
+                            @click="updateCartItemQuantity(item.service._id, 1)"
+                            class="w-6 h-6 rounded-full bg-parentPrimary/10 hover:bg-parentPrimary/20 flex items-center justify-center transition text-parentPrimary"
+                          >
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                            </svg>
+                          </button>
+                        </div>
+                        <div class="font-semibold text-sm">
+                          {{
+                            formatPrice({
+                              amount: (item.selectedVariant?.price?.amount || item.service.pricingAndDuration.price.amount) * (item.quantity || 1),
+                              currency: item.selectedVariant?.price?.currency || item.service.pricingAndDuration.price.currency
+                            })
+                          }}
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -839,22 +867,23 @@
         </div>
       </div>
 
-      <!-- Service Variant Modal -->
-      <Teleport to="body" v-if="showVariantModal && selectedServiceForVariant">
+      <!-- Service Details Modal -->
+      <Teleport to="body" v-if="showServiceDetailsModal && selectedServiceForDetails">
         <div
           class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[60] p-4"
         >
           <div
             class="bg-white rounded-2xl max-w-lg w-full max-h-[80vh] overflow-y-auto"
           >
+            <!-- Header -->
             <div
               class="sticky top-0 bg-white border-b p-6 flex items-center justify-between"
             >
               <h2 class="text-xl font-bold">
-                {{ selectedServiceForVariant.basicDetails.serviceName }}
+                {{ selectedServiceForDetails.basicDetails.serviceName }}
               </h2>
               <button
-                @click="closeVariantModal"
+                @click="closeServiceDetailsModal"
                 class="text-gray-400 hover:text-gray-600"
               >
                 <svg
@@ -873,38 +902,37 @@
               </button>
             </div>
 
+            <!-- Content -->
             <div class="p-6">
               <p class="text-gray-600 text-sm mb-6">
-                {{ selectedServiceForVariant.basicDetails.description }}
+                {{ selectedServiceForDetails.basicDetails.description }}
               </p>
 
-              <h3 class="font-semibold mb-4">Select an option *</h3>
-
-              <div class="space-y-3">
-                <div
-                  v-for="variant in selectedServiceForVariant.pricingAndDuration
-                    .variants"
-                  :key="variant.name"
-                  @click="selectVariant(variant)"
-                  :class="[
-                    'p-4 border-2 rounded-lg cursor-pointer transition',
-                    selectedVariant?.name === variant.name
-                      ? 'border-parentPrimary bg-parentPrimary/5'
-                      : 'border-gray-200 hover:border-gray-300',
-                  ]"
-                >
-                  <div class="flex items-center justify-between">
-                    <div class="flex-1">
-                      <h4 class="font-medium mb-1">{{ variant.name }}</h4>
-                      <p class="text-sm text-gray-500">
-                        {{ formatDuration(variant.duration.servicingTime) }}
-                      </p>
-                    </div>
-                    <div class="flex items-center gap-3">
-                      <span class="font-bold">{{
-                        formatPrice(variant.price)
-                      }}</span>
-                      <div
+              <!-- Variants -->
+              <div v-if="selectedServiceForDetails.pricingAndDuration.variants?.length > 0">
+                <h3 class="font-semibold mb-4">Select an option *</h3>
+                <div class="space-y-3">
+                  <div
+                    v-for="variant in selectedServiceForDetails.pricingAndDuration.variants"
+                    :key="variant.name"
+                    @click="selectVariant(variant)"
+                    :class="[
+                      'p-4 border-2 rounded-lg cursor-pointer transition',
+                      selectedVariant?.name === variant.name
+                        ? 'border-parentPrimary bg-parentPrimary/5'
+                        : 'border-gray-200 hover:border-gray-300',
+                    ]"
+                  >
+                    <div class="flex items-center justify-between">
+                      <div class="flex-1">
+                        <h4 class="font-medium mb-1">{{ variant.name }}</h4>
+                        <p class="text-sm text-gray-500">
+                          {{ formatDuration(variant.duration.servicingTime) }}
+                        </p>
+                      </div>
+                      <div class="flex items-center gap-3">
+                        <span class="font-bold">{{ formatPrice(variant.price) }}</span>
+                         <div
                         :class="[
                           'w-5 h-5 rounded-full border-2 flex items-center justify-center',
                           selectedVariant?.name === variant.name
@@ -925,20 +953,48 @@
                           />
                         </svg>
                       </div>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
 
+              <!-- Quantity Stepper -->
+              <div class="mt-6 pt-6 border-t-[0.5px] border-gray-100">
+                   <div class="flex items-center justify-between mb-4">
+                  <span class="font-semibold text-gray-700">Quantity</span>
+                   <div class="flex items-center gap-3">
+                    <button
+                      @click="detailsQuantity > 1 ? detailsQuantity-- : null"
+                      class="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition text-gray-700 disabled:opacity-50"
+                      :disabled="detailsQuantity <= 1"
+                    >
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
+                      </svg>
+                    </button>
+                    <span class="text-lg font-bold w-6 text-center">{{ detailsQuantity }}</span>
+                    <button
+                      @click="detailsQuantity++"
+                      class="w-8 h-8 rounded-full bg-parentPrimary/10 hover:bg-parentPrimary/20 flex items-center justify-center transition text-parentPrimary"
+                    >
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Footer Actions -->
               <div class="mt-6 pt-6 border-t-[0.5px] border-gray-100">
                 <div class="flex items-center justify-between mb-4">
-                  <span class="font-bold">
+                  <span class="font-bold text-lg">
                     {{
-                      selectedVariant
-                        ? formatPrice(selectedVariant.price)
-                        : formatPrice(
-                            selectedServiceForVariant.pricingAndDuration.price
-                          )
+                        formatPrice({
+                            amount: (selectedVariant ? selectedVariant.price.amount : selectedServiceForDetails.pricingAndDuration.price.amount) * detailsQuantity,
+                            currency: selectedVariant ? selectedVariant.price.currency : selectedServiceForDetails.pricingAndDuration.price.currency
+                        })
                     }}
                   </span>
                   <span class="text-sm text-gray-500">
@@ -946,7 +1002,7 @@
                       selectedVariant
                         ? formatDuration(selectedVariant.duration.servicingTime)
                         : formatDuration(
-                            selectedServiceForVariant.pricingAndDuration
+                            selectedServiceForDetails.pricingAndDuration
                               .duration.servicingTime
                           )
                     }}
@@ -954,10 +1010,10 @@
                 </div>
 
                 <button
-                  @click="addVariantServiceToCart"
+                  @click="addServiceToCart"
                   :disabled="
                     !selectedVariant &&
-                    selectedServiceForVariant.pricingAndDuration.variants
+                    selectedServiceForDetails.pricingAndDuration.variants
                       ?.length > 0
                   "
                   class="w-full bg-gray-900 text-white font-bold py-3 rounded-full transition disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-800"
@@ -1272,16 +1328,18 @@ const { loginWithGoogle, loading: googleAuthLoading } = useGoogleAuth();
 // State
 const currentStep = ref(1);
 const selectedCategory = ref("Featured");
-const activeCategory = ref("Featured");
-const cart = ref<Array<{ service: any; selectedVariant?: any }>>([]);
+const activeCategory = ref("featured");
+
+const cart = ref<Array<{ service: any; selectedVariant?: any; quantity: number }>>([]);
 const selectedDate = ref<string | null>(null);
 const selectedTime = ref<string | null>(null);
 const bookingNotes = ref("");
 
-// Service variant modal
-const showVariantModal = ref(false);
-const selectedServiceForVariant = ref<any>(null);
+// Service details modal
+const showServiceDetailsModal = ref(false);
+const selectedServiceForDetails = ref<any>(null);
 const selectedVariant = ref<any>(null);
+const detailsQuantity = ref(1);
 
 // Extra service modal
 const showExtraServiceModal = ref(false);
@@ -1320,25 +1378,68 @@ const scrollObserver = ref<IntersectionObserver | null>(null);
 const isUserScrolling = ref(false);
 let scrollTimeout: NodeJS.Timeout | null = null;
 
+
 // Computed
+// const serviceCategories = computed(() => {
+//   const categoriesMap = new Map();
+
+//   // Add "Featured" category first
+//   categoriesMap.set('featured', { _id: null, categoryName: 'Featured' });
+
+//   services.value?.forEach((service: any) => {
+//     if (service.basicDetails.category && service.basicDetails.category._id) {
+//       categoriesMap.set(service.basicDetails.category._id, service.basicDetails.category);
+//     }
+//   });
+
+//   return Array.from(categoriesMap.values());
+// });
+
+// const serviceCategories = computed(() => {
+//   const categoriesMap = new Map();
+//   categoriesMap.set('featured', { _id: null, categoryName: 'Featured' });
+
+//   services.value?.forEach((service: any) => {
+//     const cat = service.basicDetails.category;
+//     if (cat?._id) {
+//       // Merge with any richer category data if available
+//       categoriesMap.set(cat._id, cat);
+//     }
+//   });
+
+//   return Array.from(categoriesMap.values());
+// });
+
 const serviceCategories = computed(() => {
-  const categories = new Set(["Featured"]);
+  const categoriesMap = new Map();
+  categoriesMap.set('featured', { _id: null, categoryName: 'Featured' });
+
   services.value?.forEach((service: any) => {
-    if (service.basicDetails.category) {
-      categories.add(service.basicDetails.category);
+    const cat = service.basicDetails.category;
+    if (cat?._id && !categoriesMap.has(cat._id)) {
+      categoriesMap.set(cat._id, {
+        ...cat,
+        description: service.basicDetails.description || ''  // 👈 grab from first service in category
+      });
     }
   });
-  return Array.from(categories);
+
+  return Array.from(categoriesMap.values());
 });
+
+// const activeCategory = ref('featured');
 
 const hasServices = computed(() => serviceCategories.value.length > 0);
 
-const getServicesByCategory = (category: string) => {
-  if (category === "Featured") {
+const getServicesByCategory = (category: any) => {
+    if (!category._id || category.categoryName === "Featured") {
+    // For "Featured" or null ID, return all or specific featured logic if intended.
+    // Assuming "Featured" means all services implies returning all.
+    // However, the original code had `if (category === "Featured") return services.value`.
     return services.value;
   }
   return (
-    services.value?.filter((s: any) => s.basicDetails.category === category) ||
+    services.value?.filter((s: any) => s.basicDetails.category?._id === category._id) ||
     []
   );
 };
@@ -1365,7 +1466,7 @@ const totalPrice = computed(() => {
   cart.value.forEach((item) => {
     const price =
       item.selectedVariant?.price || item.service.pricingAndDuration.price;
-    total.amount += price.amount;
+    total.amount += price.amount * (item.quantity || 1);
     total.currency = price.currency;
   });
   return total;
@@ -1456,9 +1557,12 @@ const upcomingDays = computed(() => {
 });
 
 // Methods
-const setCategoryRef = (category: string, el: any) => {
+const setCategoryRef = (category: any, el: any) => {
+  const key = category._id || 'featured';
   if (el) {
-    categoryRefs.value[category] = el;
+    categoryRefs.value[key] = el;
+  } else {
+    delete categoryRefs.value[key];
   }
 };
 
@@ -1469,9 +1573,10 @@ const setupScrollObserver = () => {
 
   const observerOptions = {
     root: leftContentRef.value,
-    threshold: [0, 0.25, 0.5, 0.75, 1],
-    rootMargin: "-20% 0px -70% 0px",
+    threshold: [0, 0.1],
+    rootMargin: "-10% 0px -80% 0px",
   };
+
 
   scrollObserver.value = new IntersectionObserver((entries) => {
     if (isUserScrolling.value) return;
@@ -1518,25 +1623,28 @@ const handleScroll = () => {
   }, 150);
 };
 
-const scrollToCategory = (category: string) => {
-  isUserScrolling.value = true;
-  activeCategory.value = category;
+const scrollToCategory = (category: any) => {
+  const key = category._id || 'featured';
+  const element = categoryRefs.value[key];
+  
+  if (element) {
+    // Temporarily disable observer to prevent jitter
+    isUserScrolling.value = true;
+    
+    // Update active category immediately for UI feedback
+    activeCategory.value = key;
 
-  const element = categoryRefs.value[category];
-  if (element && leftContentRef.value) {
-    const container = leftContentRef.value;
-    const elementTop = element.offsetTop;
-    const containerTop = container.scrollTop;
-    const offset = 100; // Offset for sticky header
+    // Scroll the container, not the window
+    if (leftContentRef.value) {
+      const offset = 20; // sticky header offset
+      const elementPosition = element.offsetTop;
+      const offsetPosition = elementPosition - offset;
 
-    container.scrollTo({
-      top: elementTop - offset,
-      behavior: "smooth",
-    });
-
-    setTimeout(() => {
-      isUserScrolling.value = false;
-    }, 1000);
+      leftContentRef.value.scrollTo({
+        top: offsetPosition,
+        behavior: "smooth",
+      });
+    }
   }
 };
 
@@ -1555,16 +1663,10 @@ const isServiceInCart = (serviceId: string) => {
 };
 
 const handleServiceClick = (service: any) => {
-  if (
-    service.pricingAndDuration.variants &&
-    service.pricingAndDuration.variants.length > 0
-  ) {
-    selectedServiceForVariant.value = service;
-    selectedVariant.value = null;
-    showVariantModal.value = true;
-  } else {
-    toggleServiceInCart(service);
-  }
+  selectedServiceForDetails.value = service;
+  selectedVariant.value = null;
+  detailsQuantity.value = 1;
+  showServiceDetailsModal.value = true;
 };
 
 const toggleServiceInCart = (service: any) => {
@@ -1574,7 +1676,19 @@ const toggleServiceInCart = (service: any) => {
   if (index > -1) {
     cart.value.splice(index, 1);
   } else {
-    cart.value.push({ service });
+    cart.value.push({ service, quantity: 1 });
+  }
+};
+
+const updateCartItemQuantity = (serviceId: string, delta: number) => {
+  const item = cart.value.find((i) => i.service._id === serviceId);
+  if (item) {
+    const newQty = (item.quantity || 1) + delta;
+    if (newQty < 1) {
+      removeFromCart(serviceId);
+    } else {
+      item.quantity = newQty;
+    }
   }
 };
 
@@ -1589,20 +1703,22 @@ const selectVariant = (variant: any) => {
   selectedVariant.value = variant;
 };
 
-const addVariantServiceToCart = () => {
-  if (selectedServiceForVariant.value) {
+const addServiceToCart = () => {
+  if (selectedServiceForDetails.value) {
     cart.value.push({
-      service: selectedServiceForVariant.value,
+      service: selectedServiceForDetails.value,
       selectedVariant: selectedVariant.value,
+      quantity: detailsQuantity.value,
     });
-    closeVariantModal();
+    closeServiceDetailsModal();
   }
 };
 
-const closeVariantModal = () => {
-  showVariantModal.value = false;
-  selectedServiceForVariant.value = null;
+const closeServiceDetailsModal = () => {
+  showServiceDetailsModal.value = false;
+  selectedServiceForDetails.value = null;
   selectedVariant.value = null;
+  detailsQuantity.value = 1;
 };
 
 // const proceedToDateTime = () => {
@@ -1755,19 +1871,11 @@ const proceedToConfirm = () => {
 };
 
 const addExtraService = (service: any) => {
-  if (
-    service.pricingAndDuration.variants &&
-    service.pricingAndDuration.variants.length > 0
-  ) {
-    showExtraServiceModal.value = false;
-    selectedServiceForVariant.value = service;
-    selectedVariant.value = null;
-    showVariantModal.value = true;
-  } else {
-    cart.value.push({ service });
-    showExtraServiceModal.value = false;
-    checkAuthAndProceed();
-  }
+  showExtraServiceModal.value = false;
+  selectedServiceForDetails.value = service;
+  selectedVariant.value = null;
+  detailsQuantity.value = 1;
+  showServiceDetailsModal.value = true;
 };
 
 const skipExtraService = () => {
@@ -1882,6 +1990,7 @@ const confirmBooking = async () => {
   services: cart.value.map((item: any) => ({
     serviceId: item.service._id,
     bufferTime: 0,
+    quantity: item.quantity || 1,
   })),
   bookingSource: {
     sourceType: route.query.source || "direct_link",

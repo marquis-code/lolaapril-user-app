@@ -33,7 +33,7 @@
                 <li><NuxtLink to="#services" @click="mobileMenuOpen = false" class="hover:text-accent transition-colors">Services</NuxtLink></li>
                 <li><NuxtLink to="#story" @click="mobileMenuOpen = false" class="hover:text-accent transition-colors">Our Story</NuxtLink></li>
                 <li><NuxtLink to="#gallery" @click="mobileMenuOpen = false" class="hover:text-accent transition-colors">Gallery</NuxtLink></li>
-                <li><NuxtLink to="#book" @click="mobileMenuOpen = false" class="hover:text-accent transition-colors">Book Now</NuxtLink></li>
+                <li><NuxtLink to="#book" @click="handleBookNow" class="hover:text-accent transition-colors">Book Now</NuxtLink></li>
               </ul>
               <div class="w-full flex flex-col items-center">
                 <template v-if="!isLoggedIn">
@@ -264,6 +264,12 @@ const confirmLogout = () => {
     navigateTo('/')
   }
 }
+
+const handleBookNow = () => {
+  mobileMenuOpen.value = false
+  navigateTo('/book?subdomain=lola-beauty')
+}
+
 </script>
 
 <style scoped>

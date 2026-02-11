@@ -53,11 +53,11 @@ const props = defineProps<{
 const isHovered = ref(false)
 
 const goToBooking = () => {
-  navigateTo({
-    path: '/book',
-    query: {
-      subdomain: 'lola-beauty',
-    },
-  })
+  // navigateTo({
+  //   path: '/book',
+  //   query: {
+  //     subdomain: 'lola-beauty',
+  //   },
+  // })
 }
 </script>
