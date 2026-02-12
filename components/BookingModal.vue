@@ -761,8 +761,8 @@
                         <div class="font-semibold text-sm">
                           {{
                             formatPrice({
-                              amount: (item.selectedVariant?.price?.amount || item.service.pricingAndDuration.price.amount) * (item.quantity || 1),
-                              currency: item.selectedVariant?.price?.currency || item.service.pricingAndDuration.price.currency
+                              amount: (item.selectedVariant?.pricing?.price?.amount || item.service.pricingAndDuration.price.amount) * (item.quantity || 1),
+                              currency: item.selectedVariant?.pricing?.price?.currency || item.service.pricingAndDuration.price.currency
                             })
                           }}
                         </div>
@@ -909,39 +909,42 @@
               </p>
 
               <!-- Variants -->
-              <div v-if="selectedServiceForDetails.pricingAndDuration.variants?.length > 0">
-                <h3 class="font-semibold mb-4">Select an option *</h3>
+              <div v-if="selectedServiceForDetails.variants?.length > 0">
+                <h3 class="font-semibold mb-4 text-sm uppercase tracking-wide text-gray-500">Select an option *</h3>
                 <div class="space-y-3">
                   <div
-                    v-for="variant in selectedServiceForDetails.pricingAndDuration.variants"
-                    :key="variant.name"
+                    v-for="variant in selectedServiceForDetails.variants"
+                    :key="variant.variantName"
                     @click="selectVariant(variant)"
                     :class="[
-                      'p-4 border-2 rounded-lg cursor-pointer transition',
-                      selectedVariant?.name === variant.name
+                      'p-4 border-[0.5px] rounded-xl cursor-pointer transition relative',
+                      selectedVariant?.variantName === variant.variantName
                         ? 'border-parentPrimary bg-parentPrimary/5'
-                        : 'border-gray-200 hover:border-gray-300',
+                        : 'border-gray-100 hover:border-gray-200',
                     ]"
                   >
-                    <div class="flex items-center justify-between">
-                      <div class="flex-1">
-                        <h4 class="font-medium mb-1">{{ variant.name }}</h4>
-                        <p class="text-sm text-gray-500">
-                          {{ formatDuration(variant.duration.servicingTime) }}
+                    <div class="flex items-start justify-between">
+                      <div class="flex-1 pr-8">
+                        <h4 class="font-bold text-sm mb-0.5">{{ variant.variantName }}</h4>
+                        <p class="text-xs text-gray-500 mb-2" v-if="variant.variantDescription">
+                          {{ variant.variantDescription }}
+                        </p>
+                        <p class="text-xs font-medium text-gray-500 px-2 py-0.5 bg-gray-50 rounded-full inline-block">
+                          {{ formatDuration(variant.pricing.duration) }}
                         </p>
                       </div>
-                      <div class="flex items-center gap-3">
-                        <span class="font-bold">{{ formatPrice(variant.price) }}</span>
+                      <div class="flex flex-col items-end gap-3">
+                        <span class="font-bold text-sm">{{ formatPrice(variant.pricing.price) }}</span>
                          <div
                         :class="[
-                          'w-5 h-5 rounded-full border-2 flex items-center justify-center',
-                          selectedVariant?.name === variant.name
+                          'w-5 h-5 rounded-full border-[0.5px] flex items-center justify-center transition-colors',
+                          selectedVariant?.variantName === variant.variantName
                             ? 'border-parentPrimary bg-parentPrimary'
-                            : 'border-gray-300',
+                            : 'border-gray-200 bg-white',
                         ]"
                       >
                         <svg
-                          v-if="selectedVariant?.name === variant.name"
+                          v-if="selectedVariant?.variantName === variant.variantName"
                           class="w-3 h-3 text-white"
                           fill="currentColor"
                           viewBox="0 0 20 20"
@@ -992,15 +995,15 @@
                   <span class="font-bold text-lg">
                     {{
                         formatPrice({
-                            amount: (selectedVariant ? selectedVariant.price.amount : selectedServiceForDetails.pricingAndDuration.price.amount) * detailsQuantity,
-                            currency: selectedVariant ? selectedVariant.price.currency : selectedServiceForDetails.pricingAndDuration.price.currency
+                            amount: (selectedVariant ? selectedVariant.pricing.price.amount : selectedServiceForDetails.pricingAndDuration.price.amount) * detailsQuantity,
+                            currency: selectedVariant ? selectedVariant.pricing.price.currency : selectedServiceForDetails.pricingAndDuration.price.currency
                         })
                     }}
                   </span>
                   <span class="text-sm text-gray-500">
                     {{
                       selectedVariant
-                        ? formatDuration(selectedVariant.duration.servicingTime)
+                        ? formatDuration(selectedVariant.pricing.duration)
                         : formatDuration(
                             selectedServiceForDetails.pricingAndDuration
                               .duration.servicingTime
@@ -1013,7 +1016,7 @@
                   @click="addServiceToCart"
                   :disabled="
                     !selectedVariant &&
-                    selectedServiceForDetails.pricingAndDuration.variants
+                    selectedServiceForDetails.variants
                       ?.length > 0
                   "
                   class="w-full bg-gray-900 text-white font-bold py-3 rounded-full transition disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-800"
@@ -1465,9 +1468,9 @@ const totalPrice = computed(() => {
   let total = { amount: 0, currency: "NGN" };
   cart.value.forEach((item) => {
     const price =
-      item.selectedVariant?.price || item.service.pricingAndDuration.price;
-    total.amount += price.amount * (item.quantity || 1);
-    total.currency = price.currency;
+      item.selectedVariant?.pricing?.price || item.service.pricingAndDuration.price;
+    total.amount += (price.amount || 0) * (item.quantity || 1);
+    total.currency = price.currency || "NGN";
   });
   return total;
 });
@@ -1705,6 +1708,14 @@ const selectVariant = (variant: any) => {
 
 const addServiceToCart = () => {
   if (selectedServiceForDetails.value) {
+    // If already in cart, remove it first (to update it)
+    const index = cart.value.findIndex(
+      (item) => item.service._id === selectedServiceForDetails.value._id
+    );
+    if (index > -1) {
+      cart.value.splice(index, 1);
+    }
+
     cart.value.push({
       service: selectedServiceForDetails.value,
       selectedVariant: selectedVariant.value,
@@ -2122,6 +2133,19 @@ watch(
     if (step === 1 && servs && servs.length > 0) {
       await nextTick();
       setupScrollObserver();
+
+      // Handle automatic scrolling to "Lodgings (BnB)" if service query is "spa-bnb-experience"
+      if (route.query.service === "spa-bnb-experience") {
+        const lodgingsCategory = serviceCategories.value.find(
+          (c) => c.categoryName === "Lodgings (BnB)"
+        );
+        if (lodgingsCategory) {
+          // Small delay to ensure refs are ready
+          setTimeout(() => {
+            scrollToCategory(lodgingsCategory);
+          }, 100);
+        }
+      }
     }
   }
 );

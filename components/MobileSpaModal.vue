@@ -133,11 +133,12 @@
                         <div
                           v-for="service in getServicesByCategory(category)"
                           :key="service._id"
-                          class="bg-white rounded-xl border-[0.5px] transition p-3 sm:p-4"
-                          :class="isSelected(service._id) ? 'border-parentPrimary bg-parentPrimary/5' : 'border-gray-100'"
+                          class="bg-white rounded-xl border-[0.5px] transition p-3 sm:p-4 active:scale-98 cursor-pointer"
+                          :class="isServiceInCart(service._id) ? 'border-parentPrimary bg-parentPrimary/5' : 'border-gray-100'"
+                          @click="handleServiceClick(service)"
                         >
                           <div class="flex items-start justify-between gap-3">
-                            <div class="flex-1 min-w-0 cursor-pointer" @click="toggleService(service)">
+                            <div class="flex-1 min-w-0">
                               <h3 class="font-semibold text-sm sm:text-base mb-1">
                                 {{ service.basicDetails.serviceName }}
                               </h3>
@@ -152,11 +153,11 @@
 
                             <!-- Selection toggle -->
                             <button
-                              @click="toggleService(service)"
+                              @click.stop="toggleServiceInCart(service)"
                               class="ml-2 w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center transition flex-shrink-0"
-                              :class="isSelected(service._id) ? 'bg-parentPrimary text-white' : 'border-[0.5px] border-gray-100'"
+                              :class="isServiceInCart(service._id) ? 'bg-parentPrimary text-white' : 'border-[0.5px] border-gray-100'"
                             >
-                              <svg v-if="isSelected(service._id)" class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                              <svg v-if="isServiceInCart(service._id)" class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
                               </svg>
                               <svg v-else xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#000000" viewBox="0 0 256 256">
@@ -166,7 +167,7 @@
                           </div>
 
                           <!-- Quantity stepper (visible when selected) -->
-                          <div v-if="isSelected(service._id)" class="mt-3 pt-3 border-t border-gray-100 flex items-center justify-between">
+                          <!-- <div v-if="isServiceInCart(service._id)" class="mt-3 pt-3 border-t border-gray-100 flex items-center justify-between">
                             <span class="text-sm text-gray-600">How many?</span>
                             <div class="flex items-center gap-3">
                               <button
@@ -187,7 +188,7 @@
                                 </svg>
                               </button>
                             </div>
-                          </div>
+                          </div> -->
                         </div>
                       </div>
                     </div>
@@ -282,13 +283,16 @@
                     >
                       <div class="flex-1 min-w-0">
                         <h4 class="font-medium text-sm">{{ item.service.basicDetails.serviceName }}</h4>
+                        <p class="text-xs text-gray-500" v-if="item.selectedVariant">
+                           {{ item.selectedVariant.variantName }}
+                        </p>
                         <p class="text-xs text-gray-500">
-                          {{ formatDuration(item.service.pricingAndDuration.duration.servicingTime) }}
+                          {{ formatDuration(item.selectedVariant?.pricing?.duration || item.service.pricingAndDuration.duration.servicingTime) }}
                           <span v-if="item.quantity > 1" class="ml-1 text-parentPrimary font-semibold">× {{ item.quantity }}</span>
                         </p>
                       </div>
                       <span class="font-bold text-sm">
-                        {{ formatPrice({ amount: item.service.pricingAndDuration.price.amount * item.quantity, currency: item.service.pricingAndDuration.price.currency }) }}
+                        {{ formatPrice({ amount: (item.selectedVariant?.pricing?.price?.amount || item.service.pricingAndDuration.price.amount) * item.quantity, currency: item.selectedVariant?.pricing?.price?.currency || item.service.pricingAndDuration.price.currency }) }}
                       </span>
                     </div>
                   </div>
@@ -428,12 +432,15 @@
                           </svg>
                         </button>
                       </div>
+                      <div class="text-xs text-blue-500 font-medium mb-1" v-if="item.selectedVariant">
+                        {{ item.selectedVariant.variantName }}
+                      </div>
                       <div class="text-xs text-gray-500 mb-1">
-                        {{ formatDuration(item.service.pricingAndDuration.duration.servicingTime) }}
+                        {{ formatDuration(item.selectedVariant?.pricing?.duration || item.service.pricingAndDuration.duration.servicingTime) }}
                         <span v-if="item.quantity > 1"> × {{ item.quantity }}</span>
                       </div>
                       <div class="font-semibold text-sm">
-                        {{ formatPrice({ amount: item.service.pricingAndDuration.price.amount * item.quantity, currency: item.service.pricingAndDuration.price.currency }) }}
+                        {{ formatPrice({ amount: (item.selectedVariant?.pricing?.price?.amount || item.service.pricingAndDuration.price.amount) * item.quantity, currency: item.selectedVariant?.pricing?.price?.currency || item.service.pricingAndDuration.price.currency }) }}
                       </div>
                     </div>
                   </div>
@@ -524,6 +531,136 @@
         </div>
       </div>
     </div>
+
+    <!-- Service Details Modal -->
+    <Teleport to="body" v-if="showServiceDetailsModal && selectedServiceForDetails">
+      <div class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-[70] p-4">
+        <div class="bg-white rounded-3xl max-w-lg w-full max-h-[90vh] overflow-hidden flex flex-col shadow-2xl">
+          <!-- Header -->
+          <div class="p-6 border-b-[0.5px] border-gray-100 flex items-center justify-between flex-shrink-0">
+            <div>
+              <h2 class="text-xl font-bold text-gray-900">{{ selectedServiceForDetails.basicDetails.serviceName }}</h2>
+              <p class="text-sm text-gray-500 mt-1">Configure your service</p>
+            </div>
+            <button @click="closeServiceDetailsModal" class="p-2 bg-gray-50 rounded-full hover:bg-gray-100 transition">
+              <svg class="w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+
+          <!-- Content -->
+          <div class="flex-1 overflow-y-auto p-6">
+            <p class="text-gray-600 text-sm mb-8 leading-relaxed">
+              {{ selectedServiceForDetails.basicDetails.description }}
+            </p>
+
+            <!-- Variants Selection -->
+            <div v-if="selectedServiceForDetails.variants?.length > 0">
+              <h3 class="font-semibold mb-4 text-xs uppercase tracking-widest text-gray-400">Select an option *</h3>
+              <div class="space-y-3">
+                <div
+                  v-for="variant in selectedServiceForDetails.variants"
+                  :key="variant.variantName"
+                  @click="selectedVariant = variant"
+                  :class="[
+                    'p-4 border-[0.5px] rounded-2xl cursor-pointer transition relative group',
+                    selectedVariant?.variantName === variant.variantName
+                      ? 'border-parentPrimary bg-parentPrimary/5 ring-1 ring-parentPrimary/20'
+                      : 'border-gray-100 hover:border-gray-200 hover:bg-gray-50',
+                  ]"
+                >
+                  <div class="flex items-start justify-between">
+                    <div class="flex-1 pr-4">
+                      <h4 class="font-bold text-sm text-gray-900 group-hover:text-parentPrimary transition-colors">{{ variant.variantName }}</h4>
+                      <p v-if="variant.variantDescription" class="text-xs text-gray-500 mt-1 line-clamp-2">{{ variant.variantDescription }}</p>
+                      <div class="mt-3 flex items-center gap-2">
+                        <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 bg-gray-100 text-gray-600 rounded-full">
+                          {{ formatDuration(variant.pricing.duration) }}
+                        </span>
+                      </div>
+                    </div>
+                    <div class="flex flex-col items-end gap-3">
+                      <span class="font-bold text-sm text-gray-900">{{ formatPrice(variant.pricing.price) }}</span>
+                      <div
+                        :class="[
+                          'w-5 h-5 rounded-full border-[0.5px] flex items-center justify-center transition-all',
+                          selectedVariant?.variantName === variant.variantName
+                            ? 'border-parentPrimary bg-parentPrimary scale-110 shadow-lg shadow-parentPrimary/30'
+                            : 'border-gray-200 bg-white group-hover:border-gray-300',
+                        ]"
+                      >
+                        <svg v-if="selectedVariant?.variantName === variant.variantName" class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                          <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Simple quantity if no variants -->
+            <div v-else class="py-8 text-center bg-gray-50 rounded-2xl border border-dashed border-gray-200">
+               <span class="text-sm font-bold text-gray-900">{{ formatPrice(selectedServiceForDetails.pricingAndDuration.price) }}</span>
+               <p class="text-xs text-gray-500 mt-1">{{ formatDuration(selectedServiceForDetails.pricingAndDuration.duration.servicingTime) }}</p>
+            </div>
+
+            <!-- Shared Quantity Stepper -->
+            <div class="mt-8 pt-8 border-t-[0.5px] border-gray-100 flex items-center justify-between">
+              <div>
+                <span class="font-bold text-sm text-gray-900">Quantity</span>
+                <p class="text-[10px] text-gray-500">How many people?</p>
+              </div>
+              <div class="flex items-center gap-4">
+                <button
+                  @click="detailsQuantity > 1 ? detailsQuantity-- : null"
+                  :disabled="detailsQuantity <= 1"
+                  class="w-10 h-10 rounded-xl bg-gray-50 hover:bg-gray-100 flex items-center justify-center transition disabled:opacity-30 disabled:cursor-not-allowed group"
+                >
+                  <svg class="w-5 h-5 text-gray-600 group-hover:text-gray-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
+                  </svg>
+                </button>
+                <span class="text-xl font-black w-8 text-center text-gray-900">{{ detailsQuantity }}</span>
+                <button
+                  @click="detailsQuantity++"
+                  class="w-10 h-10 rounded-xl bg-parentPrimary/10 hover:bg-parentPrimary/20 flex items-center justify-center transition group"
+                >
+                  <svg class="w-5 h-5 text-parentPrimary group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Footer -->
+          <div class="p-6 border-t-[0.5px] border-gray-100 flex-shrink-0 bg-gray-50/50">
+            <div class="flex items-center justify-between mb-6">
+              <div>
+                <p class="text-[10px] uppercase font-bold tracking-widest text-gray-400">Estimated Total</p>
+                <p class="text-2xl font-black text-gray-900">
+                  {{
+                    formatPrice({
+                      amount: (selectedVariant ? selectedVariant.pricing.price.amount : selectedServiceForDetails.pricingAndDuration.price.amount) * detailsQuantity,
+                      currency: selectedVariant ? selectedVariant.pricing.price.currency : selectedServiceForDetails.pricingAndDuration.price.currency
+                    })
+                  }}
+                </p>
+              </div>
+            </div>
+            <button
+              @click="addServiceToCart"
+              :disabled="!selectedVariant && selectedServiceForDetails.variants?.length > 0"
+              class="w-full bg-gray-900 text-white font-black py-4 rounded-2xl transition shadow-xl shadow-gray-200 hover:bg-gray-800 active:scale-95 disabled:opacity-30 disabled:cursor-not-allowed"
+            >
+              Add to Booking
+            </button>
+          </div>
+        </div>
+      </div>
+    </Teleport>
 
     <!-- Auth Modal -->
     <Teleport to="body" v-if="showAuthModal">
@@ -728,14 +865,19 @@ const { loginWithGoogle, loading: googleAuthLoading } = useGoogleAuth()
 
 // State
 const currentStep = ref(1)
-const selectedServiceIds = ref<string[]>([])
-const serviceQuantities = ref<Record<string, number>>({})
+const cart = ref<Array<{ service: any; selectedVariant?: any; quantity: number }>>([])
 const numberOfPeople = ref<string | number>(1)
 const location = ref<any>(null)
 const additionalDirections = ref('')
 const requestedDate = ref('')
 const requestedTime = ref('')
 const clientNotes = ref('')
+
+// Service details modal state
+const showServiceDetailsModal = ref(false)
+const selectedServiceForDetails = ref<any>(null)
+const selectedVariant = ref<any>(null)
+const detailsQuantity = ref(1)
 
 // Category scrolling state
 const categoryRefs = ref<Record<string, HTMLElement>>({});
@@ -773,21 +915,15 @@ const numberOfPeopleError = ref(false)
 
 // Computed
 const selectedItems = computed(() => {
-  return selectedServiceIds.value.map(id => {
-    const service = services.value.find((s: any) => s._id === id)
-    return {
-      service,
-      quantity: serviceQuantities.value[id] || 1
-    }
-  }).filter(item => item.service)
+  return cart.value
 })
 
 const totalPrice = computed(() => {
   let total = { amount: 0, currency: 'NGN' }
-  selectedItems.value.forEach(item => {
-    const price = item.service.pricingAndDuration.price
-    total.amount += price.amount * item.quantity
-    total.currency = price.currency
+  cart.value.forEach(item => {
+    const price = item.selectedVariant ? item.selectedVariant.pricing.price : item.service.pricingAndDuration.price
+    total.amount += (price.amount || 0) * (item.quantity || 1)
+    total.currency = price.currency || 'NGN'
   })
   return total
 })
@@ -843,42 +979,55 @@ const getServicesByCategory = (category: any) => {
 
 
 // Methods
-function isSelected(serviceId: string) {
-  return selectedServiceIds.value.includes(serviceId)
+function isServiceInCart(serviceId: string) {
+  return cart.value.some(item => item.service._id === serviceId)
 }
 
-function toggleService(service: any) {
-  const idx = selectedServiceIds.value.indexOf(service._id)
-  if (idx > -1) {
-    selectedServiceIds.value.splice(idx, 1)
-    delete serviceQuantities.value[service._id]
+function handleServiceClick(service: any) {
+  selectedServiceForDetails.value = service
+  selectedVariant.value = null
+  detailsQuantity.value = 1
+  showServiceDetailsModal.value = true
+}
+
+function toggleServiceInCart(service: any) {
+  const index = cart.value.findIndex(item => item.service._id === service._id)
+  if (index > -1) {
+    cart.value.splice(index, 1)
   } else {
-    selectedServiceIds.value.push(service._id)
-    serviceQuantities.value[service._id] = 1
+    handleServiceClick(service)
   }
 }
 
 function removeService(serviceId: string) {
-  const idx = selectedServiceIds.value.indexOf(serviceId)
-  if (idx > -1) {
-    selectedServiceIds.value.splice(idx, 1)
-    delete serviceQuantities.value[serviceId]
+  const index = cart.value.findIndex(item => item.service._id === serviceId)
+  if (index > -1) {
+    cart.value.splice(index, 1)
   }
 }
 
-function getQty(serviceId: string) {
-  return serviceQuantities.value[serviceId] || 1
-}
-
-function incrementQty(serviceId: string) {
-  serviceQuantities.value[serviceId] = (serviceQuantities.value[serviceId] || 1) + 1
-}
-
-function decrementQty(serviceId: string) {
-  const current = serviceQuantities.value[serviceId] || 1
-  if (current > 1) {
-    serviceQuantities.value[serviceId] = current - 1
+function addServiceToCart() {
+  if (selectedServiceForDetails.value) {
+    // If already in cart, remove it first (to update it)
+    const index = cart.value.findIndex(item => item.service._id === selectedServiceForDetails.value._id)
+    if (index > -1) {
+      cart.value.splice(index, 1)
+    }
+    
+    cart.value.push({
+      service: selectedServiceForDetails.value,
+      selectedVariant: selectedVariant.value,
+      quantity: detailsQuantity.value
+    })
+    closeServiceDetailsModal()
   }
+}
+
+function closeServiceDetailsModal() {
+  showServiceDetailsModal.value = false
+  selectedServiceForDetails.value = null
+  selectedVariant.value = null
+  detailsQuantity.value = 1
 }
 
 function goBack() {
@@ -1093,6 +1242,7 @@ async function submitRequest() {
     businessId: business.value._id,
     services: selectedItems.value.map(item => ({
       serviceId: item.service._id,
+      variantId: item.selectedVariant?._id,
       quantity: item.quantity
     })),
     numberOfPeople: Number(numberOfPeople.value),
@@ -1126,8 +1276,7 @@ function close() {
 
 function resetForm() {
   currentStep.value = 1
-  selectedServiceIds.value = []
-  serviceQuantities.value = {}
+  cart.value = []
   numberOfPeople.value = 1
   location.value = null
   additionalDirections.value = ''

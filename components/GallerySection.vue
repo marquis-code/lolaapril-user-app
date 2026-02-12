@@ -38,13 +38,21 @@
 <script setup lang="ts">
 import spa1 from '@/assets/img/spa1.png'
 import spa2 from '@/assets/img/spa2.png'
+import spa18 from '@/assets/img/spa18.jpg'
+import spa16 from '@/assets/img/spa16.jpg'
+import spa15 from '@/assets/img/spa15.jpg'
+import spa6 from '@/assets/img/spa6.png'
+import spa4 from '@/assets/img/spa4.png'
+import home from '@/assets/img/home.webp'
 const galleryImages = [
   spa2,
   spa1,
-  'https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=600&h=800&fit=crop',
-  'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=600&h=800&fit=crop',
-  'https://images.unsplash.com/photo-1560750588-73207b1ef5b8?w=600&h=800&fit=crop',
-  'https://images.unsplash.com/photo-1522338242992-e1a54906a8da?w=600&h=800&fit=crop'
+  spa18,
+  spa16,
+  spa15,
+  spa6,
+  spa4,
+  home
 ]
 
 const galleryRef = ref<HTMLElement | null>(null)

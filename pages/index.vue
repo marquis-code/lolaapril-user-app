@@ -4,12 +4,12 @@
     <main>
       <ValentinesSpaModal />
       <HeroSection />
-      <AboutSection />
       <ServicesSection />
       <TestimonialsSection />
       <StorySection />
       <WhoWeAreSection />
       <GallerySection />
+      <AboutSection />
       <BookingSection @open-booking="openBookingModal" />
     </main>
   </div>
