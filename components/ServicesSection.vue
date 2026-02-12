@@ -77,7 +77,7 @@ const services: Service[] = [
 
 const showMobileSpaModal = ref(false)
 const showConsultationModal = ref(false)
-const googleApiKey = import.meta.env.VITE_GOOGLE_API_KEY || 'AIzaSyA4YTRkya1JqU8BRGBIDK-xK-Sl_B7ealA'
+const googleApiKey = import.meta.env.VITE_GOOGLE_API_KEY
 
 function onServiceClick(service: Service) {
   if (service.slug === 'mobile-spa') {
