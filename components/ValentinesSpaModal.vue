@@ -7,17 +7,21 @@
         class="fixed inset-0 z-[99999] flex items-end sm:items-center justify-center bg-black/70 backdrop-blur-md p-0 sm:p-4"
         @click.self="isOpen = false"
       >
-        <div class="relative w-full h-[95vh] sm:h-auto sm:max-w-4xl sm:max-h-[90vh] bg-white rounded-t-[2.5rem] sm:rounded-[2.5rem] overflow-y-auto overflow-x-hidden custom-scrollbar shadow-2xl border border-white/10">
+        <div class="relative w-full h-[100dvh] sm:h-auto sm:max-w-4xl sm:max-h-[90vh] bg-white sm:rounded-[2.5rem] shadow-2xl border border-white/10 flex flex-col overflow-hidden">
           
-          <!-- Close Button -->
+          <!-- Close Button (Fixed on Mobile/Overlay) -->
           <button
             @click="isOpen = false"
-            class="absolute top-4 right-4 z-50 w-10 h-10 bg-white/10 backdrop-blur-xl hover:bg-white/20 text-white rounded-full flex items-center justify-center transition-all hover:rotate-90 shadow-lg border border-white/20"
+            class="absolute top-4 right-4 z-[70] w-10 h-10 bg-white shadow-2xl hover:bg-rose-50 text-parentPrimaryFirst rounded-full flex items-center justify-center transition-all hover:rotate-90 border-2 border-parentPrimaryFirst/20 md:hover:scale-110 active:scale-90"
+            aria-label="Close modal"
           >
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
+
+          <!-- Scrollable Content -->
+          <div class="flex-1 overflow-y-auto overflow-x-hidden custom-scrollbar">
 
           <!-- Floating Hearts Animation -->
           <div class="absolute inset-0 pointer-events-none overflow-hidden z-20">
@@ -39,8 +43,8 @@
             </svg>
           </div>
 
-          <!-- Hero Carousel Section (Taller & Clear) -->
-          <div class="relative h-[450px] sm:h-[700px] w-full group overflow-hidden">
+          <!-- Hero Carousel Section (Full height for impact) -->
+          <div class="relative h-[100dvh] sm:h-[700px] w-full group overflow-hidden shrink-0">
             <TransitionGroup name="slide">
               <div
                 v-for="(img, idx) in carouselImages"
@@ -131,6 +135,7 @@
               *Terms and conditions apply. Limited slots available for peak hours.
             </p>
           </div>
+        </div>
         </div>
       </div>
     </Transition>
@@ -237,6 +242,9 @@ function onServiceClick() {
 .slide-leave-to { opacity: 0; }
 
 /* Custom Scrollbar for better UX */
+.custom-scrollbar {
+  overscroll-behavior: contain;
+}
 .custom-scrollbar::-webkit-scrollbar { width: 5px; }
 .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
 .custom-scrollbar::-webkit-scrollbar-thumb { background: #e11d48; border-radius: 10px; }
