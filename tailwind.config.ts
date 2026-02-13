@@ -48,6 +48,8 @@ module.exports = {
           800: '#002329',
           900: '#001115',
         },
+        parentPrimaryFirst: '#8D6628',
+        parentPrimarySecond: '#EFE380',
         parentSecondary: '#F8EADC',
         parentAccent: '#FFA500',
         parentGreen: {

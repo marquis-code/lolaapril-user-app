@@ -18,7 +18,7 @@
       <h2 class="text-[2.5rem] md:text-[4.5rem] lg:text-[5.5rem] font-light mb-12 animate-fade-in-delay leading-tight tracking-tight">
         Starts <span class="relative inline-block">
           Inside
-          <span class="absolute bottom-0 left-0 right-0 h-2 bg-gradient-to-r from-yellow-200 via-yellow-300 to-transparent rounded" style="height:0.5em;"></span>
+          <span class="absolute bottom-0 left-0 right-0 h-2 bg-gradient-to-r from-parentPrimaryFirst via-parentPrimarySecond to-transparent rounded" style="height:0.5em;"></span>
         </span>
       </h2>
     </div>

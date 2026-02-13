@@ -1,4 +1,4 @@
-import { GATEWAY_ENDPOINT_WITHOUT_VERSION } from '../axios.config'
+import { GATEWAY_ENDPOINT_WITHOUT_VERSION, GATEWAY_ENDPOINT_WITHOUT_VERSION_WITH_AUTH } from '../axios.config'
 
 export const consultation_api = {
     getPackages: (subdomain: string) => {
@@ -16,5 +16,9 @@ export const consultation_api = {
     verifyPayment: (reference: string) => {
         const url = `/consultations/verify-payment/${reference}`
         return GATEWAY_ENDPOINT_WITHOUT_VERSION.get(url)
+    },
+    getMyBookings: () => {
+        const url = '/consultations/my-bookings'
+        return GATEWAY_ENDPOINT_WITHOUT_VERSION_WITH_AUTH.get(url)
     }
 }

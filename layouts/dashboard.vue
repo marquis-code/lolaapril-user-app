@@ -252,6 +252,8 @@ const logoutModalOpen = ref(false)
 const navItems = [
   { path: '/dashboard/profile', label: 'Profile', icon: profile },
   { path: '/dashboard/bookings', label: 'Bookings', icon: calendar },
+  { path: '/dashboard/mobile-spa', label: 'Mobile Spa', icon: shoppingBag },
+  { path: '/dashboard/consultations', label: 'Consultations', icon: document },
   { path: '/dashboard/wallet', label: 'Wallet', icon: wallet },
   { path: '/dashboard/favorites', label: 'Favorites', icon: heart },
   { path: '/dashboard/forms', label: 'Forms', icon: document },
@@ -262,6 +264,8 @@ const navItems = [
 const pageTitles: Record<string, { title: string; description: string }> = {
   '/dashboard/profile': { title: 'My Profile', description: 'Manage your personal information' },
   '/dashboard/bookings': { title: 'Bookings', description: 'View and manage your bookings' },
+  '/dashboard/mobile-spa': { title: 'Mobile Spa', description: 'Track your mobile spa service requests' },
+  '/dashboard/consultations': { title: 'Consultations', description: 'Manage your virtual consultation sessions' },
   '/dashboard/wallet': { title: 'Wallet', description: 'Manage your payments and transactions' },
   '/dashboard/favorites': { title: 'Favorites', description: 'Your saved businesses and services' },
   '/dashboard/forms': { title: 'Forms', description: 'View and complete your forms' },

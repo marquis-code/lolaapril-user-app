@@ -24,7 +24,7 @@
             <svg
               v-for="i in 15"
               :key="i"
-              class="absolute text-rose-400/30 animate-float-heart"
+              class="absolute text-parentPrimaryFirst/30 animate-float-heart"
               :style="{
                 left: `${Math.random() * 100}%`,
                 animationDelay: `${Math.random() * 8}s`,
@@ -63,7 +63,7 @@
                 :key="i"
                 @click="currentSlide = i"
                 class="h-1.5 transition-all duration-500 rounded-full shadow-sm"
-                :class="currentSlide === i ? 'w-8 bg-rose-500' : 'w-2 bg-white/60 hover:bg-white/90'"
+                :class="currentSlide === i ? 'w-8 bg-parentPrimaryFirst' : 'w-2 bg-white/60 hover:bg-white/90'"
               />
             </div>
           </div>
@@ -71,13 +71,13 @@
           <!-- Hero Content (Dedicated Text Area) -->
           <div class="px-6 sm:px-12 py-10 sm:py-16 bg-white relative">
             <div class="max-w-2xl mx-auto text-center animate-fade-in-up">
-              <div class="inline-flex items-center gap-2 bg-rose-100 text-rose-600 px-4 py-1.5 rounded-full mb-6 border border-rose-200">
+              <div class="inline-flex items-center gap-2 bg-rose-100 text-parentPrimaryFirst px-4 py-1.5 rounded-full mb-6 border border-parentPrimaryFirst">
                 <span class="animate-pulse text-sm">✨</span>
                 <span class="text-xs sm:text-sm font-bold tracking-wider uppercase">Valentine's Special 2026</span>
               </div>
               <h1 class="text-3xl sm:text-5xl font-black mb-4 leading-[1.1] tracking-tight text-gray-900">
-                Love is in the <span class="text-rose-600">Air</span>, <br class="hidden sm:block" />
-                Spa is in the <span class="text-rose-600">Soul</span>
+                Love is in the <span class="text-parentPrimaryFirst">Air</span>, <br class="hidden sm:block" />
+                Spa is in the <span class="text-parentPrimaryFirst">Soul</span>
               </h1>
               <p class="text-sm sm:text-lg text-gray-600 mb-8 font-medium leading-relaxed max-w-lg mx-auto">
                 Celebrate your love with a curated sanctuary of relaxation. Exclusive Valentine's packages designed for unforgettable moments.
@@ -85,7 +85,7 @@
               <div class="flex flex-col sm:flex-row gap-4 justify-center">
                 <button
                   @click="onServiceClick"
-                  class="inline-flex items-center justify-center gap-3 bg-rose-600 text-white hover:bg-rose-700 px-10 py-4 rounded-full font-bold text-sm sm:text-base transition-all hover:scale-105 active:scale-95 shadow-xl shadow-rose-200 group"
+                  class="inline-flex text-white items-center justify-center gap-3 bg-parentPrimary px-10 py-4 rounded-full font-bold text-sm sm:text-base transition-all hover:scale-105 active:scale-95 shadow-xl shadow-parentPrimaryFirst group"
                 >
                   Book Your Experience
                   <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -108,14 +108,14 @@
               </div>
             </div>
 
-            <div class="mt-16 sm:mt-24 bg-gradient-to-r from-rose-600 to-pink-600 rounded-3xl p-8 sm:p-12 text-white text-center relative overflow-hidden shadow-2xl shadow-rose-200">
+            <div class="mt-16 sm:mt-24 bg-[#8D6628] rounded-3xl p-8 sm:p-12 text-white text-center relative overflow-hidden shadow-2xl shadow-parentPrimaryFirst">
               <div class="relative z-10 flex flex-col items-center">
-                <div class="text-rose-200 font-bold tracking-widest uppercase text-xs mb-2">Exclusive Offer</div>
+                <div class="text-parentPrimaryFirst font-bold tracking-widest uppercase text-xs mb-2">Exclusive Offer</div>
                 <div class="text-3xl sm:text-5xl font-black mb-2">50% DISCOUNT</div>
                 <p class="text-rose-100 text-sm sm:text-lg mb-8 max-w-sm font-medium">For all couples treatments booked before February 14th</p>
                 <button
                   @click="onServiceClick"
-                  class="bg-white text-rose-600 px-12 py-4 rounded-2xl font-black text-sm uppercase tracking-wider hover:bg-rose-50 transition-all shadow-xl shadow-black/10 active:scale-95"
+                  class="bg-white text-parentPrimaryFirst px-12 py-4 rounded-2xl font-black text-sm uppercase tracking-wider hover:bg-rose-50 transition-all shadow-xl shadow-black/10 active:scale-95"
                 >
                   Claim Offer Now
                 </button>
@@ -124,7 +124,7 @@
               
               <!-- Abstract shapes for decor -->
               <div class="absolute -top-10 -left-10 w-40 h-40 bg-white/10 rounded-full blur-2xl" />
-              <div class="absolute -bottom-10 -right-10 w-40 h-40 bg-rose-400/30 rounded-full blur-2xl" />
+              <div class="absolute -bottom-10 -right-10 w-40 h-40 bg-parentPrimaryFirst/30 rounded-full blur-2xl" />
             </div>
             
             <p class="text-center text-gray-400 text-[10px] sm:text-xs mt-8 font-medium italic">

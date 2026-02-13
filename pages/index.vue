@@ -10,8 +10,9 @@
       <WhoWeAreSection />
       <GallerySection />
       <AboutSection />
-      <BookingSection @open-booking="openBookingModal" />
+      <!-- <BookingSection @open-booking="openBookingModal" /> -->
     </main>
+    <TheFooter />
   </div>
 </template>
 
