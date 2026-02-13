@@ -139,10 +139,14 @@
 
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted, watch } from 'vue'
+import { useAnalytics } from '@/composables/useAnalytics'
+
 
 const isOpen = ref(false)
 const currentSlide = ref(0)
+const { trackEvent } = useAnalytics()
+
 let slideInterval: any = null
 
 // Real images from assets/img/valentine
@@ -180,14 +184,25 @@ onUnmounted(() => {
   if (slideInterval) clearInterval(slideInterval)
 })
 
+watch(isOpen, (newVal) => {
+  if (newVal) {
+    trackEvent('click', 'Valentines Modal', 'open_modal')
+  } else {
+    trackEvent('click', 'Valentines Modal', 'close_modal')
+  }
+})
+
+
 function onServiceClick() {
-      navigateTo({
+  trackEvent('click', 'Valentines Modal', 'claim_offer_click')
+  navigateTo({
     path: '/book',
     query: {
       subdomain: 'lola-beauty',
     },
   })
 }
+
 </script>
 
 <style scoped>

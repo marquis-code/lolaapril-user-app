@@ -1,7 +1,6 @@
 <script setup lang="ts">
 // ─── pages/reviews.vue  (or any component) ───────────────────────────────────
 // Replace the parent string with your real account/location resource name.
-import { useReviews } from '@/composables/modules/reviews/useReviews'
 
 const LOCATION = 'accounts/123456789/locations/987654321'
 

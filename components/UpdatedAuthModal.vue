@@ -427,6 +427,8 @@ import { useLogin } from "@/composables/modules/auth/useLogin"
 import { useForgotPassword } from "@/composables/modules/auth/useForgotPassword"
 import { useResetPassword } from "@/composables/modules/auth/useResetPassword"
 import { useVerifyResetPasswordOtp } from "@/composables/modules/auth/useVerifyResetPasswordOTP"
+import { useAnalytics } from "@/composables/useAnalytics"
+
 
 const props = defineProps<{
   isOpen: boolean
@@ -443,8 +445,10 @@ const { loading: registerLoading, error: registerError, register } = useRegister
 const { loading: forgotLoading, error: forgotError, forgotPassword } = useForgotPassword()
 const { loading: resetLoading, error: resetError, resetPassword } = useResetPassword()
 const { loading: verifyLoading, error: verifyError, verifyResetPasswordOtp } = useVerifyResetPasswordOtp()
+const { trackEvent } = useAnalytics()
 
 type AuthMode = 'login' | 'signup' | 'forgot' | 'verify-otp' | 'reset-password'
+
 
 // State
 const mode = ref<AuthMode>(props.initialMode || 'signup')
@@ -491,7 +495,9 @@ const getTitle = computed(() => {
 }
 
 const closeModal = () => {
+  trackEvent('click', 'Updated Auth Modal', 'close_modal')
   emit('close')
+
   // Clear timers
   if (resendInterval) {
     clearInterval(resendInterval)
@@ -528,23 +534,31 @@ const closeModal = () => {
 
 const handleSignup = async () => {
   try {
+    trackEvent('click', 'Updated Auth Modal', 'signup_attempt')
     await register(signupForm.value)
+    trackEvent('form_submit', 'Updated Auth Modal', 'signup_success')
     closeModal()
     await navigateTo('/book?subdomain=lola-beauty')
   } catch (error) {
+    trackEvent('form_submit', 'Updated Auth Modal', 'signup_failed', { error })
     console.error('Signup error:', error)
   }
 }
 
+
 const handleLogin = async () => {
   try {
+    trackEvent('click', 'Updated Auth Modal', 'login_attempt')
     await login(loginForm.value)
+    trackEvent('form_submit', 'Updated Auth Modal', 'login_success')
     closeModal()
     await navigateTo('/book?subdomain=lola-beauty')
   } catch (error) {
+    trackEvent('form_submit', 'Updated Auth Modal', 'login_failed', { error })
     console.error('Login error:', error)
   }
 }
+
 
 const handleForgotPassword = async () => {
   try {
@@ -624,8 +638,10 @@ const handleResetPassword = async () => {
 
 const handleGoogleAuth = async () => {
   try {
+    trackEvent('click', 'Updated Auth Modal', 'google_auth_attempt')
     // TODO: Implement Google OAuth
     // This would typically redirect to your backend OAuth endpoint
+
     // Example: window.location.href = '/api/auth/google'
     console.log('Google authentication initiated')
     

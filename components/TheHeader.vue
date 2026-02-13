@@ -145,7 +145,9 @@
 <script setup lang="ts">
   const desktopDrawerOpen = ref(false)
   import { useUser } from '@/composables/modules/auth/user'
+  import { useAnalytics } from '@/composables/useAnalytics'
   const { isLoggedIn, user: currentUser } = useUser()
+
 interface User {
   id: string
   name: string
@@ -160,6 +162,8 @@ const authMode = ref<'login' | 'signup'>('signup')
 const dropdownOpen = ref(false)
 const logoutModalOpen = ref(false)
 const dropdownRef = ref<HTMLElement | null>(null)
+const { trackEvent } = useAnalytics()
+
 
 // const currentUser = ref<User | null>(null)
 // const isLoggedIn = computed(() => !!currentUser.value)
@@ -210,7 +214,11 @@ const checkAuthStatus = () => {
 
 const handleScroll = () => {
   scrolled.value = window.scrollY > 50
+  if (scrolled.value && !scrolled.value) { // This is just to satisfy logic if needed, but let's just track once
+     // trackEvent('scroll', 'The Header', 'scroll_scrolled')
+  }
 }
+
 
 const handleClickOutside = (event: MouseEvent) => {
   if (dropdownRef.value && !dropdownRef.value.contains(event.target as Node)) {
@@ -223,16 +231,19 @@ const toggleDropdown = () => {
 }
 
 const openSignupModal = () => {
+  trackEvent('click', 'The Header', 'signup_click')
   authMode.value = 'signup'
   authModalOpen.value = true
   mobileMenuOpen.value = false
 }
 
 const openLoginModal = () => {
+  trackEvent('click', 'The Header', 'login_click')
   authMode.value = 'login'
   authModalOpen.value = true
   mobileMenuOpen.value = false
 }
+
 
 const closeAuthModal = () => {
   authModalOpen.value = false
@@ -257,7 +268,10 @@ const confirmLogout = () => {
     // Close modal
     logoutModalOpen.value = false
     
+    trackEvent('click', 'The Header', 'logout_confirm')
+    
     // Dispatch event for other components
+
     window.dispatchEvent(new Event('auth-change'))
     
     // Optional: Redirect to home
@@ -266,9 +280,11 @@ const confirmLogout = () => {
 }
 
 const handleBookNow = () => {
+  trackEvent('click', 'The Header', 'book_now_click')
   mobileMenuOpen.value = false
   navigateTo('/book?subdomain=lola-beauty')
 }
+
 
 </script>
 

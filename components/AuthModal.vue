@@ -430,6 +430,8 @@ import { useForgotPassword } from "@/composables/modules/auth/useForgotPassword"
 import { useResetPassword } from "@/composables/modules/auth/useResetPassword"
 import { useVerifyResetPasswordOtp } from "@/composables/modules/auth/useVerifyResetPasswordOTP"
 import { useGoogleAuth } from "@/composables/modules/auth/useGoogleAuth"
+import { useAnalytics } from "@/composables/useAnalytics"
+
 
 const props = defineProps<{
   isOpen: boolean
@@ -447,8 +449,10 @@ const { loading: forgotLoading, forgotPassword } = useForgotPassword()
 const { loading: resetLoading, resetPassword } = useResetPassword()
 const { loading: verifyLoading, verifyResetPasswordOtp } = useVerifyResetPasswordOtp()
 const { loginWithGoogle, loading: googleAuthLoading } = useGoogleAuth()
+const { trackEvent } = useAnalytics()
 
 type AuthMode = 'login' | 'signup' | 'forgot' | 'verify-otp' | 'reset-password'
+
 
 // State
 const mode = ref<AuthMode>(props.initialMode || 'signup')
@@ -561,27 +565,37 @@ const closeModal = () => {
     canResend.value = false
     rememberMe.value = false
     mode.value = props.initialMode || 'signup'
+    trackEvent('click', 'Auth Modal', 'close_modal')
   }, 300)
 }
 
+
 const handleSignup = async () => {
   try {
+    trackEvent('click', 'Auth Modal', 'signup_attempt')
     await register(signupForm.value)
+    trackEvent('form_submit', 'Auth Modal', 'signup_success')
     closeModal()
     await navigateTo('/book?subdomain=lola-beauty')
   } catch (error) {
+    trackEvent('form_submit', 'Auth Modal', 'signup_failed', { error })
     console.error('Signup error:', error)
   }
 }
 
+
 const handleLogin = async () => {
   try {
+    trackEvent('click', 'Auth Modal', 'login_attempt')
     await login(loginForm.value)
+    trackEvent('form_submit', 'Auth Modal', 'login_success')
     closeModal()
   } catch (error) {
+    trackEvent('form_submit', 'Auth Modal', 'login_failed', { error })
     console.error('Login error:', error)
   }
 }
+
 
 const handleForgotPassword = async () => {
   try {
@@ -598,9 +612,11 @@ const handleForgotPassword = async () => {
       })
     }, 2000)
   } catch (error) {
+    trackEvent('form_submit', 'Auth Modal', 'forgot_password_failed', { error })
     console.error('Forgot password error:', error)
   }
 }
+
 
 const handleVerifyOTP = async () => {
   try {
@@ -660,8 +676,14 @@ const handleResetPassword = async () => {
 }
 
 const handleGoogleAuth = async () => {
-  await loginWithGoogle()
+  trackEvent('click', 'Auth Modal', 'google_auth_attempt')
+  await loginWithGoogle().then(() => {
+    trackEvent('form_submit', 'Auth Modal', 'google_auth_success')
+  }).catch((error) => {
+    trackEvent('form_submit', 'Auth Modal', 'google_auth_failed', { error })
+  })
 }
+
 
 
 // Methods
@@ -766,12 +788,14 @@ const handleOTPPaste = (event: ClipboardEvent) => {
 watch(() => props.isOpen, (isOpen) => {
   if (process.client) {
     if (isOpen) {
+      trackEvent('click', 'Auth Modal', 'open_modal', { mode: mode.value })
       document.body.style.overflow = 'hidden'
     } else {
       document.body.style.overflow = ''
     }
   }
 })
+
 
 // Cleanup on unmount
 onUnmounted(() => {

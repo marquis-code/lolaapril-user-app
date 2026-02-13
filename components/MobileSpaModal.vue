@@ -841,7 +841,9 @@
 
 <script setup lang="ts">
 import { ref, reactive, computed, watch, onMounted, nextTick } from 'vue'
+import { useAnalytics } from '@/composables/useAnalytics'
 import { useMobileSpa } from '@/composables/useMobileSpa'
+
 import { useGetServices } from '@/composables/modules/services/useGetServices'
 import { useGetBusiness } from '@/composables/modules/business/useGetBusiness'
 import { useLogin } from '@/composables/modules/auth/useLogin'
@@ -862,6 +864,8 @@ const { createMobileSpa, loading: submitting, error: submitError, success: submi
 const { login, error: loginError } = useLogin()
 const { register, error: signupError } = useRegister()
 const { loginWithGoogle, loading: googleAuthLoading } = useGoogleAuth()
+const { trackEvent } = useAnalytics()
+
 
 // State
 const currentStep = ref(1)
@@ -1024,11 +1028,13 @@ function addServiceToCart() {
 }
 
 function closeServiceDetailsModal() {
+  trackEvent('click', 'Mobile Spa Modal', 'close_service_details')
   showServiceDetailsModal.value = false
   selectedServiceForDetails.value = null
   selectedVariant.value = null
   detailsQuantity.value = 1
 }
+
 
 function goBack() {
   if (currentStep.value > 1) currentStep.value--
@@ -1039,8 +1045,13 @@ function goToStep2() {
 }
 
 function goToStep3() {
+  trackEvent('booking_intent', 'Mobile Spa Modal', 'proceed_to_review', {
+    itemsCount: selectedItems.value.length,
+    totalPrice: totalPrice.value.amount
+  })
   currentStep.value = 3
 }
+
 
 const setCategoryRef = (category: any, el: any) => {
   const key = category._id || 'featured';
@@ -1139,11 +1150,13 @@ onMounted(() => {
 
 watch(() => props.show, (val) => {
     if (val) {
+        trackEvent('click', 'Mobile Spa Modal', 'open_modal')
         nextTick(() => {
             setupScrollObserver();
         })
     }
 });
+
 
 // Auth helpers
 function checkUserAuthentication() {
@@ -1261,18 +1274,29 @@ async function submitRequest() {
   await createMobileSpa(payload)
 
   if (submitSuccess.value) {
+    trackEvent('form_submit', 'Mobile Spa Modal', 'submit_success', {
+      items: selectedItems.value.map(i => i.service.basicDetails.serviceName),
+      total: totalPrice.value.amount
+    })
     emit('submitted')
     // Auto close after delay
     setTimeout(() => {
       close()
     }, 3000)
+  } else {
+    trackEvent('form_submit', 'Mobile Spa Modal', 'submit_failed', {
+      error: submitError.value || 'Unknown error'
+    })
   }
 }
 
+
 function close() {
+  trackEvent('click', 'Mobile Spa Modal', 'close_modal')
   resetForm()
   emit('close')
 }
+
 
 function resetForm() {
   currentStep.value = 1

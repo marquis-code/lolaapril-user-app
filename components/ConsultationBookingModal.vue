@@ -56,51 +56,85 @@
                 <h1 class="text-2xl font-bold text-gray-900 mb-2">Select Package</h1>
                 <p class="text-gray-600 mb-8">Choose a consultation package that fits your needs</p>
 
-                <div v-if="loadingPackages" class="space-y-4">
-                  <div v-for="i in 3" :key="i" class="h-32 bg-gray-50 rounded-2xl animate-pulse" />
+                <!-- Loading States -->
+                <div v-if="loadingPackages" class="grid gap-4">
+                  <div 
+                    v-for="i in 3" 
+                    :key="i" 
+                    class="bg-white border border-gray-100 rounded-2xl p-4 animate-pulse"
+                  >
+                    <div class="flex justify-between items-start">
+                      <div class="space-y-2 flex-1">
+                        <div class="h-5 bg-gray-100 rounded-lg w-1/3"></div>
+                        <div class="h-4 bg-gray-50 rounded-lg w-1/2"></div>
+                      </div>
+                      <div class="text-right space-y-2">
+                        <div class="h-6 bg-gray-100 rounded-lg w-20 ml-auto"></div>
+                        <div class="h-3 bg-gray-50 rounded-lg w-12 ml-auto"></div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
+                <!-- Empty State -->
+                <div 
+                  v-else-if="!packages.length" 
+                  class="flex flex-col items-center justify-center py-16 px-4 bg-gray-50 rounded-3xl border border-dashed border-gray-200"
+                >
+                  <div class="w-20 h-20 bg-white rounded-3xl flex items-center justify-center shadow-sm mb-6">
+                    <svg class="w-10 h-10 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                    </svg>
+                  </div>
+                  <h3 class="text-xl font-bold text-gray-900 mb-2">No Packages Available</h3>
+                  <p class="text-gray-500 text-center max-w-sm">We couldn't find any consultation packages at the moment. Please check back later.</p>
+                </div>
+
+                <!-- Packages Grid -->
                 <div v-else class="grid gap-4">
                   <div
                     v-for="pkg in packages"
                     :key="pkg._id"
                     @click="selectPackage(pkg)"
-                    class="group relative bg-white border-2 rounded-2xl p-6 cursor-pointer transition-all hover:border-parentPrimary/30"
-                    :class="selectedPackage?._id === pkg._id ? 'border-parentPrimary bg-parentPrimary/[0.02]' : 'border-gray-100'"
+                    class="group relative bg-white border rounded-2xl p-4 cursor-pointer transition-all duration-300"
+                    :class="selectedPackage?._id === pkg._id 
+                      ? 'border-parentPrimary ring-4 ring-parentPrimary/10 bg-parentPrimary/[0.01]' 
+                      : 'border-gray-100 hover:border-parentPrimary/30 hover:shadow-lg hover:shadow-gray-100'"
                   >
-                    <div class="flex justify-between items-start mb-4">
-                      <div>
-                        <h3 class="text-lg font-bold text-gray-900 group-hover:text-parentPrimary transition-colors">
-                          {{ pkg.name }}
-                        </h3>
-                        <p class="text-gray-500 text-sm mt-1">{{ pkg.description }}</p>
+                    <div class="flex justify-between items-start">
+                      <div class="flex-1">
+                        <div class="flex items-center gap-3 mb-1">
+                          <h3 
+                            class="text-base font-bold text-gray-900 transition-colors"
+                            :class="selectedPackage?._id === pkg._id ? 'text-parentPrimary' : ''"
+                          >
+                            {{ pkg.name }}
+                          </h3>
+                          <div 
+                            v-if="selectedPackage?._id === pkg._id"
+                            class="bg-parentPrimary text-white p-0.5 rounded-full"
+                          >
+                            <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                              <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                            </svg>
+                          </div>
+                        </div>
+                        <p class="text-gray-500 text-sm line-clamp-2 leading-relaxed">{{ pkg.description }}</p>
                       </div>
-                      <div class="text-right">
-                        <div class="text-xl font-bold text-parentPrimary">{{ formatPrice(pkg.price) }}</div>
-                        <div class="text-xs text-gray-400">{{ pkg.duration }} mins</div>
+                      
+                      <div class="text-right pl-4">
+                        <div class="text-lg font-black text-parentPrimary">{{ formatPrice(pkg.price) }}</div>
+                        <div class="flex items-center justify-end gap-1 text-[10px] font-bold text-gray-400 mt-1 uppercase tracking-wider">
+                          <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          </svg>
+                          {{ pkg.duration }} MINS
+                        </div>
                       </div>
                     </div>
-                    
-                    <div  v-if="selectedPackage?._id === pkg._id" class="flex items-center gap-2 text-sm text-parentPrimary">
-                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-                      </svg>
-                      <!-- <svg class="w-4 h-4 text-parentPrimary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                      </svg>
-                      Expert Guidance -->
-                    </div>
-
-                    <!-- <div
-                      v-if="selectedPackage?._id === pkg._id"
-                      class="absolute top-4 right-4 text-parentPrimary"
-                    >
-                      <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-                      </svg>
-                    </div> -->
                   </div>
                 </div>
+
               </div>
 
               <!-- Step 2: Time Slots -->
@@ -311,6 +345,8 @@ const { showToast } = useCustomToast()
 const { loading: loadingPackages, packages, getPackages } = useGetConsultationPackages()
 const { loading: loadingSlots, slots, getSlots } = useGetConsultationSlots()
 const { loading: bookingLoading, bookConsultation } = useBookConsultation()
+const { trackEvent } = useAnalytics()
+
 
 const currentStep = ref(1)
 const selectedPackage = ref<any>(null)
@@ -433,9 +469,16 @@ const handleButtonClick = async () => {
   } else if (currentStep.value === 2) {
     currentStep.value = 3
   } else if (currentStep.value === 3) {
+    trackEvent('booking_intent', 'Consultation Booking Modal', 'confirm_click', {
+      package: selectedPackage.value?.name,
+      price: selectedPackage.value?.price,
+      date: selectedDate.value,
+      time: selectedTime.value
+    })
     await submitBooking()
   }
 }
+
 
 const submitBooking = async () => {
   const startTime = new Date(`${selectedDate.value}T${selectedTime.value}`)
@@ -445,7 +488,17 @@ const submitBooking = async () => {
     notes: notes.value
   }
 
-  await bookConsultation(props.subdomain, payload)
+  const res = await bookConsultation(props.subdomain, payload) as any
+  if (res.data?.success) {
+    trackEvent('form_submit', 'Consultation Booking Modal', 'submit_success', {
+      package: selectedPackage.value?.name,
+      reference: res.data?.data?.reference
+    })
+  } else {
+    trackEvent('form_submit', 'Consultation Booking Modal', 'submit_failed', {
+      error: res.data?.message || 'Unknown error'
+    })
+  }
   // if (res.success && res.data.checkoutUrl) {
   //   showToast({
   //       title: 'Booking Initiated',
@@ -473,7 +526,9 @@ const close = () => {
   selectedTime.value = ''
   notes.value = ''
   emit('close')
+  trackEvent('click', 'Consultation Booking Modal', 'close_modal')
 }
+
 
 const formatPrice = (price: number | any) => {
   const amount = typeof price === 'object' ? price.amount : price
@@ -504,8 +559,10 @@ const formatDisplayDate = (dateString: string) => {
 watch(() => props.show, (newVal) => {
   if (newVal) {
     getPackages(props.subdomain)
+    trackEvent('click', 'Consultation Booking Modal', 'open_modal')
   }
 })
+
 
 onMounted(() => {
   if (props.show) {
