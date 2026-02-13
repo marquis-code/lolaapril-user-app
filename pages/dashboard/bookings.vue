@@ -16,101 +16,170 @@
       </div>
 
       <div v-else>
-        <!-- Upcoming Appointments -->
-        <div class="mb-8">
-          <h2 v-if="upcomingBookings.length" class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">
-            Upcoming
-          </h2>
-
-          <div v-if="upcomingBookings.length === 0" class="text-center py-12 bg-white rounded-xl border-[0.5px] border-gray-50">
-            <svg class="w-12 h-12 text-gray-300 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-            </svg>
-            <p class="text-gray-900 font-semibold mb-1">No upcoming appointments</p>
-            <p class="text-gray-500 text-sm mb-4">Your upcoming appointments will appear here</p>
-            <button
-              @click="navigateTo('/#book')"
-              class="inline-flex items-center text-sm gap-2 bg-gray-900 text-white font-medium px-5 py-2 rounded-lg hover:bg-gray-800 transition-colors"
+        <!-- Filter Header -->
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+          <!-- Status Tabs -->
+          <div class="flex items-center p-1 bg-gray-100/50 rounded-xl w-fit">
+            <button 
+              v-for="tab in ['Upcoming', 'Completed', 'Cancelled', 'All']" 
+              :key="tab"
+              @click="activeTab = tab"
+              class="px-4 py-2 text-xs font-semibold rounded-lg transition-all"
+              :class="activeTab === tab ? 'bg-white text-parentPrimary shadow-sm' : 'text-gray-500 hover:text-gray-700'"
             >
-              Search salons
+              {{ tab }}
             </button>
           </div>
 
-          <div v-else class="space-y-3">
-            <div
-              v-for="booking in upcomingBookings"
-              :key="booking._id"
-              class="bg-white rounded-xl border-[0.5px] border-gray-50 p-4 hover:border-gray-200 hover:shadow-sm transition-all cursor-pointer"
-              @click="selectBooking(booking)"
+          <!-- Custom Date Range Picker -->
+          <div class="relative items-center gap-2">
+            <button 
+              @click="showDatePicker = !showDatePicker"
+              class="flex items-center gap-3 px-4 py-2.5 bg-white border border-gray-100 rounded-xl shadow-sm hover:border-parentPrimary/30 transition-all text-xs font-medium text-gray-700 min-w-[240px]"
             >
-              <div class="flex items-center gap-3">
-                <img
-                  src="@/assets/img/logo.png"
-                  alt="Business"
-                  class="w-12 h-12 p-1.5 bg-parentPrimary rounded-lg object-cover flex-shrink-0"
-                />
-                
-                <div class="flex-1 min-w-0">
-                  <h3 class="font-semibold text-gray-900 text-sm mb-0.5 truncate">
-                    {{ booking.business?.name || 'Lola April Wellness Spa' }}
-                  </h3>
-                  <p class="text-xs text-gray-600 mb-1">
-                    {{ formatDateTime(booking.preferredDate, booking.preferredStartTime) }}
-                  </p>
-                  <div class="flex items-center gap-2 text-xs text-gray-500">
-                    <span class="font-medium text-gray-900">₦{{ formatPrice(booking.estimatedTotal) }}</span>
-                    <span>•</span>
-                    <span>{{ booking.services?.length || 1 }} service{{ booking.services?.length > 1 ? 's' : '' }}</span>
+              <svg class="w-4 h-4 text-parentPrimary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+              <span>{{ dateRangeText }}</span>
+              <svg class="w-4 h-4 ml-auto text-gray-400 transition-transform" :class="{ 'rotate-180': showDatePicker }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+
+            <!-- Custom Calendar Popover -->
+            <Transition name="fade-popover">
+              <div v-if="showDatePicker" class="absolute top-full mt-2 left-0 md:right-0 md:left-auto z-[100] w-[320px] bg-white/80 backdrop-blur-xl border border-white/20 rounded-2xl shadow-2xl p-5 overflow-hidden">
+                <div class="flex items-center justify-between mb-4">
+                  <button @click="prevMonth" class="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+                    <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                    </svg>
+                  </button>
+                  <h3 class="text-sm font-bold text-gray-900">{{ currentMonthYear }}</h3>
+                  <button @click="nextMonth" class="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+                    <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                  </button>
+                </div>
+
+                <div class="grid grid-cols-7 gap-1 mb-2">
+                  <div v-for="day in ['M', 'T', 'W', 'T', 'F', 'S', 'S']" :key="day" class="text-[10px] font-black text-gray-400 text-center uppercase py-1">
+                    {{ day }}
                   </div>
                 </div>
 
-                <button
-                  class="text-xs text-parentPrimary font-semibold hover:text-parentPrimary-700 px-3 py-1.5 rounded-full bg-parentPrimary/5 transition-colors flex-shrink-0"
-                  @click.stop="navigateTo('/book?subdomain=lola-beauty')"
-                >
-                  Book again
-                </button>
+                <div class="grid grid-cols-7 gap-y-1">
+                  <div 
+                    v-for="(date, idx) in calendarDates" 
+                    :key="idx"
+                    class="relative py-2 flex items-center justify-center"
+                  >
+                    <!-- Range Background (Color Stroll) -->
+                    <div 
+                      v-if="isInRange(date)"
+                      class="absolute inset-y-1 left-0 right-0 bg-parentPrimary/10"
+                      :class="{ 
+                        'rounded-l-full ml-1': isRangeStart(date),
+                        'rounded-r-full mr-1': isRangeEnd(date)
+                      }"
+                    ></div>
+
+                    <button
+                      @click="handleDateClick(date)"
+                      :disabled="!date.isCurrentMonth"
+                      class="relative z-10 w-8 h-8 flex items-center justify-center text-xs font-medium rounded-full transition-all"
+                      :class="[
+                        !date.isCurrentMonth ? 'text-gray-200' : 'text-gray-700 hover:bg-gray-100',
+                        isSelected(date) ? 'bg-parentPrimary text-white shadow-lg shadow-parentPrimary/30' : '',
+                        date.isToday && !isSelected(date) ? 'text-parentPrimary font-bold border border-parentPrimary/20' : ''
+                      ]"
+                    >
+                      {{ date.day }}
+                    </button>
+                  </div>
+                </div>
+
+                <div class="flex items-center shadow-lg border-t justify-between mt-6 pt-4 border-gray-100/50">
+                  <button @click="clearDateRange" class="text-[11px] font-bold text-gray-400 hover:text-gray-600">Reset</button>
+                  <button @click="showDatePicker = false" class="px-5 py-2 bg-parentPrimary text-white text-[11px] font-bold rounded-lg shadow-lg shadow-parentPrimary/20 hover:scale-105 active:scale-95 transition-all">Apply Filter</button>
+                </div>
               </div>
-            </div>
+            </Transition>
           </div>
         </div>
 
-        <!-- Past Appointments -->
-        <div v-if="pastBookings.length > 0">
-          <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">
-            Past ({{ pastBookings.length }})
-          </h2>
+        <!-- Bookings List -->
+        <div v-if="filteredBookings.length === 0" class="text-center py-12 bg-white rounded-xl border-[0.5px] border-gray-50">
+          <svg class="w-12 h-12 text-gray-300 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+          </svg>
+          <p class="text-gray-900 font-semibold mb-1">No {{ activeTab.toLowerCase() }} appointments found</p>
+          <p class="text-gray-500 text-sm mb-4">Try adjusting your filters or status</p>
+          <button
+            @click="navigateTo('/#book')"
+            class="inline-flex items-center text-sm gap-2 bg-gray-900 text-white font-medium px-5 py-2 rounded-lg hover:bg-gray-800 transition-colors"
+          >
+            Search salons
+          </button>
+        </div>
 
-          <div class="space-y-3">
-            <div
-              v-for="booking in pastBookings"
-              :key="booking._id"
-              class="bg-white rounded-xl border-[0.5px] border-gray-50 p-4 hover:border-gray-200 hover:shadow-sm transition-all cursor-pointer opacity-90"
-              @click="selectBooking(booking)"
-            >
-              <div class="flex items-center gap-3">
+        <div v-else class="space-y-4">
+          <div
+            v-for="booking in filteredBookings"
+            :key="booking._id"
+            class="bg-white rounded-2xl border-[0.5px] border-gray-100 p-5 hover:border-parentPrimary/20 hover:shadow-md transition-all cursor-pointer group"
+            @click="selectBooking(booking)"
+          >
+            <div class="flex items-start gap-4">
+              <div class="relative">
                 <img
                   src="@/assets/img/logo.png"
                   alt="Business"
-                  class="w-12 h-12 p-1.5 bg-gray-100 rounded-lg object-cover flex-shrink-0"
+                  class="w-14 h-14 p-2 bg-parentPrimary/10 rounded-2xl object-cover flex-shrink-0"
                 />
-                
-                <div class="flex-1 min-w-0">
-                  <h3 class="font-semibold text-gray-900 text-sm mb-0.5 truncate">
-                    {{ booking.business?.name || 'Lola April Wellness Spa' }}
+                <span 
+                  class="absolute -bottom-1 -right-1 w-5 h-5 flex items-center justify-center rounded-full text-[10px] font-bold border-2 border-white"
+                  :class="getStatusColor(booking.status)"
+                ></span>
+              </div>
+              
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center justify-between mb-1">
+                  <h3 class="font-bold text-gray-900 text-base truncate">
+                    {{ booking.businessId?.businessName || booking.business?.name || 'Lola April Wellness Spa' }}
                   </h3>
-                  <p class="text-xs text-gray-600 mb-1">
-                    {{ formatDateTime(booking.preferredDate, booking.preferredStartTime) }}
-                  </p>
-                  <div class="flex items-center gap-2 text-xs text-gray-500">
-                    <span class="font-medium text-gray-900">₦{{ formatPrice(booking.estimatedTotal) }}</span>
-                    <span>•</span>
-                    <span>{{ booking.services?.length || 1 }} service{{ booking.services?.length > 1 ? 's' : '' }}</span>
-                  </div>
+                  <span class="text-xs font-bold text-gray-900">₦{{ formatPrice(booking.estimatedTotal) }}</span>
                 </div>
 
+                <!-- NEW: Specifically displaying Service Names -->
+                <div class="flex flex-wrap gap-2 mb-2">
+                  <span 
+                    v-for="(service, sIdx) in booking.services" 
+                    :key="sIdx"
+                    class="inline-flex items-center px-2 py-0.5 rounded-md bg-gray-50 text-gray-600 text-[10px] font-medium border border-gray-100"
+                  >
+                    {{ service.serviceName }}
+                  </span>
+                </div>
+
+                <div class="flex items-center gap-3 text-xs text-gray-500">
+                  <div class="flex items-center gap-1">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    {{ formatDateTime(booking.preferredDate, booking.preferredStartTime) }}
+                  </div>
+                  <span>•</span>
+                  <span class="capitalize px-2 py-0.5 rounded-full bg-gray-100 text-[10px] font-bold tracking-tight">
+                    {{ booking.status }}
+                  </span>
+                </div>
+              </div>
+
+              <div class="flex flex-col gap-2">
                 <button
-                  class="text-xs text-parentPrimary font-medium hover:text-parentPrimary-700 px-3 py-1.5 rounded-full bg-parentPrimary/5 transition-colors flex-shrink-0"
+                  class="text-xs text-parentPrimary font-bold hover:text-parentPrimary-700 px-4 py-2 rounded-xl bg-parentPrimary/5 transition-all flex-shrink-0 group-hover:bg-parentPrimary group-hover:text-white"
                   @click.stop="navigateTo('/book?subdomain=lola-beauty')"
                 >
                   Book again
@@ -389,22 +458,127 @@ const rescheduleMonth = ref(new Date().getMonth())
 const rescheduleYear = ref(new Date().getFullYear())
 const loadingRescheduleSlots = ref(false)
 
-const upcomingBookings = computed(() => {
-  const today = normalizeDate(new Date())
-  return bookings.value.filter((booking: any) => {
-    const bookingDate = normalizeDate(new Date(booking.preferredDate))
-    const status = booking.status?.toLowerCase()
-    return bookingDate >= today && status !== 'completed' && status !== 'cancelled'
-  })
+const activeTab = ref('Upcoming')
+const showDatePicker = ref(false)
+const calendarMonth = ref(new Date().getMonth())
+const calendarYear = ref(new Date().getFullYear())
+const dateRange = ref<{ start: string | null; end: string | null }>({ start: null, end: null })
+
+const dateRangeText = computed(() => {
+  if (!dateRange.value.start) return 'Select date range'
+  const start = new Date(dateRange.value.start).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+  if (!dateRange.value.end) return `${start} - ...`
+  const end = new Date(dateRange.value.end).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+  return `${start} - ${end}`
 })
 
-const pastBookings = computed(() => {
+const currentMonthYear = computed(() => {
+  return new Date(calendarYear.value, calendarMonth.value).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
+})
+
+const calendarDates = computed(() => {
+  const dates = []
+  const firstDay = new Date(calendarYear.value, calendarMonth.value, 1)
+  const lastDay = new Date(calendarYear.value, calendarMonth.value + 1, 0)
+  const today = new Date()
+  today.setHours(0,0,0,0)
+
+  let startDay = firstDay.getDay()
+  startDay = startDay === 0 ? 6 : startDay - 1
+
+  const prevMonthLastDay = new Date(calendarYear.value, calendarMonth.value, 0).getDate()
+  for (let i = startDay - 1; i >= 0; i--) {
+    dates.push({ day: prevMonthLastDay - i, date: null, isCurrentMonth: false })
+  }
+
+  for (let i = 1; i <= lastDay.getDate(); i++) {
+    const date = new Date(calendarYear.value, calendarMonth.value, i)
+    dates.push({ 
+      day: i, 
+      date: date.toISOString().split('T')[0], 
+      isCurrentMonth: true,
+      isToday: date.getTime() === today.getTime()
+    })
+  }
+
+  while (dates.length < 42) {
+    dates.push({ day: dates.length - lastDay.getDate() - startDay + 1, date: null, isCurrentMonth: false })
+  }
+  return dates
+})
+
+const handleDateClick = (dateObj: any) => {
+  if (!dateObj.date) return
+  
+  if (!dateRange.value.start || (dateRange.value.start && dateRange.value.end)) {
+    dateRange.value.start = dateObj.date
+    dateRange.value.end = null
+  } else {
+    // If user picks a date before the start date, make it the new start date
+    if (new Date(dateObj.date) < new Date(dateRange.value.start)) {
+      dateRange.value.start = dateObj.date
+    } else {
+      dateRange.value.end = dateObj.date
+    }
+  }
+}
+
+const isSelected = (dateObj: any) => dateObj.date === dateRange.value.start || dateObj.date === dateRange.value.end
+const isRangeStart = (dateObj: any) => dateObj.date === dateRange.value.start
+const isRangeEnd = (dateObj: any) => dateObj.date === dateRange.value.end
+const isInRange = (dateObj: any) => {
+  if (!dateRange.value.start || !dateRange.value.end || !dateObj.date) return false
+  const d = new Date(dateObj.date)
+  return d >= new Date(dateRange.value.start) && d <= new Date(dateRange.value.end)
+}
+
+const prevMonth = () => {
+  if (calendarMonth.value === 0) {
+    calendarMonth.value = 11
+    calendarYear.value--
+  } else calendarMonth.value--
+}
+
+const nextMonth = () => {
+  if (calendarMonth.value === 11) {
+    calendarMonth.value = 0
+    calendarYear.value++
+  } else calendarMonth.value++
+}
+
+const clearDateRange = () => {
+  dateRange.value = { start: null, end: null }
+}
+
+const filteredBookings = computed(() => {
+  let filtered = bookings.value
+
+  // Status Filter
   const today = normalizeDate(new Date())
-  return bookings.value.filter((booking: any) => {
-    const bookingDate = normalizeDate(new Date(booking.preferredDate))
-    const status = booking.status?.toLowerCase()
-    return bookingDate < today || status === 'completed' || status === 'cancelled'
-  })
+  if (activeTab.value === 'Upcoming') {
+    filtered = filtered.filter((b: any) => {
+      const bDate = normalizeDate(new Date(b.preferredDate))
+      return bDate >= today && b.status?.toLowerCase() !== 'completed' && b.status?.toLowerCase() !== 'cancelled'
+    })
+  } else if (activeTab.value === 'Completed') {
+    filtered = filtered.filter((b: any) => b.status?.toLowerCase() === 'completed')
+  } else if (activeTab.value === 'Cancelled') {
+    filtered = filtered.filter((b: any) => b.status?.toLowerCase() === 'cancelled')
+  }
+
+  // Date Range Filter
+  if (dateRange.value.start) {
+    const start = new Date(dateRange.value.start)
+    filtered = filtered.filter((b: any) => new Date(b.preferredDate) >= start)
+  }
+  if (dateRange.value.end) {
+    const end = new Date(dateRange.value.end)
+    end.setHours(23, 59, 59, 999) // End of day
+    filtered = filtered.filter((b: any) => new Date(b.preferredDate) <= end)
+  }
+
+  // Sort by date descending
+  return filtered.sort((a, b) => new Date(b.preferredDate).getTime() - new Date(a.preferredDate).getTime())
 })
 
 const rescheduleMonthYear = computed(() => {
@@ -476,6 +650,15 @@ const formatDisplayDate = (dateString: string | null) => {
   if (!dateString) return ''
   const date = new Date(dateString)
   return date.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })
+}
+
+const getStatusColor = (status: string) => {
+  const s = status?.toLowerCase()
+  if (s === 'confirmed') return 'bg-green-500'
+  if (s === 'pending') return 'bg-yellow-500'
+  if (s === 'cancelled') return 'bg-red-500'
+  if (s === 'completed') return 'bg-blue-500'
+  return 'bg-gray-400'
 }
 
 const getStatusClass = (status: string) => {
@@ -638,5 +821,17 @@ onMounted(() => {
   .modal-leave-to {
     transform: translateY(0) scale(0.9);
   }
+}
+
+/* Custom Date Picker Popover Animations */
+.fade-popover-enter-active,
+.fade-popover-leave-active {
+  transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.fade-popover-enter-from,
+.fade-popover-leave-to {
+  opacity: 0;
+  transform: translateY(-10px) scale(0.95);
 }
 </style>
