@@ -766,10 +766,10 @@
                 />
               </div>
               <div>
-                <UiAnimatedInput
-                  v-model="signupForm.phone"
-                  type="tel"
-                  label="Phone Number"
+                <UiPhoneNumberInput
+                  v-model="localPhone"
+                  @update:fullNumber="signupForm.phone = $event"
+                  
                 />
               </div>
               <div>
@@ -913,6 +913,8 @@ const signupForm = reactive({
   password: '',
   role: 'client',
 })
+
+const localPhone = ref('')
 
 // Validation
 const numberOfPeopleError = ref(false)

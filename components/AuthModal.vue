@@ -71,12 +71,11 @@
                     </div>
 
                     <div>
-                      <UiAnimatedInput
-                        id="phone"
-                        v-model="signupForm.phone"
-                        type="tel"
-                        required
-                        label="Phone Number"
+                      <UiPhoneNumberInput
+                        v-model="localPhone"
+                        @update:fullNumber="signupForm.phone = $event"
+                        
+                        :required="true"
                       />
                     </div>
 
@@ -462,6 +461,7 @@ const resendTimer = ref(60)
 const otpInputs = ref<HTMLInputElement[]>([])
 const otpDigits = ref(['', '', '', '', '', ''])
 const rememberMe = ref(false)
+const localPhone = ref('')
 
 // Forms
 const signupForm = ref({

@@ -100,9 +100,9 @@
                   </div>
                 </div>
 
-                <div class="flex items-center shadow-lg border-t justify-between mt-6 pt-4 border-gray-100/50">
+                <div class="flex items-center bg-white justify-between mt-6 pt-4">
                   <button @click="clearDateRange" class="text-[11px] font-bold text-gray-400 hover:text-gray-600">Reset</button>
-                  <button @click="showDatePicker = false" class="px-5 py-2 bg-parentPrimary text-white text-[11px] font-bold rounded-lg shadow-lg shadow-parentPrimary/20 hover:scale-105 active:scale-95 transition-all">Apply Filter</button>
+                  <button @click="showDatePicker = false" class="px-5 py-2 bg-parentPrimary text-white text-[11px] font-bold rounded-lg  shadow-parentPrimary/20 hover:scale-105 active:scale-95 transition-all">Apply Filter</button>
                 </div>
               </div>
             </Transition>

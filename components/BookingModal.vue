@@ -1207,7 +1207,7 @@
                   <UiAnimatedInput
                     v-model="signupForm.phone"
                     type="tel"
-                    label="Phone Number"
+                    
                   />
                 </div>
                 <div>
@@ -1843,21 +1843,12 @@ const selectTimeSlot = (time: string) => {
 // }
 
 const fetchTimeSlots = async () => {
-  console.log("Fetching time slots...", business.value); // Debug log
-  console.log("Selected date:", selectedDate.value); // Debug log
-  console.log("Cart contents:", cart.value); // Debug log
   if (!selectedDate.value || !business.value || cart.value.length === 0) {
-    console.log("Missing required data for fetching slots"); // Debug
     return;
   }
 
   const serviceIds = cart.value.map((item) => item.service._id);
 
-  console.log("Fetching slots with:", {
-    subdomain: route.query.subdomain,
-    date: selectedDate.value,
-    serviceIds,
-  }); // Debug log
 
   try {
     await getAvailableSlots({
